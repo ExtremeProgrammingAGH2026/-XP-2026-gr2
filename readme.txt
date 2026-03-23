@@ -1,1 +1,2 @@
 Tomasz Kurcoń
+Patryk Skowron
