@@ -34,15 +34,15 @@
 
 ## Statusy i postęp zadań
 
-14. Jako użytkownik chcę móc zmienić status zadania (np. do zrobienia, w trakcie, wykonane), aby pokazać postęp pracy.
+14. Jako użytkownik chcę móc zmienić status zadania (np. do zrobienia, w trakcie, wykonane), aby pokazać postęp pracy. [MUST]
 
-15. Jako użytkownik chcę widzieć listę swoich zadań, aby wiedzieć jakie obowiązki mam do wykonania.
+15. Jako użytkownik chcę widzieć listę swoich zadań, aby wiedzieć jakie obowiązki mam do wykonania. [MUST]
 
-16. Jako użytkownik chcę widzieć zadania innych domowników, aby mieć wgląd w podział obowiązków.
+16. Jako użytkownik chcę widzieć zadania innych domowników, aby mieć wgląd w podział obowiązków. [MUST]
 
-17. Jako użytkownik chcę widzieć zadania przeterminowane, aby wiedzieć które obowiązki nie zostały wykonane na czas.
+17. Jako użytkownik chcę widzieć zadania przeterminowane, aby wiedzieć które obowiązki nie zostały wykonane na czas. [SHOULD]
 
-18. Jako użytkownik chcę widzieć historię wykonanych zadań, aby sprawdzić jakie obowiązki zostały już zrealizowane.
+18. Jako użytkownik chcę widzieć historię wykonanych zadań, aby sprawdzić jakie obowiązki zostały już zrealizowane. [COULD]
 
 
 ## Zadania złożone i cykliczne
