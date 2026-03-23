@@ -1,3 +1,5 @@
+Patryk Skowron
+Jakub Sikora
 Dominik Mrozek
 Maciej Mężyk
 Serhii Zeliuk
