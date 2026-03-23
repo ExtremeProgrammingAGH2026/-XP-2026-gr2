@@ -1,4 +1,3 @@
-Patryk Skowron
 Jakub Sikora
 Dominik Mrozek
 Maciej Mężyk
