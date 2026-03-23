@@ -1,1 +1,8 @@
 Adam Tokarz
+Jakub Sikora
+Dominik Mrozek
+Maciej Mężyk
+Serhii Zeliuk
+Tomasz Kurcoń
+Patryk Skowron
+Mateusz Świątek
