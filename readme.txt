@@ -1,3 +1,4 @@
+Zuzanna Konopka
 Adam Tokarz
 Jakub Sikora
 Dominik Mrozek
