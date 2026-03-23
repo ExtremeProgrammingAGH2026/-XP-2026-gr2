@@ -14,23 +14,21 @@
 
 6. Jako właściciel organizacji chcę móc zmieniać role użytkowników (np. rodzic lub dziecko), aby kontrolować ich uprawnienia.
 
-
 ## Zarządzanie zadaniami
 
-7. Jako użytkownik chcę móc dodać nowe zadanie, aby przypisać obowiązek do wykonania.
+7. Jako użytkownik chcę móc dodać nowe zadanie, aby przypisać obowiązek do wykonania. [MUST]
 
-8. Jako użytkownik chcę móc przypisać zadanie do konkretnej osoby, aby było jasne kto jest odpowiedzialny za jego wykonanie.
+8. Jako użytkownik chcę móc przypisać zadanie do konkretnej osoby, aby było jasne kto jest odpowiedzialny za jego wykonanie. [MUST]
 
-9. Jako użytkownik chcę móc utworzyć zadanie dostępne dla wszystkich domowników, aby każdy mógł je wykonać.
+9. Jako użytkownik chcę móc utworzyć zadanie dostępne dla wszystkich domowników, aby każdy mógł je wykonać. [COULD]
 
-10. Jako użytkownik chcę móc ustawić termin wykonania zadania, aby domownicy wiedzieli do kiedy należy je zrobić.
+10. Jako użytkownik chcę móc ustawić termin wykonania zadania, aby domownicy wiedzieli do kiedy należy je zrobić. [SHOULD]
 
-11. Jako użytkownik chcę móc dodać opis lub notatkę do zadania, aby przekazać dodatkowe informacje.
+11. Jako użytkownik chcę móc dodać opis lub notatkę do zadania, aby przekazać dodatkowe informacje. [COULD]
 
-12. Jako użytkownik chcę móc edytować zadanie, aby poprawić jego treść, termin lub przypisaną osobę.
+12. Jako użytkownik chcę móc edytować zadanie, aby poprawić jego treść, termin lub przypisaną osobę. [SHOULD]
 
-13. Jako użytkownik chcę móc usunąć zadanie, aby pozbyć się nieaktualnych obowiązków.
-
+13. Jako użytkownik chcę móc usunąć zadanie, aby pozbyć się nieaktualnych obowiązków. [SHOULD]
 
 ## Statusy i postęp zadań
 
@@ -44,7 +42,6 @@
 
 18. Jako użytkownik chcę widzieć historię wykonanych zadań, aby sprawdzić jakie obowiązki zostały już zrealizowane. [COULD]
 
-
 ## Zadania złożone i cykliczne
 
 19. Jako użytkownik chcę móc podzielić zadanie na podzadania, aby łatwiej śledzić postęp większego obowiązku.
@@ -57,7 +54,6 @@
 
 23. Jako użytkownik chcę móc aktualizować postęp zadania (np. procentowo lub krokami), aby pokazać częściowe wykonanie pracy.
 
-
 ## Kalendarz i planowanie
 
 24. Jako użytkownik chcę móc przeglądać kalendarz zadań, aby zobaczyć plan obowiązków w czasie.
@@ -65,7 +61,6 @@
 25. Jako użytkownik chcę widzieć zadania przypisane na dany dzień, aby lepiej zaplanować swój czas.
 
 26. Jako użytkownik chcę widzieć potencjalne konflikty czasowe między zadaniami, aby uniknąć ich nakładania się.
-
 
 ## Powiadomienia i statystyki
 
