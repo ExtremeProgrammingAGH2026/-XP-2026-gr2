@@ -1,3 +1,4 @@
+Adam Tokarz
 Jakub Sikora
 Dominik Mrozek
 Maciej Mężyk
