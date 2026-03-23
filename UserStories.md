@@ -10,7 +10,7 @@
 
 4. Jako właściciel organizacji chcę móc zaprosić innych użytkowników do systemu, aby mogli uczestniczyć w podziale obowiązków. [SHOULD]
 
-5. Jako właściciel organizacji chcę móc usuwać użytkowników z domu, aby zarządzać składem domowników. [SHOULD]
+5. Jako właściciel organizacji chcę móc usuwać użytkowników z domu, aby zarządzać składem domowników. [COULD]
 
 6. Jako właściciel organizacji chcę móc zmieniać role użytkowników (np. rodzic lub dziecko), aby kontrolować ich uprawnienia. [COULD]
 
