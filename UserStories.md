@@ -56,18 +56,18 @@
 
 ## Kalendarz i planowanie
 
-24. Jako użytkownik chcę móc przeglądać kalendarz zadań, aby zobaczyć plan obowiązków w czasie.
+24. Jako użytkownik chcę móc przeglądać kalendarz zadań, aby zobaczyć plan obowiązków w czasie. [MUST]
 
-25. Jako użytkownik chcę widzieć zadania przypisane na dany dzień, aby lepiej zaplanować swój czas.
+25. Jako użytkownik chcę widzieć zadania przypisane na dany dzień, aby lepiej zaplanować swój czas. [MUST]
 
-26. Jako użytkownik chcę widzieć potencjalne konflikty czasowe między zadaniami, aby uniknąć ich nakładania się.
+26. Jako użytkownik chcę widzieć potencjalne konflikty czasowe między zadaniami, aby uniknąć ich nakładania się. [MUST]
 
 ## Powiadomienia i statystyki
 
-27. Jako użytkownik chcę otrzymywać przypomnienia o nadchodzących zadaniach, aby nie zapomnieć o obowiązkach.
+27. Jako użytkownik chcę otrzymywać przypomnienia o nadchodzących zadaniach, aby nie zapomnieć o obowiązkach. [SHOULD]
 
-28. Jako użytkownik chcę otrzymywać powiadomienie o przeterminowanym zadaniu, aby wiedzieć że powinienem je jak najszybciej wykonać.
+28. Jako użytkownik chcę otrzymywać powiadomienie o przeterminowanym zadaniu, aby wiedzieć że powinienem je jak najszybciej wykonać. [SHOULD]
 
-29. Jako użytkownik chcę móc zobaczyć statystyki wykonanych zadań, aby sprawdzić ile obowiązków wykonałem.
+29. Jako użytkownik chcę móc zobaczyć statystyki wykonanych zadań, aby sprawdzić ile obowiązków wykonałem. [COULD]
 
-30. Jako użytkownik chcę widzieć statystyki wykonanych zadań innych domowników, aby zobaczyć jak rozkłada się podział pracy w domu.
+30. Jako użytkownik chcę widzieć statystyki wykonanych zadań innych domowników, aby zobaczyć jak rozkłada się podział pracy w domu. [COULD]
