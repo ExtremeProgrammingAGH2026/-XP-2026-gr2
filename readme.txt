@@ -1,1 +1,2 @@
 Serhii Zeliuk
+Patryk Skowron
