@@ -1,3 +1,4 @@
+Dominik Mrozek
 Maciej Mężyk
 Serhii Zeliuk
 Tomasz Kurcoń
