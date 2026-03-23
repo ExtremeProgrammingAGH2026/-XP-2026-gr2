@@ -1,1 +1,2 @@
 Patryk Skowron
+Jakub Sikora
