@@ -1,4 +1,4 @@
-Maciej Trzaskacz
+Maciej Mężyk
 Serhii Zeliuk
 Tomasz Kurcoń
 Patryk Skowron
