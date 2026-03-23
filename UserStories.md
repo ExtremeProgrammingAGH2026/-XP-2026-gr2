@@ -2,17 +2,17 @@
 
 ## Zarządzanie kontami i organizacją
 
-1. Jako użytkownik chcę móc utworzyć konto w aplikacji, aby mieć dostęp do systemu zarządzania zadaniami domowymi.
+1. Jako użytkownik chcę móc utworzyć konto w aplikacji, aby mieć dostęp do systemu zarządzania zadaniami domowymi. [MUST]
 
-2. Jako użytkownik chcę móc się zalogować do aplikacji, aby zobaczyć swoje zadania i obowiązki.
+2. Jako użytkownik chcę móc się zalogować do aplikacji, aby zobaczyć swoje zadania i obowiązki. [MUST]
 
-3. Jako użytkownik chcę móc utworzyć organizację (dom), aby zarządzać zadaniami wspólnie z innymi domownikami.
+3. Jako użytkownik chcę móc utworzyć organizację (dom), aby zarządzać zadaniami wspólnie z innymi domownikami. [COULD]
 
-4. Jako właściciel organizacji chcę móc zaprosić innych użytkowników do domu, aby mogli uczestniczyć w podziale obowiązków.
+4. Jako właściciel organizacji chcę móc zaprosić innych użytkowników do domu, aby mogli uczestniczyć w podziale obowiązków. [SHOULD]
 
-5. Jako właściciel organizacji chcę móc usuwać użytkowników z domu, aby zarządzać składem domowników.
+5. Jako właściciel organizacji chcę móc usuwać użytkowników z domu, aby zarządzać składem domowników. [SHOULD]
 
-6. Jako właściciel organizacji chcę móc zmieniać role użytkowników (np. rodzic lub dziecko), aby kontrolować ich uprawnienia.
+6. Jako właściciel organizacji chcę móc zmieniać role użytkowników (np. rodzic lub dziecko), aby kontrolować ich uprawnienia. [COULD]
 
 
 ## Zarządzanie zadaniami
