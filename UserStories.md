@@ -8,7 +8,7 @@
 
 3. Jako użytkownik chcę móc utworzyć organizację (dom), aby zarządzać zadaniami wspólnie z innymi domownikami. [COULD]
 
-4. Jako właściciel organizacji chcę móc zaprosić innych użytkowników do domu, aby mogli uczestniczyć w podziale obowiązków. [SHOULD]
+4. Jako właściciel organizacji chcę móc zaprosić innych użytkowników do systemu, aby mogli uczestniczyć w podziale obowiązków. [SHOULD]
 
 5. Jako właściciel organizacji chcę móc usuwać użytkowników z domu, aby zarządzać składem domowników. [SHOULD]
 
