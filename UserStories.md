@@ -44,15 +44,15 @@
 
 ## Zadania złożone i cykliczne
 
-19. Jako użytkownik chcę móc podzielić zadanie na podzadania, aby łatwiej śledzić postęp większego obowiązku.
+19. Jako użytkownik chcę móc podzielić zadanie na podzadania, aby łatwiej śledzić postęp większego obowiązku. [SHOULD]
 
-20. Jako użytkownik chcę móc oznaczać wykonanie podzadań przy pomocy checkboxów, aby pokazać które kroki zostały już wykonane.
+20. Jako użytkownik chcę móc oznaczać wykonanie podzadań przy pomocy checkboxów, aby pokazać które kroki zostały już wykonane. [SHOULD]
 
-21. Jako użytkownik chcę móc ustawić zadanie cykliczne (np. sprzątanie co tydzień), aby nie musieć dodawać go ręcznie za każdym razem.
+21. Jako użytkownik chcę móc ustawić zadanie cykliczne (np. sprzątanie co tydzień), aby nie musieć dodawać go ręcznie za każdym razem. [MUST]
 
-22. Jako użytkownik chcę móc tworzyć zadania jednorazowe, aby zarządzać pojedynczymi obowiązkami.
+22. Jako użytkownik chcę móc tworzyć zadania jednorazowe, aby zarządzać pojedynczymi obowiązkami. [MUST]
 
-23. Jako użytkownik chcę móc aktualizować postęp zadania (np. procentowo lub krokami), aby pokazać częściowe wykonanie pracy.
+23. Jako użytkownik chcę móc aktualizować postęp zadania (np. procentowo lub krokami), aby pokazać częściowe wykonanie pracy. [COULD]
 
 ## Kalendarz i planowanie
 
