@@ -1,0 +1,81 @@
+ZASADY KODOWANIA
+
+1. ZASADA OGÓLNA
+- Formatowanie kodu musi być zgodne z domyślnym formatterem IntelliJ IDEA
+- Kod należy formatować przed każdym commitem (Ctrl + Alt + L)
+
+2. JĘZYK
+- Nazwy klas, metod i zmiennych: język angielski
+- Komentarze i dokumentacja: język angielski
+- Nazwy powinny być czytelne i opisowe
+
+3. FORMATOWANIE (zgodne z IntelliJ)
+- Wcięcia: 4 spacje (bez tabulatorów)
+- Klamry:
+  - Otwierająca klamra w tej samej linii:
+    if (condition) {
+        // kod
+    }
+- Spacje:
+  - Spacja po słowach kluczowych (if, for, while)
+  - Spacje wokół operatorów (=, +, -, itp.)
+- Długość linii: zgodna z ustawieniami IntelliJ (nie wymuszana ręcznie)
+- Jedna instrukcja na linię
+- Puste linie oddzielające logiczne sekcje kodu
+
+4. NAZEWNICTWO
+- Klasy: PascalCase (np. UserService, OrderController)
+- Interfejsy: PascalCase (np. UserRepository)
+- Metody: camelCase (np. getUserById)
+- Zmienne: camelCase (np. totalPrice)
+- Stałe: UPPER_CASE_WITH_UNDERSCORES (np. MAX_RETRIES)
+- Pakiety: małe litery (np. com.project.service)
+
+5. STRUKTURA PROJEKTU
+- Jeden plik = jedna klasa publiczna
+- Standardowy podział na pakiety:
+  - controller
+  - service
+  - repository
+  - entity / model
+  - dto
+  - config
+- Kontrolery nie powinny zawierać logiki biznesowej
+
+6. KOMENTARZE
+- Komentarze stosować tylko tam, gdzie to konieczne
+- Unikać komentowania oczywistych fragmentów kodu
+- Publiczne klasy i metody powinny posiadać JavaDoc:
+  /**
+   * Zwraca użytkownika na podstawie ID
+   */
+- Komentarze muszą być aktualizowane wraz z kodem
+
+7. DOBRE PRAKTYKI
+- Stosować zasadę DRY (Don't Repeat Yourself)
+- Stosować zasadę SRP (Single Responsibility Principle)
+- Metody powinny być krótkie i czytelne
+- Unikać głębokiego zagnieżdżenia (maks. 3 poziomy)
+- Preferować wstrzykiwanie zależności (Dependency Injection)
+
+8. OBSŁUGA WYJĄTKÓW
+- Nie ignorować wyjątków
+- Stosować własne wyjątki dla logiki biznesowej
+- Używać logowania zamiast System.out.println
+
+9. IMPORTY
+- Nie używać importów z wildcardem (np. import java.util.*)
+- Korzystać z automatycznego zarządzania importami w IntelliJ
+
+10. TESTY
+- Logika biznesowa powinna być pokryta testami jednostkowymi
+- Nazwy testów powinny opisywać zachowanie:
+  np. shouldReturnUserWhenIdExists
+
+11. WERSJONOWANIE
+- Kod musi być sformatowany przed commitem
+- Commity powinny mieć czytelne opisy
+
+12. AKTUALIZACJA STANDARDU
+- Standard może być rozszerzany w przyszłości
+- Zmiany wymagają akceptacji całego zespołu

@@ -71,3 +71,34 @@
 29. Jako użytkownik chcę móc zobaczyć statystyki wykonanych zadań, aby sprawdzić ile obowiązków wykonałem. [COULD]
 
 30. Jako użytkownik chcę widzieć statystyki wykonanych zadań innych domowników, aby zobaczyć jak rozkłada się podział pracy w domu. [COULD]
+
+1 1
+2 0,5
+3 1,5
+4 1
+5 0,5
+6 0,5
+7 1
+8 0,5
+9 0,5
+10 0,5
+11 0,5
+12 0,5
+13 0,5
+14 0,5
+15 1
+16 1
+17 0,5
+18 0,5
+19 1
+20 0,5
+21 1
+22 0,5
+23 1
+24 2
+25 1
+26 1,5
+27 1
+28 1
+29 1
+30 1,5
