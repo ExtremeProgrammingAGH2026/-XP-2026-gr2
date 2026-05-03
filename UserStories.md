@@ -1,5 +1,7 @@
 # Historyjki użytkownika – Aplikacja do zarządzania zadaniami domowymi
 
+# 1. Historyjki
+
 ## Zarządzanie kontami i organizacją
 
 1. Jako użytkownik chcę móc utworzyć konto w aplikacji, aby mieć dostęp do systemu zarządzania zadaniami domowymi. [MUST]
@@ -72,35 +74,107 @@
 
 30. Jako użytkownik chcę widzieć statystyki wykonanych zadań innych domowników, aby zobaczyć jak rozkłada się podział pracy w domu. [COULD]
 
-| NR historii | Estymacja czasowa (h) |
-| ----------- | --------------------- |
-| 1           | 1                     |
-| 2           | 0,5                   |
-| 3           | 1,5                   |
-| 4           | 1                     |
-| 5           | 0,5                   |
-| 6           | 0,5                   |
-| 7           | 1                     |
-| 8           | 0,5                   |
-| 9           | 0,5                   |
-| 10          | 0,5                   |
-| 11          | 0,5                   |
-| 12          | 0,5                   |
-| 13          | 0,5                   |
-| 14          | 0,5                   |
-| 15          | 1                     |
-| 16          | 1                     |
-| 17          | 0,5                   |
-| 18          | 0,5                   |
-| 19          | 1                     |
-| 20          | 0,5                   |
-| 21          | 1                     |
-| 22          | 0,5                   |
-| 23          | 1                     |
-| 24          | 2                     |
-| 25          | 1                     |
-| 26          | 1,5                   |
-| 27          | 1                     |
-| 28          | 1                     |
-| 29          | 1                     |
-| 30          | 1,5                   |
+# 2. Estymacja czasowa historyjek
+
+| NR historyjki | Estymacja czasowa (h) |
+| ------------- | --------------------- |
+| 1             | 1                     |
+| 2             | 0,5                   |
+| 3             | 1,5                   |
+| 4             | 1                     |
+| 5             | 0,5                   |
+| 6             | 0,5                   |
+| 7             | 1                     |
+| 8             | 0,5                   |
+| 9             | 0,5                   |
+| 10            | 0,5                   |
+| 11            | 0,5                   |
+| 12            | 0,5                   |
+| 13            | 0,5                   |
+| 14            | 0,5                   |
+| 15            | 1                     |
+| 16            | 1                     |
+| 17            | 0,5                   |
+| 18            | 0,5                   |
+| 19            | 1                     |
+| 20            | 0,5                   |
+| 21            | 1                     |
+| 22            | 0,5                   |
+| 23            | 1                     |
+| 24            | 2                     |
+| 25            | 1                     |
+| 26            | 1,5                   |
+| 27            | 1                     |
+| 28            | 1                     |
+| 29            | 1                     |
+| 30            | 1,5                   |
+
+# 3. Story Points
+
+| Nr historyjki | Story Points SP |
+| ------------- | --------------- |
+| 1             | 3               |
+| 2             | 2               |
+| 3             | 3               |
+| 4             | 3               |
+| 5             | 1               |
+| 6             | 1               |
+| 7             | 3               |
+| 8             | 1               |
+| 9             | 1               |
+| 10            | 1               |
+| 11            | 1               |
+| 12            | 2               |
+| 13            | 1               |
+| 14            | 1               |
+| 15            | 1               |
+| 16            | 8               |
+| 17            | 3               |
+| 18            | 3               |
+| 19            | 3               |
+| 20            | 2               |
+| 21            | 5               |
+| 22            | 3               |
+| 23            | 2               |
+| 24            | 13              |
+| 25            | 3               |
+| 26            | 3               |
+| 27            | 3               |
+| 28            | 3               |
+| 29            | 3               |
+| 30            | 3               |
+
+# 4. Planning Game
+
+| Nr historyjki | Value  | Risk   | SUMA | Completeness | Volatility | Complexity |
+| ------------- | ------ | ------ | ---- | ------------ | ---------- | ---------- |
+| 21            | MUST   | Medium | 4    | 2            | 1          | 1          |
+| 24            | MUST   | Medium | 4    | 1            | 1          | 2          |
+| 7             | MUST   | Medium | 3    | 1            | 1          | 1          |
+| 16            | MUST   | Medium | 3    | 0            | 1          | 2          |
+| 1             | MUST   | Medium | 2    | 1            | 0          | 1          |
+| 26            | MUST   | Medium | 2    | 1            | 0          | 1          |
+| 15            | MUST   | Low    | 1    | 0            | 1          | 0          |
+| 25            | MUST   | Low    | 1    | 0            | 0          | 1          |
+| 2             | MUST   | Low    | 0    | 0            | 0          | 0          |
+| 8             | MUST   | Low    | 0    | 0            | 0          | 0          |
+| 14            | MUST   | Low    | 0    | 0            | 0          | 0          |
+| 22            | MUST   | Low    | 0    | 0            | 0          | 0          |
+| 19            | SHOULD | Medium | 3    | 1            | 1          | 1          |
+| 27            | SHOULD | Medium | 3    | 1            | 1          | 1          |
+| 28            | SHOULD | Medium | 3    | 1            | 1          | 1          |
+| 17            | SHOULD | Medium | 2    | 0            | 1          | 1          |
+| 20            | SHOULD | Medium | 2    | 0            | 1          | 1          |
+| 4             | SHOULD | Low    | 1    | 0            | 0          | 1          |
+| 10            | SHOULD | Low    | 0    | 0            | 0          | 0          |
+| 12            | SHOULD | Low    | 0    | 0            | 0          | 0          |
+| 13            | SHOULD | Low    | 0    | 0            | 0          | 0          |
+| 3             | COULD  | Medium | 3    | 1            | 1          | 1          |
+| 23            | COULD  | Medium | 3    | 1            | 1          | 1          |
+| 29            | COULD  | Medium | 3    | 1            | 1          | 1          |
+| 30            | COULD  | Medium | 3    | 1            | 1          | 1          |
+| 6             | COULD  | Medium | 2    | 1            | 1          | 0          |
+| 18            | COULD  | Medium | 2    | 0            | 1          | 1          |
+| 5             | COULD  | Low    | 0    | 0            | 0          | 0          |
+| 9             | COULD  | Low    | 0    | 0            | 0          | 0          |
+| 11            | COULD  | Low    | 0    | 0            | 0          | 0          |
