@@ -183,16 +183,61 @@
 
 # 5. SCOPE historyjek
 
-| Treść                                                                                                                                         | NR historii | Value | Risk   | SUMA | Completeness | Volatility | Complexity | Story Points | SUMA SP |
-| --------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ----- | ------ | ---- | ------------ | ---------- | ---------- | ------------ | ------- |
-| 24. Jako użytkownik chcę móc przeglądać kalendarz zadań, aby zobaczyć plan obowiązków w czasie. [MUST]                                        | 24          | MUST  | Medium | 4    | 1            | 1          | 2          | 13           | 13      |
-| 21. Jako użytkownik chcę móc ustawić zadanie cykliczne (np. sprzątanie co tydzień), aby nie musieć dodawać go ręcznie za każdym razem. [MUST] | 21          | MUST  | Medium | 4    | 2            | 1          | 1          | 5            | 18      |
-| 16. Jako użytkownik chcę widzieć zadania innych domowników, aby mieć wgląd w podział obowiązków. [MUST]                                       | 16          | MUST  | Medium | 3    | 0            | 1          | 2          | 8            | 26      |
-| 1. Jako użytkownik chcę móc utworzyć konto w aplikacji, aby mieć dostęp do systemu zarządzania zadaniami domowymi. [MUST]                     | 1           | MUST  | Medium | 2    | 1            | 0          | 1          | 3            | 29      |
-| 26. Jako użytkownik chcę widzieć potencjalne konflikty czasowe między zadaniami, aby uniknąć ich nakładania się. [MUST]                       | 26          | MUST  | Medium | 2    | 1            | 0          | 1          | 3            | 32      |
-| 15. Jako użytkownik chcę widzieć listę swoich zadań, aby wiedzieć jakie obowiązki mam do wykonania. [MUST]                                    | 15          | MUST  | Low    | 1    | 0            | 1          | 0          | 1            | 33      |
-| 25. Jako użytkownik chcę widzieć zadania przypisane na dany dzień, aby lepiej zaplanować swój czas. [MUST]                                    | 25          | MUST  | Low    | 1    | 0            | 0          | 1          | 3            | 36      |
-| 2. Jako użytkownik chcę móc się zalogować do aplikacji, aby zobaczyć swoje zadania i obowiązki. [MUST]                                        | 2           | MUST  | Low    | 0    | 0            | 0          | 0          | 2            | 38      |
-| 8. Jako użytkownik chcę móc przypisać zadanie do konkretnej osoby, aby było jasne kto jest odpowiedzialny za jego wykonanie. [MUST]           | 8           | MUST  | Low    | 0    | 0            | 0          | 0          | 1            | 39      |
-| 14. Jako użytkownik chcę móc zmienić status zadania (np. do zrobienia, w trakcie, wykonane), aby pokazać postęp pracy. [MUST]                 | 14          | MUST  | Low    | 0    | 0            | 0          | 0          | 1            | 40      |
-| 22. Jako użytkownik chcę móc tworzyć zadania jednorazowe, aby zarządzać pojedynczymi obowiązkami. [MUST]                                      | 22          | MUST  | Low    | 0    | 0            | 0          | 0          | 3            | 43      |
+| Treść                                                                                                                                         | NR historii | Value | Risk   | SUMA | Completeness | Volatility | Complexity | Story Points | SUMA SP | Estymacja czasowa (h) |
+| --------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ----- | ------ | ---- | ------------ | ---------- | ---------- | ------------ | ------- | --------------------- |
+| 24. Jako użytkownik chcę móc przeglądać kalendarz zadań, aby zobaczyć plan obowiązków w czasie. [MUST]                                        | 24          | MUST  | Medium | 4    | 1            | 1          | 2          | 13           | 13      | 2                     |
+| 21. Jako użytkownik chcę móc ustawić zadanie cykliczne (np. sprzątanie co tydzień), aby nie musieć dodawać go ręcznie za każdym razem. [MUST] | 21          | MUST  | Medium | 4    | 2            | 1          | 1          | 5            | 18      | 1                     |
+| 16. Jako użytkownik chcę widzieć zadania innych domowników, aby mieć wgląd w podział obowiązków. [MUST]                                       | 16          | MUST  | Medium | 3    | 0            | 1          | 2          | 8            | 26      | 1                     |
+| 1. Jako użytkownik chcę móc utworzyć konto w aplikacji, aby mieć dostęp do systemu zarządzania zadaniami domowymi. [MUST]                     | 1           | MUST  | Medium | 2    | 1            | 0          | 1          | 3            | 29      | 1                     |
+| 26. Jako użytkownik chcę widzieć potencjalne konflikty czasowe między zadaniami, aby uniknąć ich nakładania się. [MUST]                       | 26          | MUST  | Medium | 2    | 1            | 0          | 1          | 3            | 32      | 1,5                   |
+| 15. Jako użytkownik chcę widzieć listę swoich zadań, aby wiedzieć jakie obowiązki mam do wykonania. [MUST]                                    | 15          | MUST  | Low    | 1    | 0            | 1          | 0          | 1            | 33      | 1                     |
+| 25. Jako użytkownik chcę widzieć zadania przypisane na dany dzień, aby lepiej zaplanować swój czas. [MUST]                                    | 25          | MUST  | Low    | 1    | 0            | 0          | 1          | 3            | 36      | 1                     |
+| 2. Jako użytkownik chcę móc się zalogować do aplikacji, aby zobaczyć swoje zadania i obowiązki. [MUST]                                        | 2           | MUST  | Low    | 0    | 0            | 0          | 0          | 2            | 38      | 0,5                   |
+| 8. Jako użytkownik chcę móc przypisać zadanie do konkretnej osoby, aby było jasne kto jest odpowiedzialny za jego wykonanie. [MUST]           | 8           | MUST  | Low    | 0    | 0            | 0          | 0          | 1            | 39      | 0,5                   |
+| 14. Jako użytkownik chcę móc zmienić status zadania (np. do zrobienia, w trakcie, wykonane), aby pokazać postęp pracy. [MUST]                 | 14          | MUST  | Low    | 0    | 0            | 0          | 0          | 1            | 40      | 0,5                   |
+| 22. Jako użytkownik chcę móc tworzyć zadania jednorazowe, aby zarządzać pojedynczymi obowiązkami. [MUST]                                      | 22          | MUST  | Low    | 0    | 0            | 0          | 0          | 3            | 43      | 0,5                   |
+
+**SUMA ESTYMACJA CZASOWA:** 10,5 h
+
+# 6. Podział tasków
+
+| Nr tasku | Task historyjki                                           | Nr Historyjki | Osoba            | Estymacja czasowa tasku (h) |
+| -------- | --------------------------------------------------------- | ------------- | ---------------- | --------------------------- |
+| 1        | Obsługa zapisu do pliku                                   | 22            | Serhii Zeliuk    | 1                           |
+| 2        | Utworzenie UI w konsoli                                   | 22            | Patryk Skowron   | 0,5                         |
+| 3        | Printowanie kalendarza w konsoli                          | 24            | Adam Tokarz      | 1                           |
+| 4        | Sortowanie zadań po datach i godzinach                    | 24            | Adam Tokarz      | 0,5                         |
+| 5        | Odczytywanie danych z csv                                 | 24            | Adam Tokarz      | 0,5                         |
+| 6        | Obsługa filtrowania zadań                                 | 24            | Adam Tokarz      | 0,5                         |
+| 7        | Obsługa cykliczności, crontab                             | 21            | Tomasz Kurcoń    | 2                           |
+| 8        | Obsługa zapisu do pliku                                   | 21            | Tomasz Kurcoń    | 1                           |
+| 9        | Utworzenie UI w konsoli                                   | 21            | Tomasz Kurcoń    | 2                           |
+| 10       | Wybór użytkowników                                        | 16            | Tomasz Kurcoń    | 1                           |
+| 11       | Odczytywanie danych z csv                                 | 16            | Patryk Skowron   | 0,5                         |
+| 12       | Printowanie zadań innych użytkowników w konsoli           | 16            | Patryk Skowron   | 0,5                         |
+| 13       | Formularz rejestracji konta                               | 1             | Jakub Sikora     | 0,5                         |
+| 14       | Walidacja danych rejestracji                              | 1             | Jakub Sikora     | 1                           |
+| 15       | Zapis nowego użytkownika do CSV                           | 1             | Jakub Sikora     | 0,5                         |
+| 16       | Wykrywanie konfliktów terminów                            | 26            | Jakub Sikora     | 0,5                         |
+| 17       | Wyświetlanie ostrzeżenia o konflikcie                     | 26            | Dominik Mrozek   | 0,5                         |
+| 18       | Porównywanie nakładających się zadań                      | 26            | Serhii Zeliuk    | 2                           |
+| 19       | Sortowanie po godzinie                                    | 25            | Dominik Mrozek   | 0,25                        |
+| 20       | Printowanie zadań w konsoli                               | 25            | Dominik Mrozek   | 0,5                         |
+| 21       | Odczytywanie danych z csv                                 | 15            | Maciej Mężyk     | 0,5                         |
+| 22       | Printowanie zadań w konsoli                               | 15            | Maciej Mężyk     | 0,5                         |
+| 23       | Odczytywanie zadań z csv                                  | 25            | Dominik Mrozek   | 0,25                        |
+| 24       | Lista moich zadań                                         | 15            | Maciej Mężyk     | 0,5                         |
+| 25       | Filtrowanie zadań po zalogowanym użytkowniku              | 15            | Maciej Mężyk     | 0,5                         |
+| 26       | Sortowanie zadań na liście                                | 15            | Mateusz Świątek  | 0,5                         |
+| 27       | Interfejs w konsoli                                       | 2             | Patryk Skowron   | 0,5                         |
+| 28       | Wczytanie użytkowników z pliku                            | 2             | Maciej Trzaskacz | 0,5                         |
+| 29       | Znajdywanie odpowiedniego użytkownika, porównywanie hasła | 2             | Maciej Trzaskacz | 0,5                         |
+| 30       | Ustawienie/Przechowywanie aktualnego użytkownika          | 2             | Maciej Trzaskacz | 0,5                         |
+| 31       | Odczytywanie osób                                         | 8             | Serhii Zeliuk    | 0,5                         |
+| 32       | Obsługa zapisu zadania do pliku                           | 8             | Maciej Trzaskacz | 1                           |
+| 33       | Interfejs UI w konsoli do przypisania zadania             | 8             | Serhii Zeliuk    | 0,5                         |
+| 34       | Zmiana statusu zadania                                    | 14            | Mateusz Świątek  | 0,5                         |
+| 35       | Edycja odpowiedniego obiektu                              | 14            | Mateusz Świątek  | 1                           |
+| 36       | Wypisanie obiektu od nowa w celu potwierdzenia zmian      | 14            | Mateusz Świątek  | 0,5                         |
+
+**SUMA ESTYMACJA CZASOWA TASKÓW:** 25,5 h
