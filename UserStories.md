@@ -108,6 +108,7 @@
 | 28            | 1                     |
 | 29            | 1                     |
 | 30            | 1,5                   |
+| **SUMA**      | **25,5**              |
 
 # 3. Story Points
 
@@ -143,6 +144,7 @@
 | 28            | 3               |
 | 29            | 3               |
 | 30            | 3               |
+| **SUMA**      | **85**          |
 
 # 4. Planning Game
 
@@ -178,3 +180,19 @@
 | 5             | COULD  | Low    | 0    | 0            | 0          | 0          |
 | 9             | COULD  | Low    | 0    | 0            | 0          | 0          |
 | 11            | COULD  | Low    | 0    | 0            | 0          | 0          |
+
+# 5. SCOPE historyjek
+
+| Treść                                                                                                                                         | NR historii | Value | Risk   | SUMA | Completeness | Volatility | Complexity | Story Points | SUMA SP |
+| --------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ----- | ------ | ---- | ------------ | ---------- | ---------- | ------------ | ------- |
+| 24. Jako użytkownik chcę móc przeglądać kalendarz zadań, aby zobaczyć plan obowiązków w czasie. [MUST]                                        | 24          | MUST  | Medium | 4    | 1            | 1          | 2          | 13           | 13      |
+| 21. Jako użytkownik chcę móc ustawić zadanie cykliczne (np. sprzątanie co tydzień), aby nie musieć dodawać go ręcznie za każdym razem. [MUST] | 21          | MUST  | Medium | 4    | 2            | 1          | 1          | 5            | 18      |
+| 16. Jako użytkownik chcę widzieć zadania innych domowników, aby mieć wgląd w podział obowiązków. [MUST]                                       | 16          | MUST  | Medium | 3    | 0            | 1          | 2          | 8            | 26      |
+| 1. Jako użytkownik chcę móc utworzyć konto w aplikacji, aby mieć dostęp do systemu zarządzania zadaniami domowymi. [MUST]                     | 1           | MUST  | Medium | 2    | 1            | 0          | 1          | 3            | 29      |
+| 26. Jako użytkownik chcę widzieć potencjalne konflikty czasowe między zadaniami, aby uniknąć ich nakładania się. [MUST]                       | 26          | MUST  | Medium | 2    | 1            | 0          | 1          | 3            | 32      |
+| 15. Jako użytkownik chcę widzieć listę swoich zadań, aby wiedzieć jakie obowiązki mam do wykonania. [MUST]                                    | 15          | MUST  | Low    | 1    | 0            | 1          | 0          | 1            | 33      |
+| 25. Jako użytkownik chcę widzieć zadania przypisane na dany dzień, aby lepiej zaplanować swój czas. [MUST]                                    | 25          | MUST  | Low    | 1    | 0            | 0          | 1          | 3            | 36      |
+| 2. Jako użytkownik chcę móc się zalogować do aplikacji, aby zobaczyć swoje zadania i obowiązki. [MUST]                                        | 2           | MUST  | Low    | 0    | 0            | 0          | 0          | 2            | 38      |
+| 8. Jako użytkownik chcę móc przypisać zadanie do konkretnej osoby, aby było jasne kto jest odpowiedzialny za jego wykonanie. [MUST]           | 8           | MUST  | Low    | 0    | 0            | 0          | 0          | 1            | 39      |
+| 14. Jako użytkownik chcę móc zmienić status zadania (np. do zrobienia, w trakcie, wykonane), aby pokazać postęp pracy. [MUST]                 | 14          | MUST  | Low    | 0    | 0            | 0          | 0          | 1            | 40      |
+| 22. Jako użytkownik chcę móc tworzyć zadania jednorazowe, aby zarządzać pojedynczymi obowiązkami. [MUST]                                      | 22          | MUST  | Low    | 0    | 0            | 0          | 0          | 3            | 43      |
