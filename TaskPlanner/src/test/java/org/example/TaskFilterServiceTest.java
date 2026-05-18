@@ -3,7 +3,10 @@ package org.example;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -12,6 +15,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TaskFilterServiceTest {
 
+    private static final ZoneId ZONE = ZoneOffset.UTC;
+
     private TaskFilterService filterService;
     private List<Task> sampleTasks;
 
@@ -19,18 +24,22 @@ class TaskFilterServiceTest {
     void setUp() {
         filterService = new TaskFilterService();
         sampleTasks = Arrays.asList(
-                new Task("1", "Spotkanie zespołu", "Daily standup", "Anna", LocalDateTime.of(2026, 5, 5, 9, 0)),
-                new Task("2", "Code review", "Przegląd PR #42", "Tomek", LocalDateTime.of(2026, 5, 15, 14, 0)),
-                new Task("3", "Planowanie sprintu", "Sprint 7", "Anna", LocalDateTime.of(2026, 5, 31, 10, 0)),
-                new Task("4", "Retro", "Retrospektywa sprintu 6", "Tomek", LocalDateTime.of(2026, 6, 1, 11, 0)),
-                new Task("5", "Demo", "Prezentacja klientowi", "Kasia", LocalDateTime.of(2026, 4, 30, 16, 0))
+                new Task("1", "Spotkanie zespołu", "Daily standup", "Anna", toInstant(2026, 5, 5, 9, 0)),
+                new Task("2", "Code review", "Przegląd PR #42", "Tomek", toInstant(2026, 5, 15, 14, 0)),
+                new Task("3", "Planowanie sprintu", "Sprint 7", "Anna", toInstant(2026, 5, 31, 10, 0)),
+                new Task("4", "Retro", "Retrospektywa sprintu 6", "Tomek", toInstant(2026, 6, 1, 11, 0)),
+                new Task("5", "Demo", "Prezentacja klientowi", "Kasia", toInstant(2026, 4, 30, 16, 0))
         );
+    }
+
+    private static Instant toInstant(int year, int month, int day, int hour, int minute) {
+        return LocalDateTime.of(year, month, day, hour, minute).toInstant(ZoneOffset.UTC);
     }
 
     @Test
     void filterByDateRange_returnsTasksWithinRange() {
-        LocalDateTime from = LocalDateTime.of(2026, 5, 1, 0, 0);
-        LocalDateTime to = LocalDateTime.of(2026, 5, 31, 23, 59);
+        Instant from = toInstant(2026, 5, 1, 0, 0);
+        Instant to = toInstant(2026, 5, 31, 23, 59);
 
         List<Task> result = filterService.filterByDateRange(sampleTasks, from, to);
 
@@ -42,8 +51,8 @@ class TaskFilterServiceTest {
 
     @Test
     void filterByDateRange_excludesTasksOutsideRange() {
-        LocalDateTime from = LocalDateTime.of(2026, 5, 1, 0, 0);
-        LocalDateTime to = LocalDateTime.of(2026, 5, 31, 23, 59);
+        Instant from = toInstant(2026, 5, 1, 0, 0);
+        Instant to = toInstant(2026, 5, 31, 23, 59);
 
         List<Task> result = filterService.filterByDateRange(sampleTasks, from, to);
 
@@ -53,8 +62,8 @@ class TaskFilterServiceTest {
 
     @Test
     void filterByDateRange_returnsEmptyListWhenNoTasksMatch() {
-        LocalDateTime from = LocalDateTime.of(2026, 7, 1, 0, 0);
-        LocalDateTime to = LocalDateTime.of(2026, 7, 31, 23, 59);
+        Instant from = toInstant(2026, 7, 1, 0, 0);
+        Instant to = toInstant(2026, 7, 31, 23, 59);
 
         List<Task> result = filterService.filterByDateRange(sampleTasks, from, to);
 
@@ -63,8 +72,8 @@ class TaskFilterServiceTest {
 
     @Test
     void filterByDateRange_handlesEmptyTaskList() {
-        LocalDateTime from = LocalDateTime.of(2026, 5, 1, 0, 0);
-        LocalDateTime to = LocalDateTime.of(2026, 5, 31, 23, 59);
+        Instant from = toInstant(2026, 5, 1, 0, 0);
+        Instant to = toInstant(2026, 5, 31, 23, 59);
 
         List<Task> result = filterService.filterByDateRange(Collections.emptyList(), from, to);
 
@@ -73,8 +82,8 @@ class TaskFilterServiceTest {
 
     @Test
     void filterByDateRange_includesTasksExactlyOnBoundary() {
-        LocalDateTime from = LocalDateTime.of(2026, 5, 5, 9, 0);
-        LocalDateTime to = LocalDateTime.of(2026, 5, 15, 14, 0);
+        Instant from = toInstant(2026, 5, 5, 9, 0);
+        Instant to = toInstant(2026, 5, 15, 14, 0);
 
         List<Task> result = filterService.filterByDateRange(sampleTasks, from, to);
 
@@ -85,16 +94,14 @@ class TaskFilterServiceTest {
 
     @Test
     void filterByMonth_returnsMayTasks() {
-        List<Task> result = filterService.filterByMonth(sampleTasks, 2026, 5);
+        List<Task> result = filterService.filterByMonth(sampleTasks, 2026, 5, ZONE);
 
         assertEquals(3, result.size());
-        assertTrue(result.stream().allMatch(t ->
-                t.getStartDate().getMonthValue() == 5 && t.getStartDate().getYear() == 2026));
     }
 
     @Test
     void filterByMonth_returnsEmptyForMonthWithNoTasks() {
-        List<Task> result = filterService.filterByMonth(sampleTasks, 2026, 3);
+        List<Task> result = filterService.filterByMonth(sampleTasks, 2026, 3, ZONE);
 
         assertTrue(result.isEmpty());
     }

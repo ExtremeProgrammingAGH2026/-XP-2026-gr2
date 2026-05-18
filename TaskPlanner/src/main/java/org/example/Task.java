@@ -1,15 +1,15 @@
 package org.example;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public class Task {
     private String id;
     private String title;
     private String description;
     private String owner;
-    private LocalDateTime startDate;
+    private Instant startDate;
 
-    public Task(String id, String title, String description, String owner, LocalDateTime startDate) {
+    public Task(String id, String title, String description, String owner, Instant startDate) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -33,7 +33,7 @@ public class Task {
         return owner;
     }
 
-    public LocalDateTime getStartDate() {
+    public Instant getStartDate() {
         return startDate;
     }
 }
