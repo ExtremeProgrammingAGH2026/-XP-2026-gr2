@@ -2,7 +2,9 @@ package org.example;
 
 import java.time.Instant;
 
-public class Task {
+import org.example.sorting.HasScheduledTime;
+
+public class Task implements HasScheduledTime {
     private String id;
     private String title;
     private String description;
@@ -34,6 +36,11 @@ public class Task {
     }
 
     public Instant getStartDate() {
+        return startDate;
+    }
+
+    @Override
+    public Instant getScheduledTime() {
         return startDate;
     }
 }
