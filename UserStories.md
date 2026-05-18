@@ -226,7 +226,7 @@
 | 21       | Odczytywanie danych z csv                                 | 15            | Maciej Mężyk     | 0,5                         |
 | 22       | Printowanie zadań w konsoli                               | 15            | Maciej Mężyk     | 0,5                         |
 | 23       | Odczytywanie zadań z csv                                  | 25            | Dominik Mrozek   | 0,25                        |
-| 24       | Lista moich zadań                                         | 15            | Maciej Mężyk     | 0,5                         |
+| 24       | Walidacja danych wpisywanych w UI                         | 22            | Maciej Mężyk     | 0,5                         |
 | 25       | Filtrowanie zadań po zalogowanym użytkowniku              | 15            | Maciej Mężyk     | 0,5                         |
 | 26       | Sortowanie zadań na liście                                | 15            | Mateusz Świątek  | 0,5                         |
 | 27       | Interfejs w konsoli                                       | 2             | Patryk Skowron   | 0,5                         |
