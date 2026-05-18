@@ -5,7 +5,7 @@ import java.io.Reader;
 import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +25,7 @@ public class CSVService {
                 .build();
 
         List<List<String>> rows = new ArrayList<>();
-        try (Reader reader = Files.newBufferedReader(Path.of(path), StandardCharsets.UTF_8); CSVParser parser = csvFormat.parse(reader)) {
+        try (Reader reader = Files.newBufferedReader(Paths.get(path), StandardCharsets.UTF_8); CSVParser parser = csvFormat.parse(reader)) {
             for (CSVRecord record : parser) {
                 List<String> row = new ArrayList<>(record.size());
                 for (String value : record) {
