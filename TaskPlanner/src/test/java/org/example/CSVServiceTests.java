@@ -36,8 +36,14 @@ public class CSVServiceTests {
         List<List<String>> rows = csvService.readCsv(csvPath.toString(), ';');
 
         assertEquals(2, rows.size());
-        assertIterableEquals(List.of("a", "b"), rows.get(0));
-        assertIterableEquals(List.of("c", "d"), rows.get(1));
+        List<String> expected = new java.util.ArrayList<>();
+        expected.add("a");
+        expected.add("b");
+        assertIterableEquals(expected, rows.get(0));
+        List<String> expected1 = new java.util.ArrayList<>();
+        expected1.add("c");
+        expected1.add("d");
+        assertIterableEquals(expected1, rows.get(1));
     }
 
     @Test
@@ -64,8 +70,16 @@ public class CSVServiceTests {
         List<List<String>> rows = csvService.readCsv(csvPath.toString(), ';');
 
         assertEquals(2, rows.size());
-        assertIterableEquals(List.of("Zażółć", "gęślą", "jaźń"), rows.get(0));
-        assertIterableEquals(List.of("ąćęłńóśźż", "€", "漢字"), rows.get(1));
+        List<String> expected = new java.util.ArrayList<>();
+        expected.add("Zażółć");
+        expected.add("gęślą");
+        expected.add("jaźń");
+        assertIterableEquals(expected, rows.get(0));
+        List<String> expected1 = new java.util.ArrayList<>();
+        expected1.add("ąćęłńóśźż");
+        expected1.add("€");
+        expected1.add("漢字");
+        assertIterableEquals(expected1, rows.get(1));
     }
 
     @Test
@@ -81,7 +95,7 @@ public class CSVServiceTests {
 
     private static void writeUtf8(Path path, String content) {
         try {
-            Files.writeString(path, content, StandardCharsets.UTF_8);
+            Files.write(path, content.getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
             fail("Failed to write test CSV file: " + e.getMessage());
         }
