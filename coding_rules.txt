@@ -68,6 +68,7 @@ ZASADY KODOWANIA
 - Korzystać z automatycznego zarządzania importami w IntelliJ
 
 10. TESTY
+- Używamy JUnit 5
 - Logika biznesowa powinna być pokryta testami jednostkowymi
 - Nazwy testów powinny opisywać zachowanie:
   np. shouldReturnUserWhenIdExists
