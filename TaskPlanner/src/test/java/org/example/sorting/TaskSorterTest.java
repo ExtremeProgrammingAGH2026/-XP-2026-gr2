@@ -1,5 +1,6 @@
 package org.example.sorting;
 
+import org.example.Task;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
@@ -14,9 +15,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class TaskSorterTest {
 
     private static HasScheduledTime item(int year, int month, int day, int hour, int minute) {
-        Instant instant = LocalDateTime.of(year, month, day, hour, minute, 0)
-                .toInstant(ZoneOffset.UTC);
-        return () -> instant;
+        return () -> instant(year, month, day, hour, minute);
+    }
+
+    private static Instant instant(int year, int month, int day, int hour, int minute) {
+        return LocalDateTime.of(year, month, day, hour, minute, 0).toInstant(ZoneOffset.UTC);
     }
 
     // --- sorting only by date ---
@@ -196,6 +199,30 @@ class TaskSorterTest {
 
         assertEquals(first, original.get(0));
         assertEquals(second, original.get(1));
+    }
+
+    // --- integration with Task ---
+
+    @Test
+    void shouldSortTasksByDateAscendingAndTimeOfDayDescending() {
+        Instant march10at9 = instant(2024, 3, 10, 9, 0);
+        Instant march10at15 = instant(2024, 3, 10, 15, 0);
+        Instant march8at12 = instant(2024, 3, 8, 12, 0);
+
+        Task taskA = new Task("1", "Odkurzyć", "", "Adam", march10at9);
+        Task taskB = new Task("2", "Umyć naczynia", "", "Adam", march10at15);
+        Task taskC = new Task("3", "Wynieść śmieci", "", "Adam", march8at12);
+
+        List<Task> result = TaskSorter.sort(
+                Arrays.asList(taskA, taskB, taskC),
+                ZoneOffset.UTC,
+                SortOrder.ASC,
+                SortOrder.DESC
+        );
+
+        assertEquals(taskC, result.get(0)); // March 8
+        assertEquals(taskB, result.get(1)); // March 10, 15:00 (later time first — DESC)
+        assertEquals(taskA, result.get(2)); // March 10, 09:00
     }
 
     @Test
