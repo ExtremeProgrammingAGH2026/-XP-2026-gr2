@@ -1,6 +1,8 @@
 package org.example.sorting;
 
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -28,6 +30,22 @@ public class TaskSorter {
             SortOrder dayOrder,
             SortOrder timeOrder
     ) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        Comparator<T> byDay = Comparator.comparing(
+                (T item) -> item.getScheduledTime().atZone(zone).toLocalDate()
+        );
+        if (dayOrder == SortOrder.DESC) {
+            byDay = byDay.reversed();
+        }
+
+        Comparator<T> byTime = Comparator.comparing(
+                (T item) -> item.getScheduledTime().atZone(zone).toLocalTime()
+        );
+        if (timeOrder == SortOrder.DESC) {
+            byTime = byTime.reversed();
+        }
+
+        List<T> result = new ArrayList<>(items);
+        result.sort(byDay.thenComparing(byTime));
+        return result;
     }
 }
