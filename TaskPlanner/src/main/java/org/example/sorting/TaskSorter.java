@@ -1,8 +1,11 @@
 package org.example.sorting;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -30,22 +33,32 @@ public class TaskSorter {
             SortOrder dayOrder,
             SortOrder timeOrder
     ) {
-        Comparator<T> byDay = Comparator.comparing(
-                (T item) -> item.getScheduledTime().atZone(zone).toLocalDate()
-        );
-        if (dayOrder == SortOrder.DESC) {
-            byDay = byDay.reversed();
+        int n = items.size();
+
+        // Precompute keys: O(n) zone conversions instead of O(n log n) during comparisons
+        LocalDate[] dates = new LocalDate[n];
+        LocalTime[] times = new LocalTime[n];
+        for (int i = 0; i < n; i++) {
+            ZonedDateTime zdt = items.get(i).getScheduledTime().atZone(zone);
+            dates[i] = zdt.toLocalDate();
+            times[i] = zdt.toLocalTime();
         }
 
-        Comparator<T> byTime = Comparator.comparing(
-                (T item) -> item.getScheduledTime().atZone(zone).toLocalTime()
-        );
-        if (timeOrder == SortOrder.DESC) {
-            byTime = byTime.reversed();
-        }
+        int dayFactor = dayOrder == SortOrder.ASC ? 1 : -1;
+        int timeFactor = timeOrder == SortOrder.ASC ? 1 : -1;
 
-        List<T> result = new ArrayList<>(items);
-        result.sort(byDay.thenComparing(byTime));
+        Integer[] indices = new Integer[n];
+        for (int i = 0; i < n; i++) indices[i] = i;
+
+        // Comparator touches only pre-built arrays — no allocations in the hot path
+        Arrays.sort(indices, (i, j) -> {
+            int cmp = dayFactor * dates[i].compareTo(dates[j]);
+            if (cmp != 0) return cmp;
+            return timeFactor * times[i].compareTo(times[j]);
+        });
+
+        List<T> result = new ArrayList<>(n);
+        for (int idx : indices) result.add(items.get(idx));
         return result;
     }
 }
