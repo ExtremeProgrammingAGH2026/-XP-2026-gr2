@@ -10,6 +10,7 @@ public class Task implements HasScheduledTime {
     private String description;
     private String owner;
     private Instant startDate;
+    private TaskStatus status;
 
     public Task(String id, String title, String description, String owner, Instant startDate) {
         this.id = id;
@@ -17,6 +18,7 @@ public class Task implements HasScheduledTime {
         this.description = description;
         this.owner = owner;
         this.startDate = startDate;
+        this.status = TaskStatus.NEW;
     }
 
     public String getId() {
@@ -37,6 +39,14 @@ public class Task implements HasScheduledTime {
 
     public Instant getStartDate() {
         return startDate;
+    }
+
+    public TaskStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(TaskStatus status) {
+        this.status = status;
     }
 
     @Override
