@@ -38,7 +38,7 @@ public class Task implements HasScheduledTime {
     }
 
     public Instant getStartDate() {
-        return startDate;
+        return getScheduledTime();
     }
 
     public TaskStatus getStatus() {
