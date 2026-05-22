@@ -1,5 +1,7 @@
 package org.example;
 
+import java.util.Objects;
+
 /**
  * Handles editing of task fields.
  */
@@ -18,7 +20,12 @@ public class TaskEditService {
      * @param newTitle new title; must not be null or blank
      */
     public void editTitle(Task task, String newTitle) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        Objects.requireNonNull(task, "task must not be null");
+        Objects.requireNonNull(newTitle, "newTitle must not be null");
+        if (newTitle.isBlank()) {
+            throw new IllegalArgumentException("newTitle must not be blank");
+        }
+        task.setTitle(newTitle);
     }
 
     /**
@@ -28,7 +35,9 @@ public class TaskEditService {
      * @param newDescription new description; must not be null
      */
     public void editDescription(Task task, String newDescription) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        Objects.requireNonNull(task, "task must not be null");
+        Objects.requireNonNull(newDescription, "newDescription must not be null");
+        task.setDescription(newDescription);
     }
 
     /**
@@ -38,6 +47,7 @@ public class TaskEditService {
      * @param newStatus desired status
      */
     public void editStatus(Task task, TaskStatus newStatus) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        Objects.requireNonNull(task, "task must not be null");
+        taskStatusService.changeStatus(task, newStatus);
     }
 }
