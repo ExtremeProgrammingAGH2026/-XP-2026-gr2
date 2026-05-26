@@ -38,11 +38,19 @@ public class Task implements HasScheduledTime {
     }
 
     public Instant getStartDate() {
-        return startDate;
+        return getScheduledTime();
     }
 
     public TaskStatus getStatus() {
         return status;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public void setStatus(TaskStatus status) {
