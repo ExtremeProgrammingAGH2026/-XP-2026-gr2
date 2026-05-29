@@ -21,7 +21,7 @@ class TaskPrintServiceTest {
     private static final ZoneId ZONE = ZoneId.of("Europe/Warsaw");
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
     private static final String TOP_BORDER = "-------------------------------------------";
-    private static final String BOTTOM_BORDER = "-----------------------------------";
+    private static final String BOTTOM_BORDER = "-------------------------------------------";
 
     private final PrintStream originalOut = System.out;
     private ByteArrayOutputStream output;
