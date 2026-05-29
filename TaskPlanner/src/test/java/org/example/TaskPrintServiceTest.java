@@ -10,7 +10,9 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -64,6 +66,45 @@ class TaskPrintServiceTest {
         assertEquals("No tasks available" + System.lineSeparator(), output.toString());
     }
 
+    @Test
+    void shouldPrintTasksSortedByDate() {
+        Task later = new Task("2", "Shopping", "Buy milk", "Ewa", toInstant(2026, 5, 29, 11, 0));
+        Task earliest = new Task("1", "Clean", "Clean room", "Adam", toInstant(2026, 5, 29, 9, 15));
+        Task middle = new Task("3", "Laundry", "Wash clothes", "Ola", toInstant(2026, 5, 29, 10, 0));
+
+        service.printTasksSortedByDate(List.of(later, earliest, middle));
+
+        assertEquals(expectedFor(sortedByDate(List.of(later, earliest, middle))), output.toString());
+    }
+
+    @Test
+    void shouldPrintTasksFilteredByDateRange() {
+        Task inRangeEarly = new Task("1", "Clean", "Clean room", "Adam", toInstant(2026, 5, 29, 9, 15));
+        Task inRangeLate = new Task("2", "Shopping", "Buy milk", "Ewa", toInstant(2026, 5, 29, 11, 0));
+        Task beforeRange = new Task("3", "Laundry", "Wash clothes", "Ola", toInstant(2026, 5, 29, 8, 0));
+        Task afterRange = new Task("4", "Workout", "Gym", "Adam", toInstant(2026, 5, 29, 12, 30));
+
+        service.printTasksByDateRange(
+                List.of(inRangeLate, beforeRange, inRangeEarly, afterRange),
+                toInstant(2026, 5, 29, 9, 0),
+                toInstant(2026, 5, 29, 11, 0));
+
+        List<Task> expected = sortedByDate(List.of(inRangeEarly, inRangeLate));
+        assertEquals(expectedFor(expected), output.toString());
+    }
+
+    @Test
+    void shouldPrintTasksFilteredByOwner() {
+        Task first = new Task("1", "Clean", "Clean room", "Adam", toInstant(2026, 5, 29, 9, 15));
+        Task second = new Task("2", "Shopping", "Buy milk", "Ewa", toInstant(2026, 5, 29, 11, 0));
+        Task third = new Task("3", "Laundry", "Wash clothes", "Adam", toInstant(2026, 5, 29, 10, 0));
+
+        service.printTasksByOwner(List.of(second, first, third), "Adam");
+
+        List<Task> expected = sortedByDate(List.of(first, third));
+        assertEquals(expectedFor(expected), output.toString());
+    }
+
     private static String expectedFor(List<Task> tasks) {
         StringBuilder builder = new StringBuilder();
         for (Task task : tasks) {
@@ -85,5 +126,11 @@ class TaskPrintServiceTest {
 
     private static Instant toInstant(int year, int month, int day, int hour, int minute) {
         return LocalDateTime.of(year, month, day, hour, minute).atZone(ZONE).toInstant();
+    }
+
+    private static List<Task> sortedByDate(List<Task> tasks) {
+        return tasks.stream()
+                .sorted(Comparator.comparing(Task::getStartDate))
+                .collect(Collectors.toList());
     }
 }
