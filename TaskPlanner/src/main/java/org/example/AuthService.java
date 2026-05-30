@@ -4,7 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AuthService {
-    public static List<User> loadUsers(String filePath) {
+    private final String filePath;
+    
+    public AuthService(String filePath) {
+        this.filePath = filePath;
+    }
+    
+    public List<User> loadUsers() {
         CSVService csvService = new CSVService();
         List<List<String>> rows = csvService.readCsv(filePath, ';');
         List<User> users = new ArrayList<>();
