@@ -1,0 +1,24 @@
+package org.example;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class AuthService {
+    public static List<User> loadUsers(String filePath) {
+        CSVService csvService = new CSVService();
+        List<List<String>> rows = csvService.readCsv(filePath, ';');
+        List<User> users = new ArrayList<>();
+        for (List<String> row : rows) {
+            if (row.size() != 4) {
+                throw new CsvException("Invalid user data format: " + row);
+            }
+            String id = row.get(0);
+            String email = row.get(1);
+            String name = row.get(2);
+            String password = row.get(3);
+            users.add(new User(id, email, name, password));
+        }
+        return users;
+    }
+    
+}
