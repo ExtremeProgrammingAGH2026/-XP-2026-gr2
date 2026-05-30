@@ -27,4 +27,13 @@ public class AuthService {
         return users;
     }
     
+    public User authenticateUser(String email, String password) {
+        List<User> users = loadUsers();
+        for (User user : users) {
+            if (user.getEmail().equals(email) && user.getPassword().equals(password)) {
+                return user;
+            }
+        }
+        return null; // Authentication failed
+    }
 }
