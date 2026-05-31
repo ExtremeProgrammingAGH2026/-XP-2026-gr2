@@ -5,17 +5,17 @@ import java.util.Objects;
 
 public class TaskConflictService {
 
-    public boolean hasConflict(Task task, List<Task> existingTasks) {
-        Objects.requireNonNull(task, "task must not be null");
-        Objects.requireNonNull(existingTasks, "existingTasks must not be null");
+    private final TaskOverlapService taskOverlapService;
 
-        return existingTasks.stream()
-                .filter(existing -> !existing.getId().equals(task.getId()))
-                .anyMatch(existing -> overlaps(task, existing));
+    public TaskConflictService() {
+        this(new TaskOverlapService());
     }
 
-    private boolean overlaps(Task first, Task second) {
-        return first.getStartDate().isBefore(second.getEndDate())
-                && first.getEndDate().isAfter(second.getStartDate());
+    public TaskConflictService(TaskOverlapService taskOverlapService) {
+        this.taskOverlapService = Objects.requireNonNull(taskOverlapService);
+    }
+
+    public boolean hasConflict(Task task, List<Task> existingTasks) {
+        return !taskOverlapService.findOverlappingTasks(task, existingTasks).isEmpty();
     }
 }
