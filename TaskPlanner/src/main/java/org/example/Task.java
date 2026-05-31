@@ -10,14 +10,20 @@ public class Task implements HasScheduledTime {
     private String description;
     private String owner;
     private Instant startDate;
+    private Instant endDate;
     private TaskStatus status;
 
     public Task(String id, String title, String description, String owner, Instant startDate) {
+        this(id, title, description, owner, startDate, startDate);
+    }
+
+    public Task(String id, String title, String description, String owner, Instant startDate, Instant endDate) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.owner = owner;
         this.startDate = startDate;
+        this.endDate = endDate;
         this.status = TaskStatus.NEW;
     }
 
@@ -39,6 +45,10 @@ public class Task implements HasScheduledTime {
 
     public Instant getStartDate() {
         return getScheduledTime();
+    }
+
+    public Instant getEndDate() {
+        return endDate;
     }
 
     public TaskStatus getStatus() {
