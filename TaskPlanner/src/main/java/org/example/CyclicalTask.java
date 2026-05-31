@@ -9,14 +9,13 @@ import com.cronutils.parser.CronParser;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.chrono.ChronoZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class CyclicalTask extends Task{
-    private Instant endDate;
-    private Cron cron;
+    private final Instant endDate;
+    private final Cron cron;
 
     public CyclicalTask(String id, String title, String description, String owner, Instant startDate, Instant endDate, String cronExpression) {
         super(id, title, description, owner, startDate);
