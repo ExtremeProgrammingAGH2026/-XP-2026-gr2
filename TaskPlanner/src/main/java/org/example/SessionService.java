@@ -2,19 +2,24 @@ package org.example;
 
 public class SessionService {
 
+    private User currentUser;
+
     public void login(User user) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        if (user == null) {
+            throw new NullPointerException("user must not be null");
+        }
+        this.currentUser = user;
     }
 
     public User getCurrentUser() {
-        throw new UnsupportedOperationException("Not implemented yet");
+        return currentUser;
     }
 
     public boolean isLoggedIn() {
-        throw new UnsupportedOperationException("Not implemented yet");
+        return currentUser != null;
     }
 
     public void logout() {
-        throw new UnsupportedOperationException("Not implemented yet");
+        this.currentUser = null;
     }
 }
