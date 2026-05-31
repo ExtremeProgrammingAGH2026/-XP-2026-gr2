@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 
 public class TaskListService {
 
+    private static final Comparator<Task> BY_START_DATE = Comparator.comparing(Task::getStartDate);
+
     private final TaskFilterService filterService;
 
     public TaskListService(TaskFilterService filterService) {
@@ -17,7 +19,7 @@ public class TaskListService {
         Objects.requireNonNull(tasks, "tasks must not be null");
         Objects.requireNonNull(owner, "owner must not be null");
         return filterService.filterByOwner(tasks, owner).stream()
-                .sorted(Comparator.comparing(Task::getStartDate))
+                .sorted(BY_START_DATE)
                 .collect(Collectors.toList());
     }
 
