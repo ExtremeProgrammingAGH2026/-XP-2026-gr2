@@ -11,6 +11,11 @@ public class TaskConflictService {
 
         return existingTasks.stream()
                 .filter(existing -> !existing.getId().equals(task.getId()))
-                .anyMatch(existing -> existing.getStartDate().equals(task.getStartDate()));
+                .anyMatch(existing -> overlaps(task, existing));
+    }
+
+    private boolean overlaps(Task first, Task second) {
+        return first.getStartDate().isBefore(second.getEndDate())
+                && first.getEndDate().isAfter(second.getStartDate());
     }
 }
