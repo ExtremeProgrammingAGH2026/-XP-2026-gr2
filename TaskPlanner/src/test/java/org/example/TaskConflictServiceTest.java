@@ -10,44 +10,62 @@ import static org.junit.jupiter.api.Assertions.*;
 class TaskConflictServiceTest {
 
     @Test
-    void shouldDetectConflictWhenTasksHaveSameStartDate() {
+    void shouldDetectConflictWhenTasksOverlap() {
         Task first = new Task("1", "Task 1", "Desc", "Adam",
-                Instant.parse("2026-06-01T10:00:00Z"));
+                Instant.parse("2026-06-01T10:00:00Z"),
+                Instant.parse("2026-06-01T11:00:00Z"));
+
         Task second = new Task("2", "Task 2", "Desc", "Adam",
-                Instant.parse("2026-06-01T10:00:00Z"));
+                Instant.parse("2026-06-01T10:30:00Z"),
+                Instant.parse("2026-06-01T11:30:00Z"));
 
         TaskConflictService service = new TaskConflictService();
 
-        boolean result = service.hasConflict(first, List.of(second));
-
-        assertTrue(result);
+        assertTrue(service.hasConflict(first, List.of(second)));
     }
 
     @Test
-    void shouldNotDetectConflictWhenTasksHaveDifferentStartDate() {
+    void shouldNotDetectConflictWhenTasksDoNotOverlap() {
         Task first = new Task("1", "Task 1", "Desc", "Adam",
-                Instant.parse("2026-06-01T10:00:00Z"));
+                Instant.parse("2026-06-01T10:00:00Z"),
+                Instant.parse("2026-06-01T11:00:00Z"));
+
         Task second = new Task("2", "Task 2", "Desc", "Adam",
+                Instant.parse("2026-06-01T11:00:00Z"),
+                Instant.parse("2026-06-01T12:00:00Z"));
+
+        TaskConflictService service = new TaskConflictService();
+
+        assertFalse(service.hasConflict(first, List.of(second)));
+    }
+
+    @Test
+    void shouldDetectConflictWhenTasksHaveSameStartAndEndDate() {
+        Task first = new Task("1", "Task 1", "Desc", "Adam",
+                Instant.parse("2026-06-01T10:00:00Z"),
+                Instant.parse("2026-06-01T11:00:00Z"));
+
+        Task second = new Task("2", "Task 2", "Desc", "Adam",
+                Instant.parse("2026-06-01T10:00:00Z"),
                 Instant.parse("2026-06-01T11:00:00Z"));
 
         TaskConflictService service = new TaskConflictService();
 
-        boolean result = service.hasConflict(first, List.of(second));
-
-        assertFalse(result);
+        assertTrue(service.hasConflict(first, List.of(second)));
     }
 
     @Test
     void shouldIgnoreTheSameTaskById() {
         Task first = new Task("1", "Task 1", "Desc", "Adam",
-                Instant.parse("2026-06-01T10:00:00Z"));
+                Instant.parse("2026-06-01T10:00:00Z"),
+                Instant.parse("2026-06-01T11:00:00Z"));
+
         Task sameTask = new Task("1", "Task 1", "Desc", "Adam",
-                Instant.parse("2026-06-01T10:00:00Z"));
+                Instant.parse("2026-06-01T10:30:00Z"),
+                Instant.parse("2026-06-01T11:30:00Z"));
 
         TaskConflictService service = new TaskConflictService();
 
-        boolean result = service.hasConflict(first, List.of(sameTask));
-
-        assertFalse(result);
+        assertFalse(service.hasConflict(first, List.of(sameTask)));
     }
 }
