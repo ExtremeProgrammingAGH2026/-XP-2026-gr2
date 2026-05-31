@@ -1,6 +1,9 @@
 package org.example;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class TaskListService {
 
@@ -11,10 +14,16 @@ public class TaskListService {
     }
 
     public List<Task> getMyTasks(List<Task> tasks, String owner) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        Objects.requireNonNull(tasks, "tasks must not be null");
+        Objects.requireNonNull(owner, "owner must not be null");
+        return filterService.filterByOwner(tasks, owner).stream()
+                .sorted(Comparator.comparing(Task::getStartDate))
+                .collect(Collectors.toList());
     }
 
     public List<Task> getMyActiveTasks(List<Task> tasks, String owner) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        return getMyTasks(tasks, owner).stream()
+                .filter(task -> task.getStatus() != TaskStatus.DONE)
+                .collect(Collectors.toList());
     }
 }
