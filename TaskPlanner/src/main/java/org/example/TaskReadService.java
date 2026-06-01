@@ -1,5 +1,7 @@
 package org.example;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -14,6 +16,12 @@ public class TaskReadService {
     private static final String HEADER_ID = "id";
 
     public List<Task> readTasks(String path) {
+        if (path == null) {
+            throw new CsvException("Path cannot be null");
+        }
+        if (!Files.exists(Path.of(path))) {
+            return new ArrayList<>();
+        }
         CSVService csvService = new CSVService();
         List<List<String>> rows = csvService.readCsv(path, ';');
 
