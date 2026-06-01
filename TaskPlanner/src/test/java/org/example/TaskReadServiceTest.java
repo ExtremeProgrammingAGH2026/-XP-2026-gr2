@@ -90,6 +90,13 @@ public class TaskReadServiceTest {
     }
 
     @Test
+    public void shouldReturnEmptyListForNonExistentFile() {
+        String nonExistent = tempDir.resolve("missing.csv").toString();
+        List<Task> tasks = service.readTasks(nonExistent);
+        assertTrue(tasks.isEmpty());
+    }
+
+    @Test
     public void shouldReadAllTaskStatuses() throws IOException {
         Path csv = tempDir.resolve("tasks.csv");
         write(csv, HEADER
