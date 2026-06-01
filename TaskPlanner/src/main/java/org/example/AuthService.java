@@ -5,11 +5,11 @@ import java.util.List;
 
 public class AuthService {
     private final String filePath;
-    
+
     public AuthService(String filePath) {
         this.filePath = filePath;
     }
-    
+
     public List<User> loadUsers() {
         CSVService csvService = new CSVService();
         List<List<String>> rows = csvService.readCsv(filePath, ';');
