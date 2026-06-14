@@ -1,16 +1,11 @@
 package org.example;
 
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 import java.util.UUID;
 
 public class CreateTaskUI {
-
-    private static final ZoneId WARSAW = ZoneId.of("Europe/Warsaw");
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm").withZone(WARSAW);
 
     private final TaskSaveService taskSaveService;
     private final String tasksFilePath;
@@ -51,9 +46,9 @@ public class CreateTaskUI {
             System.out.print(prompt);
             String input = scanner.nextLine().trim();
             try {
-                return ZonedDateTime.parse(input, FORMATTER);
+                return ZonedDateTime.parse(input, DateTimeFormats.FORMATTER);
             } catch (DateTimeParseException e) {
-                System.out.println("Invalid format. Use dd.MM.yyyy HH:mm");
+                System.out.println("Invalid format. Use " + DateTimeFormats.PATTERN);
             }
         }
     }

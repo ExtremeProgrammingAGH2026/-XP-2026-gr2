@@ -1,6 +1,7 @@
 package org.example.registration;
 
 import org.example.AuthService;
+import org.example.CsvConstants;
 import org.example.CsvException;
 import org.example.User;
 
@@ -62,7 +63,8 @@ public class RegistrationService {
 
     private void appendUserToCsv(User user) {
         String row =
-                user.getId() + ";" + user.getEmail() + ";" + user.getName() + ";" + user.getPassword()
+                String.join(CsvConstants.SEPARATOR_STR,
+                        user.getId(), user.getEmail(), user.getName(), user.getPassword())
                         + System.lineSeparator();
         try {
             Files.writeString(Path.of(filePath), row, StandardCharsets.UTF_8,

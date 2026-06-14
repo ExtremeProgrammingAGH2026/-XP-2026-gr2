@@ -5,16 +5,12 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 
 class TaskSaveService {
-
-    private static final ZoneId ZONE = ZoneId.of("Europe/Warsaw");
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-    private static final String HEADER = "id;title;description;owner;startDate;status" + System.lineSeparator();
+    private static final String HEADER = String.join(CsvConstants.SEPARATOR_STR,
+            "id", "title", "description", "owner", "startDate", "status") + System.lineSeparator();
 
     public void saveTask(Task task, String path, boolean append) {
         Objects.requireNonNull(task, "task must not be null");
@@ -48,8 +44,8 @@ class TaskSaveService {
             throw new CsvException("Task fields must not be null");
         }
 
-        String date = DATE_FORMATTER.withZone(ZONE).format(task.getStartDate());
-        return String.join(";",
+        String date = DateTimeFormats.FORMATTER.format(task.getStartDate());
+        return String.join(CsvConstants.SEPARATOR_STR,
                 task.getId(),
                 task.getTitle(),
                 task.getDescription(),
