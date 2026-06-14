@@ -5,6 +5,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class TaskPrintService {
@@ -13,6 +14,12 @@ public class TaskPrintService {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
     private static final String TOP_BORDER = "-------------------------------------------";
     private static final String BOTTOM_BORDER = "-------------------------------------------";
+
+    private final TaskFilterService filterService;
+
+    public TaskPrintService(TaskFilterService filterService) {
+        this.filterService = Objects.requireNonNull(filterService, "filterService must not be null");
+    }
 
     public void printTasks(List<Task> tasks) {
         if (tasks == null || tasks.isEmpty()) {
@@ -33,7 +40,6 @@ public class TaskPrintService {
     }
 
     public void printTasksByDateRange(List<Task> tasks, Instant from, Instant to) {
-        TaskFilterService filterService = new TaskFilterService();
         List<Task> filtered = filterService.filterByDateRange(tasks, from, to).stream()
                 .sorted(Comparator.comparing(Task::getStartDate))
                 .collect(Collectors.toList());
@@ -41,7 +47,6 @@ public class TaskPrintService {
     }
 
     public void printTasksByOwner(List<Task> tasks, String owner) {
-        TaskFilterService filterService = new TaskFilterService();
         List<Task> filtered = filterService.filterByOwner(tasks, owner).stream()
                 .sorted(Comparator.comparing(Task::getStartDate))
                 .collect(Collectors.toList());

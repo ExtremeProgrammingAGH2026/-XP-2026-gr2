@@ -41,7 +41,7 @@ public class MainMenuTest {
 
         AuthService authService = new AuthService(usersFile.toString());
         TaskReadService taskReadService = new TaskReadService();
-        TaskPrintService taskPrintService = new TaskPrintService();
+        TaskPrintService taskPrintService = new TaskPrintService(new TaskFilterService());
         OtherUsersTasksUI otherUsersTasksUI = new OtherUsersTasksUI(
                 authService, taskReadService, taskPrintService, tasksFile.toString());
         CreateTaskUI createTaskUI = new CreateTaskUI(new TaskSaveService(), tasksFile.toString());

@@ -41,7 +41,7 @@ public class OtherUsersTasksUITest {
 
         AuthService authService = new AuthService(usersFile.toString());
         TaskReadService taskReadService = new TaskReadService();
-        TaskPrintService taskPrintService = new TaskPrintService();
+        TaskPrintService taskPrintService = new TaskPrintService(new TaskFilterService());
         ui = new OtherUsersTasksUI(authService, taskReadService, taskPrintService, tasksFile.toString());
     }
 
@@ -98,7 +98,7 @@ public class OtherUsersTasksUITest {
     public void shouldShowMessageWhenNoOtherUsersExist() throws IOException {
         write(usersFile, "1;alice@example.com;Alice;secret");
         AuthService authService = new AuthService(usersFile.toString());
-        ui = new OtherUsersTasksUI(authService, new TaskReadService(), new TaskPrintService(), tasksFile.toString());
+        ui = new OtherUsersTasksUI(authService, new TaskReadService(), new TaskPrintService(new TaskFilterService()), tasksFile.toString());
 
         Scanner scanner = new Scanner("");
         ui.show(scanner, currentUser);

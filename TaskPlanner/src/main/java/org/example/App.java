@@ -28,7 +28,8 @@ public class App {
 
         TaskSaveService taskSaveService = new TaskSaveService();
         TaskReadService taskReadService = new TaskReadService();
-        TaskPrintService taskPrintService = new TaskPrintService();
+        TaskFilterService taskFilterService = new TaskFilterService();
+        TaskPrintService taskPrintService = new TaskPrintService(taskFilterService);
         OtherUsersTasksUI otherUsersTasksUI = new OtherUsersTasksUI(authService, taskReadService, taskPrintService, TASKS_FILE);
         CreateTaskUI createTaskUI = new CreateTaskUI(taskSaveService, TASKS_FILE);
         MainMenu mainMenu = new MainMenu(taskReadService, taskPrintService, otherUsersTasksUI, createTaskUI, TASKS_FILE);

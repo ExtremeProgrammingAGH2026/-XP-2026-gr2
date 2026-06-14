@@ -30,7 +30,7 @@ class TaskPrintServiceTest {
 
     @BeforeEach
     void setUp() {
-        service = new TaskPrintService();
+        service = new TaskPrintService(new TaskFilterService());
         output = new ByteArrayOutputStream();
         System.setOut(new PrintStream(output));
     }
