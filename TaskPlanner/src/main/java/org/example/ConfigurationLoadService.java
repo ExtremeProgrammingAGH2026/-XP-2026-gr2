@@ -4,14 +4,16 @@ import java.io.File;
 import java.io.IOException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jdk.jshell.spi.ExecutionControl;
 
 public class ConfigurationLoadService {
 
+    private final ObjectMapper objectMapper;
+
     public ConfigurationLoadService() {
+        this.objectMapper = new ObjectMapper();
     }
 
     public AppConfiguration loadConfiguration(String filePath) throws IOException {
-        return null;
+        return objectMapper.readValue(new File(filePath), AppConfiguration.class);
     }
 }
