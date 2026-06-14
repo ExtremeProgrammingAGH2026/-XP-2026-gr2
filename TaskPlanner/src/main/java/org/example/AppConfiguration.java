@@ -6,7 +6,7 @@ public class AppConfiguration {
     private String tasksFilePath;
     private int maxLoginAttempts;
     private int minPasswordLength;
-    private String timeZone;
+    private String timeZoneName;
     private String dateTimeFormat;
 
     public String getUsersFilePath() {
@@ -41,12 +41,12 @@ public class AppConfiguration {
         this.minPasswordLength = minPasswordLength;
     }
 
-    public String getTimeZone() {
-        return timeZone;
+    public String getTimeZoneName() {
+        return timeZoneName;
     }
 
-    public void setTimeZone(String timeZone) {
-        this.timeZone = timeZone;
+    public void setTimeZoneName(String timeZoneName) {
+        this.timeZoneName = timeZoneName;
     }
 
     public String getDateTimeFormat() {
