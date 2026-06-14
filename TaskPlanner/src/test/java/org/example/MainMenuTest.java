@@ -56,7 +56,7 @@ public class MainMenuTest {
 
     @Test
     public void shouldDisplayMenuOptions() {
-        Scanner scanner = new Scanner("7\n");
+        Scanner scanner = new Scanner("6\n");
         menu.run(scanner, currentUser);
 
         String out = output.toString();
@@ -65,13 +65,12 @@ public class MainMenuTest {
         assertTrue(out.contains("Create task"));
         assertTrue(out.contains("Show config"));
         assertTrue(out.contains("Save config"));
-        assertTrue(out.contains("Load Json"));
         assertTrue(out.contains("Exit"));
     }
 
     @Test
     public void shouldExitOnChoice4() {
-        Scanner scanner = new Scanner("7\n");
+        Scanner scanner = new Scanner("6\n");
         menu.run(scanner, currentUser);
         assertTrue(output.toString().contains("Exit") || !output.toString().isEmpty());
     }
@@ -81,7 +80,7 @@ public class MainMenuTest {
         write(tasksFile, "id;title;description;owner;startDate;status\n"
                 + "1;Clean;Clean room;Alice;01.06.2026 10:00;NEW");
 
-        Scanner scanner = new Scanner("1\n7\n");
+        Scanner scanner = new Scanner("1\n6\n");
         menu.run(scanner, currentUser);
 
         assertTrue(output.toString().contains("Clean"));
@@ -89,7 +88,7 @@ public class MainMenuTest {
 
     @Test
     public void shouldShowNoTasksWhenFileDoesNotExist() {
-        Scanner scanner = new Scanner("1\n7\n");
+        Scanner scanner = new Scanner("1\n6\n");
         menu.run(scanner, currentUser);
 
         assertTrue(output.toString().contains("No tasks available"));
@@ -100,7 +99,7 @@ public class MainMenuTest {
         write(tasksFile, "id;title;description;owner;startDate;status\n"
                 + "1;Shopping;Buy milk;Bob;01.06.2026 11:00;NEW");
 
-        Scanner scanner = new Scanner("2\n1\n7\n");
+        Scanner scanner = new Scanner("2\n1\n6\n");
         menu.run(scanner, currentUser);
 
         assertTrue(output.toString().contains("Bob"));
@@ -108,7 +107,7 @@ public class MainMenuTest {
 
     @Test
     public void shouldHandleInvalidChoiceAndRetry() {
-        Scanner scanner = new Scanner("99\n7\n");
+        Scanner scanner = new Scanner("99\n6\n");
         menu.run(scanner, currentUser);
 
         assertTrue(output.toString().contains("Invalid choice"));
