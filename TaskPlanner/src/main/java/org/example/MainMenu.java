@@ -1,5 +1,6 @@
 package org.example;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -10,6 +11,8 @@ public class MainMenu {
     private final OtherUsersTasksUI otherUsersTasksUI;
     private final CreateTaskUI createTaskUI;
     private final String tasksFilePath;
+    private final ConfigurationSaveService configurationSaveService;
+    private final AppConfiguration appConfiguration;
 
     public MainMenu(TaskReadService taskReadService, TaskPrintService taskPrintService,
                     OtherUsersTasksUI otherUsersTasksUI, CreateTaskUI createTaskUI,
@@ -19,6 +22,15 @@ public class MainMenu {
         this.otherUsersTasksUI = otherUsersTasksUI;
         this.createTaskUI = createTaskUI;
         this.tasksFilePath = tasksFilePath;
+        // initialize configuration save service and default configuration
+        this.configurationSaveService = new ConfigurationSaveService();
+        this.appConfiguration = new AppConfiguration();
+        this.appConfiguration.setUsersFilePath("data/users.csv");
+        this.appConfiguration.setTasksFilePath(tasksFilePath);
+        this.appConfiguration.setMaxLoginAttempts(3);
+        this.appConfiguration.setMinPasswordLength(8);
+        this.appConfiguration.setTimeZoneName("Europe/Warsaw");
+        this.appConfiguration.setDateTimeFormat("dd.MM.yyyy HH:mm");
     }
 
     public void run(Scanner scanner, User currentUser) {
@@ -27,7 +39,8 @@ public class MainMenu {
             System.out.println("1. My tasks");
             System.out.println("2. Other users' tasks");
             System.out.println("3. Create task");
-            System.out.println("4. Exit");
+            System.out.println("4. Save config");
+            System.out.println("5. Exit");
             System.out.print("Choice: ");
 
             String choice = scanner.nextLine().trim();
@@ -42,6 +55,15 @@ public class MainMenu {
                     createTaskUI.createTask(scanner, currentUser);
                     break;
                 case "4":
+                    try {
+                        String path = "data/config.json";
+                        configurationSaveService.saveConfiguration(appConfiguration, path);
+                        System.out.println("Configuration saved to " + path);
+                    } catch (IOException e) {
+                        System.out.println("Failed to save configuration: " + e.getMessage());
+                    }
+                    break;
+                case "5":
                     return;
                 default:
                     System.out.println("Invalid choice. Try again.");
