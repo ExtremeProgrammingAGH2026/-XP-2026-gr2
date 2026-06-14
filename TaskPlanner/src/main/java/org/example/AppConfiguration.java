@@ -10,50 +10,50 @@ public class AppConfiguration {
     private String dateTimeFormat;
 
     public String getUsersFilePath() {
-        return "";
+        return usersFilePath;
     }
 
     public void setUsersFilePath(String usersFilePath) {
-
+        this.usersFilePath = usersFilePath;
     }
 
     public String getTasksFilePath() {
-        return "";
+        return tasksFilePath;
     }
 
     public void setTasksFilePath(String tasksFilePath) {
-
+        this.tasksFilePath = tasksFilePath;
     }
 
     public int getMaxLoginAttempts() {
-        return 0;
+        return maxLoginAttempts;
     }
 
     public void setMaxLoginAttempts(int maxLoginAttempts) {
-
+        this.maxLoginAttempts = maxLoginAttempts;
     }
 
     public int getMinPasswordLength() {
-        return 0;
+        return minPasswordLength;
     }
 
     public void setMinPasswordLength(int minPasswordLength) {
-
+        this.minPasswordLength = minPasswordLength;
     }
 
     public String getTimeZone() {
-        return "";
+        return timeZone;
     }
 
     public void setTimeZone(String timeZone) {
-
+        this.timeZone = timeZone;
     }
 
     public String getDateTimeFormat() {
-        return "";
+        return dateTimeFormat;
     }
 
     public void setDateTimeFormat(String dateTimeFormat) {
-
+        this.dateTimeFormat = dateTimeFormat;
     }
 }
