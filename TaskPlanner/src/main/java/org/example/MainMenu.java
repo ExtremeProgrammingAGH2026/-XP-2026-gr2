@@ -15,8 +15,8 @@ public class MainMenu {
     private final AppConfiguration appConfiguration;
 
     public MainMenu(TaskReadService taskReadService, TaskPrintService taskPrintService,
-            OtherUsersTasksUI otherUsersTasksUI, CreateTaskUI createTaskUI,
-            String tasksFilePath) {
+                    OtherUsersTasksUI otherUsersTasksUI, CreateTaskUI createTaskUI,
+                    String tasksFilePath) {
         this.taskReadService = taskReadService;
         this.taskPrintService = taskPrintService;
         this.otherUsersTasksUI = otherUsersTasksUI;
@@ -39,9 +39,10 @@ public class MainMenu {
             System.out.println("1. My tasks");
             System.out.println("2. Other users' tasks");
             System.out.println("3. Create task");
-            System.out.println("4. Save config");
-            System.out.println("5. Load Json");
-            System.out.println("6. Exit");
+            System.out.println("4. Show config");
+            System.out.println("5. Save config");
+            System.out.println("6. Load Json");
+            System.out.println("7. Exit");
             System.out.print("Choice: ");
             String path = "data/config.json";
             String choice = scanner.nextLine().trim();
@@ -56,6 +57,16 @@ public class MainMenu {
                     createTaskUI.createTask(scanner, currentUser);
                     break;
                 case "4":
+                    // Print current configuration
+                    System.out.println("Current configuration:");
+                    System.out.println("usersFilePath: " + nullToPlaceholder(appConfiguration.getUsersFilePath()));
+                    System.out.println("tasksFilePath: " + nullToPlaceholder(appConfiguration.getTasksFilePath()));
+                    System.out.println("maxLoginAttempts: " + appConfiguration.getMaxLoginAttempts());
+                    System.out.println("minPasswordLength: " + appConfiguration.getMinPasswordLength());
+                    System.out.println("timeZoneName: " + nullToPlaceholder(appConfiguration.getTimeZoneName()));
+                    System.out.println("dateTimeFormat: " + nullToPlaceholder(appConfiguration.getDateTimeFormat()));
+                    break;
+                case "5":
                     try {
 
                         configurationSaveService.saveConfiguration(appConfiguration, path);
@@ -64,7 +75,7 @@ public class MainMenu {
                         System.out.println("Failed to save configuration: " + e.getMessage());
                     }
                     break;
-                case "5":
+                case "6":
                     try {
                         ConfigurationLoadService loadService = new ConfigurationLoadService();
                         AppConfiguration loadedConfig = loadService.loadConfiguration(path);
@@ -79,7 +90,7 @@ public class MainMenu {
                         System.out.println("Failed to load configuration: " + e.getMessage());
                     }
                     break;
-                case "6":
+                case "7":
                     return;
                 default:
                     System.out.println("Invalid choice. Try again.");
@@ -90,5 +101,9 @@ public class MainMenu {
     private void showMyTasks(User currentUser) {
         List<Task> tasks = taskReadService.readTasks(tasksFilePath);
         taskPrintService.printTasksByOwner(tasks, currentUser.getName());
+    }
+
+    private String nullToPlaceholder(String s) { // helper method to print "(none)" for null values
+        return s == null ? "(none)" : s;
     }
 }
