@@ -56,7 +56,7 @@ public class MainMenu {
                     break;
                 case "4":
                     try {
-                        String path = "config.json";
+                        String path = "data/config.json";
                         configurationSaveService.saveConfiguration(appConfiguration, path);
                         System.out.println("Configuration saved to " + path);
                     } catch (IOException e) {
