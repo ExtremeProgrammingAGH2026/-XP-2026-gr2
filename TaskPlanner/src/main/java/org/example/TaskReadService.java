@@ -2,17 +2,13 @@ package org.example;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TaskReadService {
 
-    private static final ZoneId WARSAW = ZoneId.of("Europe/Warsaw");
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm").withZone(WARSAW);
     private static final String HEADER_ID = "id";
 
     public List<Task> readTasks(String path) {
@@ -48,7 +44,7 @@ public class TaskReadService {
 
         ZonedDateTime startDate;
         try {
-            startDate = ZonedDateTime.parse(dateStr, FORMATTER);
+            startDate = ZonedDateTime.parse(dateStr, DateTimeFormats.FORMATTER);
         } catch (DateTimeParseException e) {
             throw new CsvException("Invalid date format in task row: " + dateStr, e);
         }
