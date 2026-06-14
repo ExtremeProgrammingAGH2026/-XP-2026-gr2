@@ -64,6 +64,7 @@ public class MainMenuTest {
         assertTrue(out.contains("Other users' tasks"));
         assertTrue(out.contains("Create task"));
         assertTrue(out.contains("Save config"));
+        assertTrue(out.contains("Load Json"));
         assertTrue(out.contains("Exit"));
     }
 
