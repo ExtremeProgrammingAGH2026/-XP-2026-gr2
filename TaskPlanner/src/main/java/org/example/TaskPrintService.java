@@ -1,8 +1,6 @@
 package org.example;
 
 import java.time.Instant;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -11,15 +9,17 @@ import java.util.stream.Collectors;
 public class TaskPrintService {
 
     private static final Comparator<Task> BY_START_DATE = Comparator.comparing(Task::getStartDate);
-    private static final ZoneId ZONE = ZoneId.of("Europe/Warsaw");
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-    private static final String TOP_BORDER = "-------------------------------------------";
-    private static final String BOTTOM_BORDER = "-------------------------------------------";
 
     private final TaskFilterService filterService;
+    private final TaskFormatter formatter;
 
     public TaskPrintService(TaskFilterService filterService) {
+        this(filterService, new DefaultTaskFormatter());
+    }
+
+    public TaskPrintService(TaskFilterService filterService, TaskFormatter formatter) {
         this.filterService = Objects.requireNonNull(filterService, "filterService must not be null");
+        this.formatter = Objects.requireNonNull(formatter, "formatter must not be null");
     }
 
     public void printTasks(List<Task> tasks) {
@@ -29,7 +29,7 @@ public class TaskPrintService {
         }
 
         for (Task task : tasks) {
-            printTask(task);
+            System.out.print(formatter.format(task));
         }
     }
 
@@ -51,12 +51,4 @@ public class TaskPrintService {
                 .collect(Collectors.toList());
     }
 
-    private void printTask(Task task) {
-        System.out.println(TOP_BORDER);
-        System.out.println("TASK: " + task.getTitle() + " status: " + task.getStatus().name());
-        System.out.println("Owned by: " + task.getOwner());
-        System.out.println("Start date: " + DATE_FORMATTER.withZone(ZONE).format(task.getStartDate()));
-        System.out.println("Description: " + task.getDescription());
-        System.out.println(BOTTOM_BORDER);
-    }
 }
