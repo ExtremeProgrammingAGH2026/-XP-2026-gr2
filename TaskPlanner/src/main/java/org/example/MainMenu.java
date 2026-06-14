@@ -31,6 +31,24 @@ public class MainMenu {
         this.appConfiguration.setMinPasswordLength(8);
         this.appConfiguration.setTimeZoneName("Europe/Warsaw");
         this.appConfiguration.setDateTimeFormat("dd.MM.yyyy HH:mm");
+
+        // Try to load configuration from file on startup; if loading fails, keep defaults
+        String configPath = "data/config.json";
+        try {
+            ConfigurationLoadService loadService = new ConfigurationLoadService();
+            AppConfiguration loaded = loadService.loadConfiguration(configPath);
+            if (loaded != null) {
+                // copy values (allow nulls to overwrite if present in file)
+                this.appConfiguration.setUsersFilePath(loaded.getUsersFilePath());
+                this.appConfiguration.setTasksFilePath(loaded.getTasksFilePath());
+                this.appConfiguration.setMaxLoginAttempts(loaded.getMaxLoginAttempts());
+                this.appConfiguration.setMinPasswordLength(loaded.getMinPasswordLength());
+                this.appConfiguration.setTimeZoneName(loaded.getTimeZoneName());
+                this.appConfiguration.setDateTimeFormat(loaded.getDateTimeFormat());
+            }
+        } catch (IOException e) {
+            // ignore - keep defaults when config file is missing or unreadable
+        }
     }
 
     public void run(Scanner scanner, User currentUser) {
@@ -41,8 +59,7 @@ public class MainMenu {
             System.out.println("3. Create task");
             System.out.println("4. Show config");
             System.out.println("5. Save config");
-            System.out.println("6. Load Json");
-            System.out.println("7. Exit");
+            System.out.println("6. Exit");
             System.out.print("Choice: ");
             String path = "data/config.json";
             String choice = scanner.nextLine().trim();
@@ -68,7 +85,6 @@ public class MainMenu {
                     break;
                 case "5":
                     try {
-
                         configurationSaveService.saveConfiguration(appConfiguration, path);
                         System.out.println("Configuration saved to " + path);
                     } catch (IOException e) {
@@ -76,21 +92,6 @@ public class MainMenu {
                     }
                     break;
                 case "6":
-                    try {
-                        ConfigurationLoadService loadService = new ConfigurationLoadService();
-                        AppConfiguration loadedConfig = loadService.loadConfiguration(path);
-                        appConfiguration.setUsersFilePath(loadedConfig.getUsersFilePath());
-                        appConfiguration.setTasksFilePath(loadedConfig.getTasksFilePath());
-                        appConfiguration.setMaxLoginAttempts(loadedConfig.getMaxLoginAttempts());
-                        appConfiguration.setMinPasswordLength(loadedConfig.getMinPasswordLength());
-                        appConfiguration.setTimeZoneName(loadedConfig.getTimeZoneName());
-                        appConfiguration.setDateTimeFormat(loadedConfig.getDateTimeFormat());
-                        System.out.println("Configuration loaded from " + path);
-                    } catch (IOException e) {
-                        System.out.println("Failed to load configuration: " + e.getMessage());
-                    }
-                    break;
-                case "7":
                     return;
                 default:
                     System.out.println("Invalid choice. Try again.");
