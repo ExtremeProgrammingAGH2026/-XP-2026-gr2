@@ -40,7 +40,8 @@ public class MainMenu {
             System.out.println("2. Other users' tasks");
             System.out.println("3. Create task");
             System.out.println("4. Save config");
-            System.out.println("5. Exit");
+            System.out.println("5. Load Json");
+            System.out.println("6. Exit");
             System.out.print("Choice: ");
 
             String choice = scanner.nextLine().trim();
@@ -64,6 +65,22 @@ public class MainMenu {
                     }
                     break;
                 case "5":
+                    try {
+                        String path = "data/config.json";
+                        ConfigurationLoadService loadService = new ConfigurationLoadService();
+                        AppConfiguration loadedConfig = loadService.loadConfiguration(path);
+                        appConfiguration.setUsersFilePath(loadedConfig.getUsersFilePath());
+                        appConfiguration.setTasksFilePath(loadedConfig.getTasksFilePath());
+                        appConfiguration.setMaxLoginAttempts(loadedConfig.getMaxLoginAttempts());
+                        appConfiguration.setMinPasswordLength(loadedConfig.getMinPasswordLength());
+                        appConfiguration.setTimeZoneName(loadedConfig.getTimeZoneName());
+                        appConfiguration.setDateTimeFormat(loadedConfig.getDateTimeFormat());
+                        System.out.println("Configuration loaded from " + path);
+                    } catch (IOException e) {
+                        System.out.println("Failed to load configuration: " + e.getMessage());
+                    }
+                    break;
+                case "6":
                     return;
                 default:
                     System.out.println("Invalid choice. Try again.");

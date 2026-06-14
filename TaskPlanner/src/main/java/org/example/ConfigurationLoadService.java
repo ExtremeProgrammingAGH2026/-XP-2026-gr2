@@ -14,6 +14,17 @@ public class ConfigurationLoadService {
     }
 
     public AppConfiguration loadConfiguration(String filePath) throws IOException {
-        return objectMapper.readValue(new File(filePath), AppConfiguration.class); // This will throw an IOException if the file is not found or cannot be read
+        File file = new File(filePath);
+        if (!file.exists()) {
+            AppConfiguration defaultConfig = new AppConfiguration();
+            defaultConfig.setUsersFilePath("data/users.csv");
+            defaultConfig.setTasksFilePath("data/tasks.csv");
+            defaultConfig.setMaxLoginAttempts(3);
+            defaultConfig.setMinPasswordLength(8);
+            defaultConfig.setTimeZoneName("Europe/Warsaw");
+            defaultConfig.setDateTimeFormat("dd.MM.yyyy HH:mm");
+            return defaultConfig;
+        }
+        return objectMapper.readValue(file, AppConfiguration.class);
     }
 }
