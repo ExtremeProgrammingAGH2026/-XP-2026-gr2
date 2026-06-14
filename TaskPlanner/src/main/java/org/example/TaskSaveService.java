@@ -9,7 +9,8 @@ import java.util.List;
 import java.util.Objects;
 
 class TaskSaveService {
-    private static final String HEADER = "id;title;description;owner;startDate;status" + System.lineSeparator();
+    private static final String HEADER = String.join(CsvConstants.SEPARATOR_STR,
+            "id", "title", "description", "owner", "startDate", "status") + System.lineSeparator();
 
     public void saveTask(Task task, String path, boolean append) {
         Objects.requireNonNull(task, "task must not be null");
@@ -44,7 +45,7 @@ class TaskSaveService {
         }
 
         String date = DateTimeFormats.FORMATTER.format(task.getStartDate());
-        return String.join(";",
+        return String.join(CsvConstants.SEPARATOR_STR,
                 task.getId(),
                 task.getTitle(),
                 task.getDescription(),

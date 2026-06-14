@@ -12,7 +12,7 @@ public class AuthService {
 
     public List<User> loadUsers() {
         CSVService csvService = new CSVService();
-        List<List<String>> rows = csvService.readCsv(filePath, ';');
+        List<List<String>> rows = csvService.readCsv(filePath, CsvConstants.SEPARATOR);
         List<User> users = new ArrayList<>();
         for (List<String> row : rows) {
             if (row.size() != 4) {

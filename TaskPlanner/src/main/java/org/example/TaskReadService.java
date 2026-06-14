@@ -19,7 +19,7 @@ public class TaskReadService {
             return new ArrayList<>();
         }
         CSVService csvService = new CSVService();
-        List<List<String>> rows = csvService.readCsv(path, ';');
+        List<List<String>> rows = csvService.readCsv(path, CsvConstants.SEPARATOR);
 
         List<Task> tasks = new ArrayList<>();
         for (List<String> row : rows) {
