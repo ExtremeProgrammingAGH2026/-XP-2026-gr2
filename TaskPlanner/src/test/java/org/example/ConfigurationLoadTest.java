@@ -82,4 +82,23 @@ public class ConfigurationLoadTest {
         // Act & Assert
         assertThrows(IOException.class, () -> service.loadConfiguration(configFile.getAbsolutePath()));
     }
+
+    @Test
+    public void testLoadConfigurationWhenFileDoesNotExist() throws IOException {
+        // Arrange
+        File configFile = tempDir.resolve("non_existent_config.json").toFile();
+        ConfigurationLoadService service = new ConfigurationLoadService();
+
+        // Act
+        AppConfiguration config = service.loadConfiguration(configFile.getAbsolutePath());
+
+        // Assert
+        assertNotNull(config, "Configuration should not be null even if file is missing");
+        assertEquals("data/users.csv", config.getUsersFilePath());
+        assertEquals("data/tasks.csv", config.getTasksFilePath());
+        assertEquals(3, config.getMaxLoginAttempts());
+        assertEquals(8, config.getMinPasswordLength());
+        assertEquals("Europe/Warsaw", config.getTimeZoneName());
+        assertEquals("dd.MM.yyyy HH:mm", config.getDateTimeFormat());
+    }
 }

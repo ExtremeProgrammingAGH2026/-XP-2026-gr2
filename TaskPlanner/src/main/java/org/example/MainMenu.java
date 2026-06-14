@@ -15,8 +15,8 @@ public class MainMenu {
     private final AppConfiguration appConfiguration;
 
     public MainMenu(TaskReadService taskReadService, TaskPrintService taskPrintService,
-                    OtherUsersTasksUI otherUsersTasksUI, CreateTaskUI createTaskUI,
-                    String tasksFilePath) {
+            OtherUsersTasksUI otherUsersTasksUI, CreateTaskUI createTaskUI,
+            String tasksFilePath) {
         this.taskReadService = taskReadService;
         this.taskPrintService = taskPrintService;
         this.otherUsersTasksUI = otherUsersTasksUI;
@@ -40,9 +40,10 @@ public class MainMenu {
             System.out.println("2. Other users' tasks");
             System.out.println("3. Create task");
             System.out.println("4. Save config");
-            System.out.println("5. Exit");
+            System.out.println("5. Load Json");
+            System.out.println("6. Exit");
             System.out.print("Choice: ");
-
+            String path = "data/config.json";
             String choice = scanner.nextLine().trim();
             switch (choice) {
                 case "1":
@@ -56,7 +57,7 @@ public class MainMenu {
                     break;
                 case "4":
                     try {
-                        String path = "data/config.json";
+
                         configurationSaveService.saveConfiguration(appConfiguration, path);
                         System.out.println("Configuration saved to " + path);
                     } catch (IOException e) {
@@ -64,6 +65,21 @@ public class MainMenu {
                     }
                     break;
                 case "5":
+                    try {
+                        ConfigurationLoadService loadService = new ConfigurationLoadService();
+                        AppConfiguration loadedConfig = loadService.loadConfiguration(path);
+                        appConfiguration.setUsersFilePath(loadedConfig.getUsersFilePath());
+                        appConfiguration.setTasksFilePath(loadedConfig.getTasksFilePath());
+                        appConfiguration.setMaxLoginAttempts(loadedConfig.getMaxLoginAttempts());
+                        appConfiguration.setMinPasswordLength(loadedConfig.getMinPasswordLength());
+                        appConfiguration.setTimeZoneName(loadedConfig.getTimeZoneName());
+                        appConfiguration.setDateTimeFormat(loadedConfig.getDateTimeFormat());
+                        System.out.println("Configuration loaded from " + path);
+                    } catch (IOException e) {
+                        System.out.println("Failed to load configuration: " + e.getMessage());
+                    }
+                    break;
+                case "6":
                     return;
                 default:
                     System.out.println("Invalid choice. Try again.");
