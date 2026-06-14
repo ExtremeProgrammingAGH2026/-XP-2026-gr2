@@ -103,7 +103,7 @@ public class MainMenu {
         taskPrintService.printTasksByOwner(tasks, currentUser.getName());
     }
 
-    private String nullToPlaceholder(String s) {
+    private String nullToPlaceholder(String s) { // helper method to print "(none)" for null values
         return s == null ? "(none)" : s;
     }
 }
