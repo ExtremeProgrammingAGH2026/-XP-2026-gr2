@@ -16,7 +16,7 @@ public class ConfigurationLoadTest {
     Path tempDir;
 
     @Test
-    public void testLoadFullConfigurationFromJson() throws IOException {
+    public void testLoadFullConfigurationFromJson() throws IOException { // This test verifies that a fully populated JSON configuration file is correctly loaded into an AppConfiguration object
         // Arrange
         File configFile = tempDir.resolve("config.json").toFile();
         String json = "{\n" +
@@ -45,7 +45,7 @@ public class ConfigurationLoadTest {
     }
 
     @Test
-    public void testLoadConfigurationWithMissingFields() throws IOException {
+    public void testLoadConfigurationWithMissingFields() throws IOException { // This test checks that when a JSON configuration file is missing some fields, the loadConfiguration method still returns a valid AppConfiguration object with default values for the missing fields
         // Arrange: JSON missing most fields -> defaults (ints default to 0, strings to null)
         File configFile = tempDir.resolve("config_partial.json").toFile();
         String json = "{\n" +
@@ -71,7 +71,7 @@ public class ConfigurationLoadTest {
     }
 
     @Test
-    public void testLoadInvalidJsonThrows() throws IOException {
+    public void testLoadInvalidJsonThrows() throws IOException { // This test ensures that if the JSON configuration file is malformed, the loadConfiguration method throws an IOException, indicating that the file could not be read or parsed correctly
         // Arrange
         File configFile = tempDir.resolve("config_invalid.json").toFile();
         String json = "{ invalid json }";

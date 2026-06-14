@@ -10,10 +10,10 @@ public class ConfigurationLoadService {
     private final ObjectMapper objectMapper;
 
     public ConfigurationLoadService() {
-        this.objectMapper = new ObjectMapper();
+        this.objectMapper = new ObjectMapper(); // Default configuration is sufficient for our needs
     }
 
     public AppConfiguration loadConfiguration(String filePath) throws IOException {
-        return objectMapper.readValue(new File(filePath), AppConfiguration.class);
+        return objectMapper.readValue(new File(filePath), AppConfiguration.class); // This will throw an IOException if the file is not found or cannot be read
     }
 }
