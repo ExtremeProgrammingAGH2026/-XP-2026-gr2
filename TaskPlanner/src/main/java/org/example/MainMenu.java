@@ -32,13 +32,13 @@ public class MainMenu {
         this.appConfiguration.setTimeZoneName("Europe/Warsaw");
         this.appConfiguration.setDateTimeFormat("dd.MM.yyyy HH:mm");
 
-        // Try to load configuration from file on startup; if loading fails, keep defaults
+        // Try to load configuration from file on startup; if loading fails, keep the above defaults
         String configPath = "data/config.json";
         try {
             ConfigurationLoadService loadService = new ConfigurationLoadService();
             AppConfiguration loaded = loadService.loadConfiguration(configPath);
             if (loaded != null) {
-                // copy values (allow nulls to overwrite if present in file)
+                // copy values from loaded file to app config (allow nulls to overwrite if present in file)
                 this.appConfiguration.setUsersFilePath(loaded.getUsersFilePath());
                 this.appConfiguration.setTasksFilePath(loaded.getTasksFilePath());
                 this.appConfiguration.setMaxLoginAttempts(loaded.getMaxLoginAttempts());
@@ -47,7 +47,7 @@ public class MainMenu {
                 this.appConfiguration.setDateTimeFormat(loaded.getDateTimeFormat());
             }
         } catch (IOException e) {
-            // ignore - keep defaults when config file is missing or unreadable
+            // ignore - keep the defaults set above when config file is missing or unreadable
         }
     }
 
