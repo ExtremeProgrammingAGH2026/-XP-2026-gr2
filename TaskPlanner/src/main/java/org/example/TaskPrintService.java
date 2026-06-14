@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 public class TaskPrintService {
 
+    private static final Comparator<Task> BY_START_DATE = Comparator.comparing(Task::getStartDate);
     private static final ZoneId ZONE = ZoneId.of("Europe/Warsaw");
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
     private static final String TOP_BORDER = "-------------------------------------------";
@@ -33,24 +34,21 @@ public class TaskPrintService {
     }
 
     public void printTasksSortedByDate(List<Task> tasks) {
-        List<Task> sorted = tasks.stream()
-                .sorted(Comparator.comparing(Task::getStartDate))
-                .collect(Collectors.toList());
-        printTasks(sorted);
+        printTasks(sortByDate(tasks));
     }
 
     public void printTasksByDateRange(List<Task> tasks, Instant from, Instant to) {
-        List<Task> filtered = filterService.filterByDateRange(tasks, from, to).stream()
-                .sorted(Comparator.comparing(Task::getStartDate))
-                .collect(Collectors.toList());
-        printTasks(filtered);
+        printTasks(sortByDate(filterService.filterByDateRange(tasks, from, to)));
     }
 
     public void printTasksByOwner(List<Task> tasks, String owner) {
-        List<Task> filtered = filterService.filterByOwner(tasks, owner).stream()
-                .sorted(Comparator.comparing(Task::getStartDate))
+        printTasks(sortByDate(filterService.filterByOwner(tasks, owner)));
+    }
+
+    private List<Task> sortByDate(List<Task> tasks) {
+        return tasks.stream()
+                .sorted(BY_START_DATE)
                 .collect(Collectors.toList());
-        printTasks(filtered);
     }
 
     private void printTask(Task task) {
