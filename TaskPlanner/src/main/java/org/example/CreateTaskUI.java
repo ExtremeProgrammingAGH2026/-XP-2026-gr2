@@ -70,12 +70,15 @@ public class CreateTaskUI {
     private ZonedDateTime promptEndDate(Scanner scanner, ZonedDateTime startDate) {
         while (true) {
             ZonedDateTime endDate = promptDate(scanner, "End date (" + DateTimeFormats.getPattern() + "): ");
-            if (!endDate.isAfter(startDate)) {
-                System.out.println("End date must be after start date.");
-                continue;
+            if (endIsAfterStart(startDate, endDate)) {
+                return endDate;
             }
-            return endDate;
+            System.out.println("End date must be after start date.");
         }
+    }
+
+    private static boolean endIsAfterStart(ZonedDateTime startDate, ZonedDateTime endDate) {
+        return endDate.isAfter(startDate);
     }
 
     private ZonedDateTime promptDate(Scanner scanner, String prompt) {
