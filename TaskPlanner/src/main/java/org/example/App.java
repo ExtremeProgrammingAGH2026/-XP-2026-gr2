@@ -39,7 +39,7 @@ public class App {
         TaskFilterService taskFilterService = new TaskFilterService();
         TaskPrintService taskPrintService = new TaskPrintService(taskFilterService);
         OtherUsersTasksUI otherUsersTasksUI = new OtherUsersTasksUI(authService, taskReadService, taskPrintService, tasksFile);
-        CreateTaskUI createTaskUI = new CreateTaskUI(taskSaveService, tasksFile);
+        CreateTaskUI createTaskUI = new CreateTaskUI(taskSaveService, authService, tasksFile);
         MainMenu mainMenu = new MainMenu(taskReadService, taskPrintService, otherUsersTasksUI, createTaskUI, tasksFile, config);
 
         User user = startScreen.run(scanner);
