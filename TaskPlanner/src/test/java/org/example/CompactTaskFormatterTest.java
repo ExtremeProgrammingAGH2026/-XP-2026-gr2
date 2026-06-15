@@ -20,7 +20,7 @@ class CompactTaskFormatterTest {
 
         String result = formatter.format(task);
 
-        assertEquals("[NEW] Clean (Adam) - 29.05.2026 10:30" + System.lineSeparator(), result);
+        assertEquals("[NEW] Clean (Adam) 29.05.2026 10:30 - 29.05.2026 10:30" + System.lineSeparator(), result);
     }
 
     @Test
@@ -30,7 +30,7 @@ class CompactTaskFormatterTest {
 
         String result = formatter.format(task);
 
-        assertEquals("[DONE] Shopping (Ewa) - 29.05.2026 11:00" + System.lineSeparator(), result);
+        assertEquals("[DONE] Shopping (Ewa) 29.05.2026 11:00 - 29.05.2026 11:00" + System.lineSeparator(), result);
     }
 
     private static Instant toInstant(int year, int month, int day, int hour, int minute) {

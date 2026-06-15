@@ -114,6 +114,7 @@ class TaskPrintServiceTest {
                     .append(System.lineSeparator());
             builder.append("Owned by: ").append(task.getOwner()).append(System.lineSeparator());
             builder.append("Start date: ").append(formatDate(task.getStartDate())).append(System.lineSeparator());
+            builder.append("End date: ").append(formatDate(task.getEndDate())).append(System.lineSeparator());
             builder.append("Description: ").append(task.getDescription()).append(System.lineSeparator());
             builder.append(BOTTOM_BORDER).append(System.lineSeparator());
         }

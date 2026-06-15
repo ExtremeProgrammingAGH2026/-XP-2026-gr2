@@ -14,6 +14,8 @@ public class DefaultTaskFormatter implements TaskFormatter {
         sb.append("Owned by: ").append(task.getOwner()).append(System.lineSeparator());
         sb.append("Start date: ").append(DateTimeFormats.FORMATTER.format(task.getStartDate()))
                 .append(System.lineSeparator());
+        sb.append("End date: ").append(DateTimeFormats.FORMATTER.format(task.getEndDate()))
+                .append(System.lineSeparator());
         sb.append("Description: ").append(task.getDescription()).append(System.lineSeparator());
         sb.append(BOTTOM_BORDER).append(System.lineSeparator());
         return sb.toString();

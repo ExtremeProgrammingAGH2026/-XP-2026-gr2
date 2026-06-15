@@ -6,8 +6,9 @@ public class CompactTaskFormatter implements TaskFormatter {
     public String format(Task task) {
         return "[" + task.getStatus().name() + "] "
                 + task.getTitle()
-                + " (" + task.getOwner() + ") - "
+                + " (" + task.getOwner() + ") "
                 + DateTimeFormats.FORMATTER.format(task.getStartDate())
+                + " - " + DateTimeFormats.FORMATTER.format(task.getEndDate())
                 + System.lineSeparator();
     }
 }

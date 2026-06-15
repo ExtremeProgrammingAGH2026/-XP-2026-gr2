@@ -24,6 +24,7 @@ class DefaultTaskFormatterTest {
                 + "TASK: Clean status: NEW" + System.lineSeparator()
                 + "Owned by: Adam" + System.lineSeparator()
                 + "Start date: 29.05.2026 10:30" + System.lineSeparator()
+                + "End date: 29.05.2026 10:30" + System.lineSeparator()
                 + "Description: Clean room" + System.lineSeparator()
                 + "-------------------------------------------" + System.lineSeparator();
 
