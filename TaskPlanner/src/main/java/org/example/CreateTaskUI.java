@@ -163,10 +163,7 @@ public class CreateTaskUI {
                 return null;
             }
             try {
-                LocalDateTime dateTime = LocalDateTime.parse(input, DateTimeFormats.getFormatter());
-                ZoneId zone = DateTimeFormats.getZone();
-                return dateTime.atZone(zone).toInstant();
-            } catch (DateTimeParseException e) {
+                return ZonedDateTime.parse(input, DateTimeFormats.getFormatter()).toInstant();
                 System.out.println("Invalid format. Use " + DateTimeFormats.getPattern());
             }
         }
