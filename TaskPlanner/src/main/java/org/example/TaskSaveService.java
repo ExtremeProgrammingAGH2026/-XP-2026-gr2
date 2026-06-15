@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 
@@ -45,16 +46,18 @@ class TaskSaveService {
             throw new CsvException("Task fields must not be null");
         }
 
-        String startDate = DateTimeFormats.STORAGE_FORMATTER.format(task.getStartDate());
-        String endDate = DateTimeFormats.STORAGE_FORMATTER.format(task.getEndDate());
         return String.join(CsvConstants.SEPARATOR_STR,
                 task.getId(),
                 task.getTitle(),
                 task.getDescription(),
                 task.getOwner(),
-                startDate,
-                endDate,
+                storageDate(task.getStartDate()),
+                storageDate(task.getEndDate()),
                 task.getStatus().name()) + System.lineSeparator();
+    }
+
+    private static String storageDate(Instant instant) {
+        return DateTimeFormats.STORAGE_FORMATTER.format(instant);
     }
 
     private static void writeFile(String path, String content, boolean append) {
