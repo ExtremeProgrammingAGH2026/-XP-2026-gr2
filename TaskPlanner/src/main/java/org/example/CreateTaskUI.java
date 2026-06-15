@@ -4,13 +4,13 @@ import org.example.recurring.RecurringTask;
 import org.example.recurring.RecurrencePattern;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class CreateTaskUI {
 
@@ -18,21 +18,19 @@ public class CreateTaskUI {
     private final TaskReadService taskReadService;
     private final TaskConflictService taskConflictService;
     private final TaskConflictWarningService taskConflictWarningService;
+    private final AuthService authService;
     private final String tasksFilePath;
 
-    public CreateTaskUI(TaskSaveService taskSaveService, String tasksFilePath) {
-        this(taskSaveService, new TaskReadService(), new TaskConflictService(),
-                new TaskConflictWarningService(), tasksFilePath);
-    }
-
-    public CreateTaskUI(TaskSaveService taskSaveService, TaskReadService taskReadService,
-                        TaskConflictService taskConflictService,
-                        TaskConflictWarningService taskConflictWarningService,
-                        String tasksFilePath) {
+    public CreateTaskUI(
+            TaskSaveService taskSaveService,
+            AuthService authService,
+            String tasksFilePath
+    ) {
         this.taskSaveService = taskSaveService;
-        this.taskReadService = taskReadService;
-        this.taskConflictService = taskConflictService;
-        this.taskConflictWarningService = taskConflictWarningService;
+        this.taskReadService = new TaskReadService();
+        this.taskConflictService = new TaskConflictService();
+        this.taskConflictWarningService = new TaskConflictWarningService();
+        this.authService = authService;
         this.tasksFilePath = tasksFilePath;
     }
 
@@ -45,7 +43,12 @@ public class CreateTaskUI {
         System.out.print("Description: ");
         String description = scanner.nextLine().trim();
 
-        ZonedDateTime startDate = promptDate(scanner, "Start date (" + DateTimeFormats.getPattern() + "): ");
+        User assignee = promptAssignee(scanner, currentUser);
+
+        ZonedDateTime startDate = promptDate(
+                scanner,
+                "Start date (" + DateTimeFormats.getPattern() + "): "
+        );
         ZonedDateTime endDate = promptEndDate(scanner, startDate);
         boolean recurring = promptYesNo(scanner, "Recurring task? (y/n): ");
 
@@ -55,31 +58,38 @@ public class CreateTaskUI {
             Instant recurrenceEndDate = promptOptionalDate(scanner,
                 "Recurrence end date (blank = no limit, " + DateTimeFormats.getPattern() + "): ");
             task = new RecurringTask(
-                UUID.randomUUID().toString(),
-                title,
-                description,
-                currentUser.getName(),
-                startDate.toInstant(),
-                endDate.toInstant(),
-                recurrencePattern,
-                recurrenceEndDate
+                    UUID.randomUUID().toString(),
+                    title,
+                    description,
+                    assignee.getName(),
+                    startDate.toInstant(),
+                    endDate.toInstant(),
+                    recurrencePattern,
+                    recurrenceEndDate
             );
         } else {
             task = new Task(
-                UUID.randomUUID().toString(),
-                title,
-                description,
-                currentUser.getName(),
-                startDate.toInstant(),
-                endDate.toInstant()
+                    UUID.randomUUID().toString(),
+                    title,
+                    description,
+                    assignee.getName(),
+                    startDate.toInstant(),
+                    endDate.toInstant()
             );
         }
 
         List<Task> existingTasks = taskReadService.readTasks(tasksFilePath);
-        if (taskConflictService.hasConflict(task, existingTasks)) {
-            taskConflictWarningService.printConflictWarning(task, existingTasks);
+
+        List<Task> assigneeTasks = existingTasks.stream()
+                .filter(existing -> assignee.getName().equals(existing.getOwner()))
+                .collect(Collectors.toList());
+
+        if (taskConflictService.hasConflict(task, assigneeTasks)) {
+            taskConflictWarningService.printConflictWarning(task, assigneeTasks);
+
             System.out.print("Task has conflicts. Create anyway? (y/n): ");
             String answer = scanner.nextLine().trim();
+
             if (!answer.equalsIgnoreCase("y")) {
                 System.out.println("Task creation cancelled.");
                 return null;
@@ -87,8 +97,64 @@ public class CreateTaskUI {
         }
 
         taskSaveService.saveTask(task, tasksFilePath, true);
-        System.out.println("Task created.");
+        System.out.println(
+                "Task assigned to " + assignee.getName() + " and created."
+        );
         return task;
+    }
+
+    private User promptAssignee(Scanner scanner, User currentUser) {
+        List<User> users = new ArrayList<>(authService.loadUsers());
+
+        boolean currentUserPresent = users.stream()
+                .anyMatch(user -> user.getId().equals(currentUser.getId()));
+
+        if (!currentUserPresent) {
+            users.add(0, currentUser);
+        }
+
+        if (users.size() == 1) {
+            System.out.println(
+                    "Task assigned to: " + users.get(0).getName()
+            );
+            return users.get(0);
+        }
+
+        System.out.println("Assign task to:");
+
+        for (int i = 0; i < users.size(); i++) {
+            User user = users.get(i);
+
+            String currentUserMarker =
+                    user.getId().equals(currentUser.getId())
+                            ? " (you)"
+                            : "";
+
+            System.out.println(
+                    (i + 1) + ". "
+                            + user.getName()
+                            + currentUserMarker
+            );
+        }
+
+        while (true) {
+            System.out.print(
+                    "Select user (1-" + users.size() + "): "
+            );
+
+            String input = scanner.nextLine().trim();
+
+            try {
+                int index = Integer.parseInt(input) - 1;
+
+                if (index >= 0 && index < users.size()) {
+                    return users.get(index);
+                }
+            } catch (NumberFormatException ignored) {
+            }
+
+            System.out.println("Invalid choice. Try again.");
+        }
     }
 
     private ZonedDateTime promptEndDate(Scanner scanner, ZonedDateTime startDate) {

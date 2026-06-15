@@ -11,6 +11,9 @@ import java.nio.file.Path;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Scanner;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -49,10 +52,28 @@ public class DateFormatChangeTest {
     }
 
     @Test
-    public void newFormatIsAcceptedAndOldFormatIsRejected() {
+    public void newFormatIsAcceptedAndOldFormatIsRejected() throws IOException {
         String tasksFile = tempDir.resolve("tasks.csv").toString();
-        CreateTaskUI ui = new CreateTaskUI(new TaskSaveService(), tasksFile);
-        User user = new User("1", "alice@example.com", "Alice", "secret");
+        String usersFile = tempDir.resolve("users.csv").toString();
+
+        Files.writeString(
+                Path.of(usersFile),
+                "1;alice@example.com;Alice;secret",
+                StandardCharsets.UTF_8
+        );
+
+        CreateTaskUI ui = new CreateTaskUI(
+                new TaskSaveService(),
+                new AuthService(usersFile),
+                tasksFile
+        );
+
+        User user = new User(
+                "1",
+                "alice@example.com",
+                "Alice",
+                "secret"
+        );
 
         // start: old format first (must be rejected), then new format (accepted); end: new format
         Scanner scanner = new Scanner("Buy milk\ndesc\n15.06.2026 10:00\n2026-06-15 10:00\n2026-06-15 11:00\nn\n");

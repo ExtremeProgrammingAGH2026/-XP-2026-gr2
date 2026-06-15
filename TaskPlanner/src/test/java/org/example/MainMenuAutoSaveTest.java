@@ -56,7 +56,11 @@ public class MainMenuAutoSaveTest {
         TaskPrintService print = new TaskPrintService(new TaskFilterService());
         AuthService auth = new AuthService(tempDir.resolve("users.csv").toString());
         OtherUsersTasksUI other = new OtherUsersTasksUI(auth, read, print, tasksFile);
-        CreateTaskUI create = new CreateTaskUI(new TaskSaveService(), tasksFile);
+        CreateTaskUI create = new CreateTaskUI(
+                new TaskSaveService(),
+                auth,
+                tasksFile
+        );
         return new MainMenu(read, print, other, create, tasksFile, config, configPath);
     }
 
