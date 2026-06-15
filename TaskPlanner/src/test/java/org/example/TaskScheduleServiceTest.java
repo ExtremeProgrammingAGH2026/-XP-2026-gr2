@@ -42,6 +42,6 @@ class TaskScheduleServiceTest {
     }
 
     private static Instant instant(int year, int month, int day, int hour, int minute) {
-        return LocalDateTime.of(year, month, day, hour, minute).toInstant(ZoneOffset.UTC);
+        return LocalDateTime.of(year, month, day, hour, minute).atZone(WARSAW).toInstant();
     }
 }
