@@ -11,6 +11,8 @@ import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -105,19 +107,36 @@ public class MainMenuTest {
     }
 
     @Test
-    public void shouldShowMyTasksFilteredByDateRange() throws IOException {
+    public void shouldShowMyTasksFilteredBySelectedDay() throws IOException {
         write(tasksFile, "id;title;description;owner;startDate;status\n"
                 + "1;Morning;Desc;Alice;01.06.2026 08:00;NEW\n"
                 + "2;Afternoon;Desc;Alice;01.06.2026 14:00;NEW\n"
-                + "3;Evening;Desc;Alice;01.06.2026 20:00;NEW");
+                + "3;Evening;Desc;Alice;02.06.2026 20:00;NEW");
 
-        Scanner scanner = new Scanner("1\ny\n01.06.2026 07:00\n01.06.2026 15:00\n8\n");
+        Scanner scanner = new Scanner("1\ny\n2\n01.06.2026\n8\n");
         menu.run(scanner, currentUser);
 
         String out = output.toString();
         assertTrue(out.contains("Morning"));
         assertTrue(out.contains("Afternoon"));
         assertFalse(out.contains("Evening"));
+    }
+
+    @Test
+    public void shouldShowTodayTasksWhenTodayOptionSelected() throws IOException {
+        LocalDate today = LocalDate.now(ZoneId.of("Europe/Warsaw"));
+        LocalDate otherDay = today.minusDays(1);
+
+        write(tasksFile, "id;title;description;owner;startDate;status\n"
+                + "1;TodayTask;Desc;Alice;" + formatDay(today) + " 10:00;NEW\n"
+                + "2;OtherTask;Desc;Alice;" + formatDay(otherDay) + " 10:00;NEW");
+
+        Scanner scanner = new Scanner("1\ny\n1\n8\n");
+        menu.run(scanner, currentUser);
+
+        String out = output.toString();
+        assertTrue(out.contains("TodayTask"));
+        assertFalse(out.contains("OtherTask"));
     }
 
     @Test
@@ -156,5 +175,9 @@ public class MainMenuTest {
 
     private static void write(Path path, String content) throws IOException {
         Files.write(path, content.getBytes(StandardCharsets.UTF_8));
+    }
+
+    private static String formatDay(LocalDate date) {
+        return String.format("%02d.%02d.%d", date.getDayOfMonth(), date.getMonthValue(), date.getYear());
     }
 }

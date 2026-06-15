@@ -123,22 +123,24 @@ Po zalogowaniu wyświetla się menu:
 1. My tasks
 2. Other users' tasks
 3. Create task
-4. Show config
-5. Edit config
-6. Save config
-7. Exit
+4. Change task status
+5. Show config
+6. Edit config
+7. Save config
+8. Exit
 Choice:
 ```
 
 | Opcja | Opis |
 |-------|------|
-| **1** | Wyświetla listę zadań zalogowanego użytkownika |
+| **1** | Wyświetla zadania zalogowanego użytkownika (z opcjonalnym filtrem po dniu) |
 | **2** | Przeglądanie zadań innych użytkowników |
-| **3** | Tworzenie nowego zadania |
-| **4** | Wyświetlenie aktualnej konfiguracji |
-| **5** | Edycja wybranego pola konfiguracji |
-| **6** | Zapis konfiguracji do pliku |
-| **7** | Wyjście z aplikacji |
+| **3** | Tworzenie nowego zadania (z pytaniem, czy zadanie ma być cykliczne) |
+| **4** | Zmiana statusu zadania |
+| **5** | Wyświetlenie aktualnej konfiguracji |
+| **6** | Edycja wybranego pola konfiguracji |
+| **7** | Zapis konfiguracji do pliku |
+| **8** | Wyjście z aplikacji |
 
 ## Tworzenie zadania
 
@@ -150,6 +152,26 @@ Title: Spotkanie z klientem
 Description: Omówienie wymagań projektu
 Start date (dd.MM.yyyy HH:mm): 15.06.2026 10:00
 End date (dd.MM.yyyy HH:mm): 15.06.2026 11:30
+Recurring task? (y/n): n
+Task created.
+```
+
+Jeśli użytkownik odpowie `y`, aplikacja pyta dodatkowo o:
+
+- wzorzec cykliczności (`DAILY`, `WEEKLY`, `BIWEEKLY`, `MONTHLY`)
+- opcjonalną datę końca cykliczności (może być pusta)
+
+Przykład:
+
+```
+Recurring task? (y/n): y
+Select recurrence pattern:
+1. DAILY
+2. WEEKLY
+3. BIWEEKLY
+4. MONTHLY
+Choice: 2
+Recurrence end date (blank = no limit, dd.MM.yyyy HH:mm): 31.12.2026 23:59
 Task created.
 ```
 
@@ -167,7 +189,32 @@ Zadanie jest automatycznie przypisywane do zalogowanego użytkownika i zapisywan
 
 ## Moje zadania
 
-Po wybraniu opcji **1** wyświetlane są zadania zalogowanego użytkownika, posortowane po dacie rozpoczęcia:
+Po wybraniu opcji **1** aplikacja pyta, czy chcesz filtrować po dacie:
+
+```
+Filter by date? (y/n): y
+Date filter:
+1. Today
+2. Other day
+Choice:
+```
+
+- `n` -> wyświetlane są wszystkie zadania zalogowanego użytkownika
+- `y` + `1` -> wyświetlane są zadania z dzisiejszego dnia
+- `y` + `2` -> aplikacja pyta o dzień w formacie `dd.MM.yyyy` i wyświetla zadania tylko z tego dnia
+
+Przykład dla innego dnia:
+
+```
+Filter by date? (y/n): y
+Date filter:
+1. Today
+2. Other day
+Choice: 2
+Day (dd.MM.yyyy): 15.06.2026
+```
+
+Wyświetlenie zadań:
 
 ```
 -------------------------------------------
@@ -206,6 +253,7 @@ No other users in the system.
 ## Konfiguracja
 
 ### Wyświetlanie konfiguracji (opcja 4)
+### Wyświetlanie konfiguracji (opcja 5)
 
 ```
 Current configuration:
@@ -217,9 +265,9 @@ Current configuration:
 6. dateTimeFormat: dd.MM.yyyy HH:mm
 ```
 
-### Edycja konfiguracji (opcja 5)
+### Edycja konfiguracji (opcja 6)
 
-Po wybraniu opcji **5** wyświetlana jest lista pól z numerami. Użytkownik wybiera numer pola do edycji i wpisuje nową wartość:
+Po wybraniu opcji **6** wyświetlana jest lista pól z numerami. Użytkownik wybiera numer pola do edycji i wpisuje nową wartość:
 
 ```
 Current configuration:
@@ -231,12 +279,12 @@ Current configuration:
 6. dateTimeFormat: dd.MM.yyyy HH:mm
 Select field to edit (1-6): 3
 New value: 5
-Configuration updated. Use 'Save config' to persist changes.
+Configuration updated and saved to data/config.json
 ```
 
-Zmiany obowiązują natychmiast w bieżącej sesji, ale **nie są automatycznie zapisywane** do pliku. Aby zachować zmiany na stałe, należy użyć opcji **6. Save config**.
+Zmiany obowiązują natychmiast i są automatycznie zapisywane do pliku konfiguracyjnego.
 
-### Zapis konfiguracji (opcja 6)
+### Zapis konfiguracji (opcja 7)
 
 Konfiguracja zapisywana jest do pliku `data/config.json` w formacie JSON. Przy kolejnym uruchomieniu aplikacja automatycznie wczytuje konfigurację z tego pliku.
 
@@ -261,11 +309,19 @@ Format: `id;email;name;password`
 
 ### tasks.csv
 
-Format z nagłówkiem: `id;title;description;owner;startDate;status`
+Aktualny format z nagłówkiem:
+
+`id;title;description;owner;startDate;endDate;status;type;recurrencePattern;recurrenceEndDate`
 
 ```
-id;title;description;owner;startDate;status
-a1b2c3d4;Spotkanie;Omówienie projektu;Jan Kowalski;15.06.2026 10:00;NEW
+id;title;description;owner;startDate;endDate;status;type;recurrencePattern;recurrenceEndDate
+a1b2c3d4;Spotkanie;Omówienie projektu;Jan Kowalski;15.06.2026 10:00;15.06.2026 11:00;NEW;NORMAL;;
+b1c2d3e4;Sprzątanie;Co tydzień;Jan Kowalski;15.06.2026 18:00;15.06.2026 19:00;NEW;RECURRING;WEEKLY;31.12.2026 23:59
 ```
+
+Kompatybilność wsteczna:
+
+- aplikacja nadal czyta starszy format `id;title;description;owner;startDate;status`
+- przy ponownym zapisie dane zostaną zapisane już w nowym, rozszerzonym formacie
 
 **Możliwe statusy zadania:** `NEW`, `IN_PROGRESS`, `DONE`

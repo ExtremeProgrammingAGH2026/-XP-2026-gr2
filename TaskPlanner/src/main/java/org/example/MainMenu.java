@@ -1,6 +1,7 @@
 package org.example;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -14,6 +15,7 @@ public class MainMenu {
     private final TaskPrintService taskPrintService;
     private final TaskSaveService taskSaveService;
     private final TaskEditService taskEditService;
+    private final TaskScheduleService taskScheduleService;
     private final OtherUsersTasksUI otherUsersTasksUI;
     private final CreateTaskUI createTaskUI;
     private final String tasksFilePath;
@@ -44,6 +46,8 @@ public class MainMenu {
         this.taskPrintService = taskPrintService;
         this.taskSaveService = taskSaveService;
         this.taskEditService = taskEditService;
+        ZoneId zone = resolveZone(appConfiguration);
+        this.taskScheduleService = new TaskScheduleService(zone);
         this.otherUsersTasksUI = otherUsersTasksUI;
         this.createTaskUI = createTaskUI;
         this.tasksFilePath = tasksFilePath;
@@ -102,35 +106,53 @@ public class MainMenu {
 
     private void showMyTasks(Scanner scanner, User currentUser) {
         List<Task> tasks = taskReadService.readTasks(tasksFilePath);
-        System.out.print("Filter by date range? (y/n): ");
+        System.out.print("Filter by date? (y/n): ");
         String answer = scanner.nextLine().trim();
         if (answer.equalsIgnoreCase("y")) {
-            showMyTasksByDateRange(scanner, tasks, currentUser);
+            showMyTasksByDay(scanner, tasks, currentUser);
         } else {
             taskPrintService.printTasksByOwner(tasks, currentUser.getName());
         }
     }
 
-    private void showMyTasksByDateRange(Scanner scanner, List<Task> tasks, User currentUser) {
-        ZonedDateTime from = promptDate(scanner, "From (dd.MM.yyyy HH:mm): ");
-        if (from == null) return;
-        ZonedDateTime to = promptDate(scanner, "To (dd.MM.yyyy HH:mm): ");
-        if (to == null) return;
+    private void showMyTasksByDay(Scanner scanner, List<Task> tasks, User currentUser) {
+        LocalDate day = promptDayChoice(scanner);
+        if (day == null) {
+            return;
+        }
 
-        List<Task> myTasks = tasks.stream()
+        List<Task> dayTasks = taskScheduleService.getTasksForDay(tasks, day).stream()
                 .filter(t -> t.getOwner().equals(currentUser.getName()))
                 .collect(java.util.stream.Collectors.toList());
-        taskPrintService.printTasksByDateRange(myTasks, from.toInstant(), to.toInstant());
+        taskPrintService.printTasksSortedByDate(dayTasks);
     }
 
-    private ZonedDateTime promptDate(Scanner scanner, String prompt) {
-        System.out.print(prompt);
-        String input = scanner.nextLine().trim();
-        try {
-            return ZonedDateTime.parse(input, DateTimeFormats.getFormatter());
-        } catch (DateTimeParseException e) {
-            System.out.println("Invalid date format.");
-            return null;
+    private LocalDate promptDayChoice(Scanner scanner) {
+        while (true) {
+            System.out.println("Date filter:");
+            System.out.println("1. Today");
+            System.out.println("2. Other day");
+            System.out.print("Choice: ");
+            String choice = scanner.nextLine().trim();
+            if ("1".equals(choice)) {
+                return LocalDate.now(resolveZone(appConfiguration));
+            }
+            if ("2".equals(choice)) {
+                return promptDay(scanner);
+            }
+            System.out.println("Invalid choice. Try again.");
+        }
+    }
+
+    private LocalDate promptDay(Scanner scanner) {
+        while (true) {
+            System.out.print("Day (dd.MM.yyyy): ");
+            String input = scanner.nextLine().trim();
+            try {
+                return LocalDate.parse(input, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid date format.");
+            }
         }
     }
 
@@ -291,5 +313,13 @@ public class MainMenu {
 
     private String nullToPlaceholder(String s) {
         return s == null ? "(none)" : s;
+    }
+
+    private static ZoneId resolveZone(AppConfiguration appConfiguration) {
+        if (appConfiguration != null && appConfiguration.getTimeZoneName() != null
+                && !appConfiguration.getTimeZoneName().isBlank()) {
+            return ZoneId.of(appConfiguration.getTimeZoneName());
+        }
+        return DateTimeFormats.getZone();
     }
 }

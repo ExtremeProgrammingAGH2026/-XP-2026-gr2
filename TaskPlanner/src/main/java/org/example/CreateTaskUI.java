@@ -1,5 +1,11 @@
 package org.example;
 
+import org.example.recurring.RecurringTask;
+import org.example.recurring.RecurrencePattern;
+
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
@@ -41,15 +47,33 @@ public class CreateTaskUI {
 
         ZonedDateTime startDate = promptDate(scanner, "Start date (" + DateTimeFormats.getPattern() + "): ");
         ZonedDateTime endDate = promptEndDate(scanner, startDate);
+        boolean recurring = promptYesNo(scanner, "Recurring task? (y/n): ");
 
-        Task task = new Task(
+        Task task;
+        if (recurring) {
+            RecurrencePattern recurrencePattern = promptRecurrencePattern(scanner);
+            Instant recurrenceEndDate = promptOptionalDate(scanner,
+                "Recurrence end date (blank = no limit, " + DateTimeFormats.getPattern() + "): ");
+            task = new RecurringTask(
+                UUID.randomUUID().toString(),
+                title,
+                description,
+                currentUser.getName(),
+                startDate.toInstant(),
+                endDate.toInstant(),
+                recurrencePattern,
+                recurrenceEndDate
+            );
+        } else {
+            task = new Task(
                 UUID.randomUUID().toString(),
                 title,
                 description,
                 currentUser.getName(),
                 startDate.toInstant(),
                 endDate.toInstant()
-        );
+            );
+        }
 
         List<Task> existingTasks = taskReadService.readTasks(tasksFilePath);
         if (taskConflictService.hasConflict(task, existingTasks)) {
@@ -84,6 +108,61 @@ public class CreateTaskUI {
             String input = scanner.nextLine().trim();
             try {
                 return ZonedDateTime.parse(input, DateTimeFormats.getFormatter());
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid format. Use " + DateTimeFormats.getPattern());
+            }
+        }
+    }
+
+    private boolean promptYesNo(Scanner scanner, String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            String input = scanner.nextLine().trim();
+            if (input.equalsIgnoreCase("y")) {
+                return true;
+            }
+            if (input.equalsIgnoreCase("n")) {
+                return false;
+            }
+            System.out.println("Please answer y or n.");
+        }
+    }
+
+    private RecurrencePattern promptRecurrencePattern(Scanner scanner) {
+        while (true) {
+            System.out.println("Select recurrence pattern:");
+            System.out.println("1. DAILY");
+            System.out.println("2. WEEKLY");
+            System.out.println("3. BIWEEKLY");
+            System.out.println("4. MONTHLY");
+            System.out.print("Choice: ");
+            String input = scanner.nextLine().trim();
+            switch (input) {
+                case "1":
+                    return RecurrencePattern.DAILY;
+                case "2":
+                    return RecurrencePattern.WEEKLY;
+                case "3":
+                    return RecurrencePattern.BIWEEKLY;
+                case "4":
+                    return RecurrencePattern.MONTHLY;
+                default:
+                    System.out.println("Invalid choice. Try again.");
+            }
+        }
+    }
+
+    private Instant promptOptionalDate(Scanner scanner, String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            String input = scanner.nextLine().trim();
+            if (input.isEmpty()) {
+                return null;
+            }
+            try {
+                LocalDateTime dateTime = LocalDateTime.parse(input, DateTimeFormats.getFormatter());
+                ZoneId zone = DateTimeFormats.getZone();
+                return dateTime.atZone(zone).toInstant();
             } catch (DateTimeParseException e) {
                 System.out.println("Invalid format. Use " + DateTimeFormats.getPattern());
             }

@@ -19,11 +19,14 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.example.recurring.RecurringTask;
+import org.example.recurring.RecurrencePattern;
+
 class TaskSaveServiceTest {
 
     private static final ZoneId ZONE = ZoneId.of("Europe/Warsaw");
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-    private static final String HEADER = "id;title;description;owner;startDate;status" + System.lineSeparator();
+    private static final String HEADER = "id;title;description;owner;startDate;endDate;status;type;recurrencePattern;recurrenceEndDate" + System.lineSeparator();
 
     @TempDir
     Path tempDir;
@@ -112,18 +115,45 @@ class TaskSaveServiceTest {
         assertEquals(HEADER + rowFor(task), Files.readString(csvPath));
     }
 
+    @Test
+    void shouldSaveRecurringTaskWithRecurrenceMetadata() throws IOException {
+        Path csvPath = tempDir.resolve("tasks.csv");
+        RecurringTask task = new RecurringTask(
+                "1",
+                "Cleaning",
+                "Weekly cleaning",
+                "Adam",
+                toInstant(2026, 5, 29, 10, 30),
+                toInstant(2026, 5, 29, 11, 0),
+                RecurrencePattern.WEEKLY,
+                toInstant(2026, 6, 30, 11, 0)
+        );
+
+        service.saveTask(task, csvPath.toString(), false);
+
+        assertTrue(Files.readString(csvPath).contains("RECURRING"));
+        assertTrue(Files.readString(csvPath).contains("WEEKLY"));
+    }
+
     private static Instant toInstant(int year, int month, int day, int hour, int minute) {
         return LocalDateTime.of(year, month, day, hour, minute).atZone(ZONE).toInstant();
     }
 
     private static String rowFor(Task task) {
         String date = DATE_FORMATTER.withZone(ZONE).format(task.getStartDate());
+        String endDate = DATE_FORMATTER.withZone(ZONE).format(task.getEndDate());
         return String.join(";",
                 task.getId(),
                 task.getTitle(),
                 task.getDescription(),
                 task.getOwner(),
                 date,
-                task.getStatus().name()) + System.lineSeparator();
+            endDate,
+            task.getStatus().name(),
+            task instanceof RecurringTask ? "RECURRING" : "NORMAL",
+            task instanceof RecurringTask ? ((RecurringTask) task).getRecurrencePattern().name() : "",
+            task instanceof RecurringTask && ((RecurringTask) task).getRecurrenceEndDate() != null
+                ? DATE_FORMATTER.withZone(ZONE).format(((RecurringTask) task).getRecurrenceEndDate().atZone(ZONE))
+                : "") + System.lineSeparator();
     }
 }
