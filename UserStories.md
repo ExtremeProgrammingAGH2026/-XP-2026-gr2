@@ -240,4 +240,19 @@
 | 35       | Edycja odpowiedniego obiektu                              | 14            | Mateusz Świątek  | 1                           |
 | 36       | Wypisanie obiektu od nowa w celu potwierdzenia zmian      | 14            | Mateusz Świątek  | 0,5                         |
 
+1. „Jako użytkownik/administrator programu chciałbym mieć możliwość zapisania pełnej konfiguracji programu (wszystkie parametry - takie jak np. parametry połączenia z bazą danych, z zewnętrznymi serwerami, dane dostępowe dla administratora, ścieżki do plików, itp.) w pliku w formacie JSON.”
+
+2. „Jako użytkownik/administrator programu chciałbym, żeby program przy starcie wczytywał konfiguracje z pliku JSON, a jeśli nie znajdzie pliku JSON w bieżącym katalogu, żeby przyjmował domyślne wartości parametrów konfiguracyjnych”
+
 **SUMA ESTYMACJA CZASOWA TASKÓW:** 25,5 h
+
+| Task                                      | Nr historyjki | Osoba            | Estymacja czasowa tasku (h) |
+| :---------------------------------------- | :-----------: | :--------------- | :-------------------------: |
+| Zapisywanie configa (save json)           |       1       | Adam Tokarz      |             0,5             |
+| Wczytywanie configa (load json)           |       2       | Maciej Trzaskacz |             0,5             |
+| Wczytywanie configa gdy json nie istnieje |       2       | Adam Tokarz      |              1              |
+| Zapisywanie configa jako opcja w menu     |       1       | Maciej Trzaskacz |              1              |
+| Automatyczne wczytywanie configa          |       2       | Adam Tokarz      |              1              |
+| Wyświetlanie wczytanego configa           |       2       | Maciej Trzaskacz |              1              |
+
+**SUMA**: 5h
