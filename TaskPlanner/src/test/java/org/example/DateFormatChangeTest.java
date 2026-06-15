@@ -55,7 +55,7 @@ public class DateFormatChangeTest {
         User user = new User("1", "alice@example.com", "Alice", "secret");
 
         // start: old format first (must be rejected), then new format (accepted); end: new format
-        Scanner scanner = new Scanner("Buy milk\ndesc\n15.06.2026 10:00\n2026-06-15 10:00\n2026-06-15 11:00\n");
+        Scanner scanner = new Scanner("Buy milk\ndesc\n15.06.2026 10:00\n2026-06-15 10:00\n2026-06-15 11:00\nn\n");
         Task task = ui.createTask(scanner, user);
 
         assertNotNull(task, "task should be created once a valid new-format date is given");
