@@ -26,7 +26,7 @@ public class TaskReadService {
             if (row.isEmpty() || row.get(0).equals(HEADER_ID)) {
                 continue;
             }
-            if (row.size() != 6) {
+            if (row.size() != 6 && row.size() != 7) {
                 throw new CsvException("Invalid task row format: " + row);
             }
             tasks.add(parseRow(row));
@@ -39,10 +39,20 @@ public class TaskReadService {
         String title = row.get(1);
         String description = row.get(2);
         String owner = row.get(3);
-        String dateStr = row.get(4);
-        String statusStr = row.get(5);
 
-        ZonedDateTime startDate = parseDate(dateStr);
+        ZonedDateTime startDate = parseDate(row.get(4));
+
+        // 7 columns: id;title;description;owner;startDate;endDate;status
+        // 6 columns (legacy): no endDate -> default the end to the start
+        ZonedDateTime endDate;
+        String statusStr;
+        if (row.size() == 7) {
+            endDate = parseDate(row.get(5));
+            statusStr = row.get(6);
+        } else {
+            endDate = startDate;
+            statusStr = row.get(5);
+        }
 
         TaskStatus status;
         try {
@@ -51,7 +61,7 @@ public class TaskReadService {
             throw new CsvException("Invalid task status: " + statusStr, e);
         }
 
-        Task task = new Task(id, title, description, owner, startDate.toInstant());
+        Task task = new Task(id, title, description, owner, startDate.toInstant(), endDate.toInstant());
         task.setStatus(status);
         return task;
     }
