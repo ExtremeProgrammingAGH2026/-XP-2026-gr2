@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 
@@ -73,6 +74,10 @@ class TaskSaveService {
                 type,
                 recurrencePattern,
                 recurrenceEndDate) + System.lineSeparator();
+    }
+
+    private static String storageDate(Instant instant) {
+        return DateTimeFormats.STORAGE_FORMATTER.format(instant);
     }
 
     private static void writeFile(String path, String content, boolean append) {
