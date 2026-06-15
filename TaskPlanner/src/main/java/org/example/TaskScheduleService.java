@@ -31,8 +31,7 @@ public class TaskScheduleService {
         Instant from = date.atStartOfDay(zone).toInstant();
         Instant to = date.plusDays(1).atStartOfDay(zone).toInstant().minusNanos(1);
         return expandForWindow(tasks, from, to).stream()
-                .filter(task -> !task.getStartDate().isAfter(to) && !task.getStartDate().isBefore(from))
-                .sorted(BY_START_DATE)
+                .filter(task -> !task.getStartDate().isAfter(to) && !task.getEndDate().isBefore(from))
                 .collect(Collectors.toList());
     }
 
