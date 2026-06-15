@@ -90,7 +90,7 @@ public class MainMenuTest {
         write(tasksFile, "id;title;description;owner;startDate;status\n"
                 + "1;Clean;Clean room;Alice;01.06.2026 10:00;NEW");
 
-        Scanner scanner = new Scanner("1\n8\n");
+        Scanner scanner = new Scanner("1\nn\n8\n");
         menu.run(scanner, currentUser);
 
         assertTrue(output.toString().contains("Clean"));
@@ -98,10 +98,26 @@ public class MainMenuTest {
 
     @Test
     public void shouldShowNoTasksWhenFileDoesNotExist() {
-        Scanner scanner = new Scanner("1\n8\n");
+        Scanner scanner = new Scanner("1\nn\n8\n");
         menu.run(scanner, currentUser);
 
         assertTrue(output.toString().contains("No tasks available"));
+    }
+
+    @Test
+    public void shouldShowMyTasksFilteredByDateRange() throws IOException {
+        write(tasksFile, "id;title;description;owner;startDate;status\n"
+                + "1;Morning;Desc;Alice;01.06.2026 08:00;NEW\n"
+                + "2;Afternoon;Desc;Alice;01.06.2026 14:00;NEW\n"
+                + "3;Evening;Desc;Alice;01.06.2026 20:00;NEW");
+
+        Scanner scanner = new Scanner("1\ny\n01.06.2026 07:00\n01.06.2026 15:00\n8\n");
+        menu.run(scanner, currentUser);
+
+        String out = output.toString();
+        assertTrue(out.contains("Morning"));
+        assertTrue(out.contains("Afternoon"));
+        assertFalse(out.contains("Evening"));
     }
 
     @Test

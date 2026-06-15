@@ -1,6 +1,8 @@
 package org.example;
 
 import java.io.IOException;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -55,7 +57,7 @@ public class MainMenu {
             String choice = scanner.nextLine().trim();
             switch (choice) {
                 case "1":
-                    showMyTasks(currentUser);
+                    showMyTasks(scanner, currentUser);
                     break;
                 case "2":
                     otherUsersTasksUI.show(scanner, currentUser);
@@ -88,9 +90,38 @@ public class MainMenu {
         }
     }
 
-    private void showMyTasks(User currentUser) {
+    private void showMyTasks(Scanner scanner, User currentUser) {
         List<Task> tasks = taskReadService.readTasks(tasksFilePath);
-        taskPrintService.printTasksByOwner(tasks, currentUser.getName());
+        System.out.print("Filter by date range? (y/n): ");
+        String answer = scanner.nextLine().trim();
+        if (answer.equalsIgnoreCase("y")) {
+            showMyTasksByDateRange(scanner, tasks, currentUser);
+        } else {
+            taskPrintService.printTasksByOwner(tasks, currentUser.getName());
+        }
+    }
+
+    private void showMyTasksByDateRange(Scanner scanner, List<Task> tasks, User currentUser) {
+        ZonedDateTime from = promptDate(scanner, "From (dd.MM.yyyy HH:mm): ");
+        if (from == null) return;
+        ZonedDateTime to = promptDate(scanner, "To (dd.MM.yyyy HH:mm): ");
+        if (to == null) return;
+
+        List<Task> myTasks = tasks.stream()
+                .filter(t -> t.getOwner().equals(currentUser.getName()))
+                .collect(java.util.stream.Collectors.toList());
+        taskPrintService.printTasksByDateRange(myTasks, from.toInstant(), to.toInstant());
+    }
+
+    private ZonedDateTime promptDate(Scanner scanner, String prompt) {
+        System.out.print(prompt);
+        String input = scanner.nextLine().trim();
+        try {
+            return ZonedDateTime.parse(input, DateTimeFormats.FORMATTER);
+        } catch (DateTimeParseException e) {
+            System.out.println("Invalid date format.");
+            return null;
+        }
     }
 
     private void changeTaskStatus(Scanner scanner, User currentUser) {
