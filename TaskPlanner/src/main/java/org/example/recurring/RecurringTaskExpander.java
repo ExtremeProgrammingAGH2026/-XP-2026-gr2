@@ -60,7 +60,7 @@ public class RecurringTaskExpander {
 
         int count = 0;
         while (!current.toInstant().isAfter(effectiveEnd)) {
-            if (count++ > MAX_OCCURRENCES) {
+            if (count++ >= MAX_OCCURRENCES) {
                 break;
             }
             Instant occurrenceStart = current.toInstant();
