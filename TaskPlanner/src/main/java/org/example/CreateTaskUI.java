@@ -21,61 +21,15 @@ public class CreateTaskUI {
     private final AuthService authService;
     private final String tasksFilePath;
 
-    public CreateTaskUI(TaskSaveService taskSaveService, String tasksFilePath) {
-        this(
-                taskSaveService,
-                new TaskReadService(),
-                new TaskConflictService(),
-                new TaskConflictWarningService(),
-                null,
-                tasksFilePath
-        );
-    }
-
     public CreateTaskUI(
             TaskSaveService taskSaveService,
-            AuthService authService,
-            String tasksFilePath
-    ) {
-        this(
-                taskSaveService,
-                new TaskReadService(),
-                new TaskConflictService(),
-                new TaskConflictWarningService(),
-                authService,
-                tasksFilePath
-        );
-    }
-
-    public CreateTaskUI(
-            TaskSaveService taskSaveService,
-            TaskReadService taskReadService,
-            TaskConflictService taskConflictService,
-            TaskConflictWarningService taskConflictWarningService,
-            String tasksFilePath
-    ) {
-        this(
-                taskSaveService,
-                taskReadService,
-                taskConflictService,
-                taskConflictWarningService,
-                null,
-                tasksFilePath
-        );
-    }
-
-    public CreateTaskUI(
-            TaskSaveService taskSaveService,
-            TaskReadService taskReadService,
-            TaskConflictService taskConflictService,
-            TaskConflictWarningService taskConflictWarningService,
             AuthService authService,
             String tasksFilePath
     ) {
         this.taskSaveService = taskSaveService;
-        this.taskReadService = taskReadService;
-        this.taskConflictService = taskConflictService;
-        this.taskConflictWarningService = taskConflictWarningService;
+        this.taskReadService = new TaskReadService();
+        this.taskConflictService = new TaskConflictService();
+        this.taskConflictWarningService = new TaskConflictWarningService();
         this.authService = authService;
         this.tasksFilePath = tasksFilePath;
     }
@@ -150,10 +104,6 @@ public class CreateTaskUI {
     }
 
     private User promptAssignee(Scanner scanner, User currentUser) {
-        if (authService == null) {
-            return currentUser;
-        }
-
         List<User> users = new ArrayList<>(authService.loadUsers());
 
         boolean currentUserPresent = users.stream()
