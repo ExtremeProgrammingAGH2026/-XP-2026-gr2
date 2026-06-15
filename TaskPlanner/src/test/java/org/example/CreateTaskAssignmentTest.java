@@ -89,4 +89,33 @@ class CreateTaskAssignmentTest {
                 Files.readString(tasksFile).contains(";Bob;")
         );
     }
+
+    @Test
+    void shouldIgnoreConflictsBelongingToAnotherUser() throws IOException {
+        Files.writeString(
+                tasksFile,
+                "id;title;description;owner;startDate;endDate;"
+                        + "status;type;recurrencePattern;recurrenceEndDate"
+                        + System.lineSeparator()
+                        + "existing;Alice task;Description;Alice;"
+                        + "15.06.2026 10:00;15.06.2026 11:00;"
+                        + "NEW;NORMAL;;"
+                        + System.lineSeparator(),
+                StandardCharsets.UTF_8
+        );
+
+        Scanner scanner = new Scanner(
+                "Bob task\n"
+                        + "Description\n"
+                        + "2\n"
+                        + "15.06.2026 10:00\n"
+                        + "15.06.2026 11:00\n"
+                        + "n\n"
+        );
+
+        Task task = createTaskUI.createTask(scanner, currentUser);
+
+        assertNotNull(task);
+        assertEquals("Bob", task.getOwner());
+    }
 }
