@@ -8,6 +8,14 @@ public final class DateTimeFormats {
     private static final String DEFAULT_PATTERN = "dd.MM.yyyy HH:mm";
     private static final String DEFAULT_ZONE = "Europe/Warsaw";
 
+    /**
+     * Canonical, immutable format used to persist dates in the CSV files.
+     * Independent of the display config, so changing the display format never
+     * rewrites or orphans already-stored data.
+     */
+    public static final DateTimeFormatter STORAGE_FORMATTER =
+            DateTimeFormatter.ofPattern(DEFAULT_PATTERN).withZone(ZoneId.of(DEFAULT_ZONE));
+
     private static String pattern = DEFAULT_PATTERN;
     private static ZoneId zone = ZoneId.of(DEFAULT_ZONE);
     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern).withZone(zone);

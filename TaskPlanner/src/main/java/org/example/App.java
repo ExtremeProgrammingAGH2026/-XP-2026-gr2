@@ -6,6 +6,8 @@ import org.example.registration.RegistrationValidator;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public class App {
@@ -15,7 +17,7 @@ public class App {
     public static void main(String[] args) throws IOException {
         Files.createDirectories(Path.of("data"));
 
-        AppConfiguration config = loadConfiguration();
+        AppConfiguration config = normalize(loadConfiguration());
         DateTimeFormats.init(config);
         String usersFile = config.getUsersFilePath();
         String tasksFile = config.getTasksFilePath();
@@ -50,14 +52,65 @@ public class App {
         try {
             return new ConfigurationLoadService().loadConfiguration(CONFIG_FILE);
         } catch (IOException e) {
-            AppConfiguration defaults = new AppConfiguration();
-            defaults.setUsersFilePath("data/users.csv");
-            defaults.setTasksFilePath("data/tasks.csv");
-            defaults.setMaxLoginAttempts(3);
-            defaults.setMinPasswordLength(8);
-            defaults.setTimeZoneName("Europe/Warsaw");
-            defaults.setDateTimeFormat("dd.MM.yyyy HH:mm");
-            return defaults;
+            return new AppConfiguration();
+        }
+    }
+
+    /**
+     * Replaces missing or nonsensical config values with safe defaults, so a
+     * hand-edited or partial config.json (e.g. minPasswordLength 0, an unknown
+     * time zone, or a garbage date pattern) can never crash the app.
+     */
+    static AppConfiguration normalize(AppConfiguration config) {
+        if (config == null) {
+            config = new AppConfiguration();
+        }
+        if (isBlank(config.getUsersFilePath())) {
+            config.setUsersFilePath("data/users.csv");
+        }
+        if (isBlank(config.getTasksFilePath())) {
+            config.setTasksFilePath("data/tasks.csv");
+        }
+        if (config.getMaxLoginAttempts() < 1) {
+            config.setMaxLoginAttempts(3);
+        }
+        if (config.getMinPasswordLength() < 1) {
+            config.setMinPasswordLength(8);
+        }
+        if (!isValidZone(config.getTimeZoneName())) {
+            config.setTimeZoneName("Europe/Warsaw");
+        }
+        if (!isValidPattern(config.getDateTimeFormat())) {
+            config.setDateTimeFormat("dd.MM.yyyy HH:mm");
+        }
+        return config;
+    }
+
+    private static boolean isBlank(String value) {
+        return value == null || value.isBlank();
+    }
+
+    private static boolean isValidZone(String zoneName) {
+        if (zoneName == null) {
+            return false;
+        }
+        try {
+            ZoneId.of(zoneName);
+            return true;
+        } catch (RuntimeException e) {
+            return false;
+        }
+    }
+
+    private static boolean isValidPattern(String pattern) {
+        if (pattern == null) {
+            return false;
+        }
+        try {
+            DateTimeFormatter.ofPattern(pattern);
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
         }
     }
 }
