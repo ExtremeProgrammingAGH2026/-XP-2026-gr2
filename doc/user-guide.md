@@ -124,8 +124,9 @@ Po zalogowaniu wyświetla się menu:
 2. Other users' tasks
 3. Create task
 4. Show config
-5. Save config
-6. Exit
+5. Edit config
+6. Save config
+7. Exit
 Choice:
 ```
 
@@ -135,8 +136,9 @@ Choice:
 | **2** | Przeglądanie zadań innych użytkowników |
 | **3** | Tworzenie nowego zadania |
 | **4** | Wyświetlenie aktualnej konfiguracji |
-| **5** | Zapis konfiguracji do pliku |
-| **6** | Wyjście z aplikacji |
+| **5** | Edycja wybranego pola konfiguracji |
+| **6** | Zapis konfiguracji do pliku |
+| **7** | Wyjście z aplikacji |
 
 ## Tworzenie zadania
 
@@ -207,15 +209,34 @@ No other users in the system.
 
 ```
 Current configuration:
-usersFilePath: data/users.csv
-tasksFilePath: data/tasks.csv
-maxLoginAttempts: 3
-minPasswordLength: 8
-timeZoneName: Europe/Warsaw
-dateTimeFormat: dd.MM.yyyy HH:mm
+1. usersFilePath: data/users.csv
+2. tasksFilePath: data/tasks.csv
+3. maxLoginAttempts: 3
+4. minPasswordLength: 8
+5. timeZoneName: Europe/Warsaw
+6. dateTimeFormat: dd.MM.yyyy HH:mm
 ```
 
-### Zapis konfiguracji (opcja 5)
+### Edycja konfiguracji (opcja 5)
+
+Po wybraniu opcji **5** wyświetlana jest lista pól z numerami. Użytkownik wybiera numer pola do edycji i wpisuje nową wartość:
+
+```
+Current configuration:
+1. usersFilePath: data/users.csv
+2. tasksFilePath: data/tasks.csv
+3. maxLoginAttempts: 3
+4. minPasswordLength: 8
+5. timeZoneName: Europe/Warsaw
+6. dateTimeFormat: dd.MM.yyyy HH:mm
+Select field to edit (1-6): 3
+New value: 5
+Configuration updated. Use 'Save config' to persist changes.
+```
+
+Zmiany obowiązują natychmiast w bieżącej sesji, ale **nie są automatycznie zapisywane** do pliku. Aby zachować zmiany na stałe, należy użyć opcji **6. Save config**.
+
+### Zapis konfiguracji (opcja 6)
 
 Konfiguracja zapisywana jest do pliku `data/config.json` w formacie JSON. Przy kolejnym uruchomieniu aplikacja automatycznie wczytuje konfigurację z tego pliku.
 

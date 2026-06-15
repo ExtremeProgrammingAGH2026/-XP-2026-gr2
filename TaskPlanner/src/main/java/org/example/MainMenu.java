@@ -58,10 +58,11 @@ public class MainMenu {
             System.out.println("2. Other users' tasks");
             System.out.println("3. Create task");
             System.out.println("4. Show config");
-            System.out.println("5. Save config");
-            System.out.println("6. Exit");
+            System.out.println("5. Edit config");
+            System.out.println("6. Save config");
+            System.out.println("7. Exit");
             System.out.print("Choice: ");
-            String path = "data/config.json";
+            String configPath = "data/config.json";
             String choice = scanner.nextLine().trim();
             switch (choice) {
                 case "1":
@@ -74,24 +75,20 @@ public class MainMenu {
                     createTaskUI.createTask(scanner, currentUser);
                     break;
                 case "4":
-                    // Print current configuration
-                    System.out.println("Current configuration:");
-                    System.out.println("usersFilePath: " + nullToPlaceholder(appConfiguration.getUsersFilePath()));
-                    System.out.println("tasksFilePath: " + nullToPlaceholder(appConfiguration.getTasksFilePath()));
-                    System.out.println("maxLoginAttempts: " + appConfiguration.getMaxLoginAttempts());
-                    System.out.println("minPasswordLength: " + appConfiguration.getMinPasswordLength());
-                    System.out.println("timeZoneName: " + nullToPlaceholder(appConfiguration.getTimeZoneName()));
-                    System.out.println("dateTimeFormat: " + nullToPlaceholder(appConfiguration.getDateTimeFormat()));
+                    showConfig();
                     break;
                 case "5":
+                    editConfig(scanner);
+                    break;
+                case "6":
                     try {
-                        configurationSaveService.saveConfiguration(appConfiguration, path);
-                        System.out.println("Configuration saved to " + path);
+                        configurationSaveService.saveConfiguration(appConfiguration, configPath);
+                        System.out.println("Configuration saved to " + configPath);
                     } catch (IOException e) {
                         System.out.println("Failed to save configuration: " + e.getMessage());
                     }
                     break;
-                case "6":
+                case "7":
                     return;
                 default:
                     System.out.println("Invalid choice. Try again.");
@@ -104,7 +101,60 @@ public class MainMenu {
         taskPrintService.printTasksByOwner(tasks, currentUser.getName());
     }
 
-    private String nullToPlaceholder(String s) { // helper method to print "(none)" for null values
+    private void showConfig() {
+        System.out.println("Current configuration:");
+        System.out.println("1. usersFilePath: " + nullToPlaceholder(appConfiguration.getUsersFilePath()));
+        System.out.println("2. tasksFilePath: " + nullToPlaceholder(appConfiguration.getTasksFilePath()));
+        System.out.println("3. maxLoginAttempts: " + appConfiguration.getMaxLoginAttempts());
+        System.out.println("4. minPasswordLength: " + appConfiguration.getMinPasswordLength());
+        System.out.println("5. timeZoneName: " + nullToPlaceholder(appConfiguration.getTimeZoneName()));
+        System.out.println("6. dateTimeFormat: " + nullToPlaceholder(appConfiguration.getDateTimeFormat()));
+    }
+
+    private void editConfig(Scanner scanner) {
+        showConfig();
+        System.out.print("Select field to edit (1-6): ");
+        String field = scanner.nextLine().trim();
+        System.out.print("New value: ");
+        String value = scanner.nextLine().trim();
+
+        switch (field) {
+            case "1":
+                appConfiguration.setUsersFilePath(value);
+                break;
+            case "2":
+                appConfiguration.setTasksFilePath(value);
+                break;
+            case "3":
+                try {
+                    appConfiguration.setMaxLoginAttempts(Integer.parseInt(value));
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid number.");
+                    return;
+                }
+                break;
+            case "4":
+                try {
+                    appConfiguration.setMinPasswordLength(Integer.parseInt(value));
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid number.");
+                    return;
+                }
+                break;
+            case "5":
+                appConfiguration.setTimeZoneName(value);
+                break;
+            case "6":
+                appConfiguration.setDateTimeFormat(value);
+                break;
+            default:
+                System.out.println("Invalid field.");
+                return;
+        }
+        System.out.println("Configuration updated. Use 'Save config' to persist changes.");
+    }
+
+    private String nullToPlaceholder(String s) {
         return s == null ? "(none)" : s;
     }
 }
