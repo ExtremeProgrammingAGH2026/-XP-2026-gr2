@@ -4,18 +4,24 @@ import java.util.Scanner;
 
 public class LoginUI {
 
-    private static final int MAX_ATTEMPTS = 3;
+    private static final int DEFAULT_MAX_ATTEMPTS = 3;
 
     private final AuthService authService;
+    private final int maxAttempts;
 
     public LoginUI(AuthService authService) {
+        this(authService, DEFAULT_MAX_ATTEMPTS);
+    }
+
+    public LoginUI(AuthService authService, int maxAttempts) {
         this.authService = authService;
+        this.maxAttempts = maxAttempts;
     }
 
     public User login(Scanner scanner) {
         System.out.println("=== Login ===");
         int attempts = 0;
-        while (attempts < MAX_ATTEMPTS) {
+        while (attempts < maxAttempts) {
             System.out.print("Email: ");
             String email = scanner.nextLine().trim();
             System.out.print("Password: ");
@@ -28,7 +34,7 @@ public class LoginUI {
             }
 
             attempts++;
-            int remaining = MAX_ATTEMPTS - attempts;
+            int remaining = maxAttempts - attempts;
             if (remaining > 0) {
                 System.out.println("Invalid email or password. " + remaining + " attempt(s) remaining.");
             }

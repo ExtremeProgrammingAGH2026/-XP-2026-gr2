@@ -46,7 +46,15 @@ public class MainMenuTest {
                 authService, taskReadService, taskPrintService, tasksFile.toString());
         CreateTaskUI createTaskUI = new CreateTaskUI(new TaskSaveService(), tasksFile.toString());
 
-        menu = new MainMenu(taskReadService, taskPrintService, otherUsersTasksUI, createTaskUI, tasksFile.toString());
+        AppConfiguration config = new AppConfiguration();
+        config.setUsersFilePath(usersFile.toString());
+        config.setTasksFilePath(tasksFile.toString());
+        config.setMaxLoginAttempts(3);
+        config.setMinPasswordLength(8);
+        config.setTimeZoneName("Europe/Warsaw");
+        config.setDateTimeFormat("dd.MM.yyyy HH:mm");
+
+        menu = new MainMenu(taskReadService, taskPrintService, otherUsersTasksUI, createTaskUI, tasksFile.toString(), config);
     }
 
     @AfterEach

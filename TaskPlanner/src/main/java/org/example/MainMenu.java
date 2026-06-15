@@ -16,39 +16,14 @@ public class MainMenu {
 
     public MainMenu(TaskReadService taskReadService, TaskPrintService taskPrintService,
                     OtherUsersTasksUI otherUsersTasksUI, CreateTaskUI createTaskUI,
-                    String tasksFilePath) {
+                    String tasksFilePath, AppConfiguration appConfiguration) {
         this.taskReadService = taskReadService;
         this.taskPrintService = taskPrintService;
         this.otherUsersTasksUI = otherUsersTasksUI;
         this.createTaskUI = createTaskUI;
         this.tasksFilePath = tasksFilePath;
-        // initialize configuration save service and default configuration
         this.configurationSaveService = new ConfigurationSaveService();
-        this.appConfiguration = new AppConfiguration();
-        this.appConfiguration.setUsersFilePath("data/users.csv");
-        this.appConfiguration.setTasksFilePath(tasksFilePath);
-        this.appConfiguration.setMaxLoginAttempts(3);
-        this.appConfiguration.setMinPasswordLength(8);
-        this.appConfiguration.setTimeZoneName("Europe/Warsaw");
-        this.appConfiguration.setDateTimeFormat("dd.MM.yyyy HH:mm");
-
-        // Try to load configuration from file on startup; if loading fails, keep the above defaults
-        String configPath = "data/config.json";
-        try {
-            ConfigurationLoadService loadService = new ConfigurationLoadService();
-            AppConfiguration loaded = loadService.loadConfiguration(configPath);
-            if (loaded != null) {
-                // copy values from loaded file to app config (allow nulls to overwrite if present in file)
-                this.appConfiguration.setUsersFilePath(loaded.getUsersFilePath());
-                this.appConfiguration.setTasksFilePath(loaded.getTasksFilePath());
-                this.appConfiguration.setMaxLoginAttempts(loaded.getMaxLoginAttempts());
-                this.appConfiguration.setMinPasswordLength(loaded.getMinPasswordLength());
-                this.appConfiguration.setTimeZoneName(loaded.getTimeZoneName());
-                this.appConfiguration.setDateTimeFormat(loaded.getDateTimeFormat());
-            }
-        } catch (IOException e) {
-            // ignore - keep the defaults set above when config file is missing or unreadable
-        }
+        this.appConfiguration = appConfiguration;
     }
 
     public void run(Scanner scanner, User currentUser) {
