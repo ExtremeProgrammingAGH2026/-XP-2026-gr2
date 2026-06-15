@@ -82,12 +82,15 @@ public class RecurringTaskExpander {
     }
 
     private Task buildOccurrence(RecurringTask template, Instant occurrenceStart) {
+        java.time.Duration duration = java.time.Duration.between(template.getStartDate(), template.getEndDate());
+        Instant occurrenceEnd = occurrenceStart.plus(duration);
         return new Task(
                 UUID.randomUUID().toString(),
                 template.getTitle(),
                 template.getDescription(),
                 template.getOwner(),
-                occurrenceStart
+                occurrenceStart,
+                occurrenceEnd
         );
     }
 
