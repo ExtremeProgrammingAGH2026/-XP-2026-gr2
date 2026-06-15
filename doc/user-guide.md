@@ -252,7 +252,6 @@ No other users in the system.
 
 ## Konfiguracja
 
-### Wyświetlanie konfiguracji (opcja 4)
 ### Wyświetlanie konfiguracji (opcja 5)
 
 ```
