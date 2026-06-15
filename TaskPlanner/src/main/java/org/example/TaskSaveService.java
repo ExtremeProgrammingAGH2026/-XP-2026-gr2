@@ -1,5 +1,7 @@
 package org.example;
 
+import org.example.recurring.RecurringTask;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -11,7 +13,8 @@ import java.util.Objects;
 
 class TaskSaveService {
     private static final String HEADER = String.join(CsvConstants.SEPARATOR_STR,
-            "id", "title", "description", "owner", "startDate", "endDate", "status") + System.lineSeparator();
+            "id", "title", "description", "owner", "startDate", "endDate",
+            "status", "type", "recurrencePattern", "recurrenceEndDate") + System.lineSeparator();
 
     public void saveTask(Task task, String path, boolean append) {
         Objects.requireNonNull(task, "task must not be null");
@@ -46,14 +49,31 @@ class TaskSaveService {
             throw new CsvException("Task fields must not be null");
         }
 
+        String type = "NORMAL";
+        String recurrencePattern = "";
+        String recurrenceEndDate = "";
+        if (task instanceof RecurringTask) {
+            RecurringTask recurringTask = (RecurringTask) task;
+            type = "RECURRING";
+            recurrencePattern = recurringTask.getRecurrencePattern().name();
+            if (recurringTask.getRecurrenceEndDate() != null) {
+                recurrenceEndDate = DateTimeFormats.STORAGE_FORMATTER.format(recurringTask.getRecurrenceEndDate());
+            }
+        }
+
+        String startDate = DateTimeFormats.STORAGE_FORMATTER.format(task.getStartDate());
+        String endDate = DateTimeFormats.STORAGE_FORMATTER.format(task.getEndDate());
         return String.join(CsvConstants.SEPARATOR_STR,
                 task.getId(),
                 task.getTitle(),
                 task.getDescription(),
                 task.getOwner(),
-                storageDate(task.getStartDate()),
-                storageDate(task.getEndDate()),
-                task.getStatus().name()) + System.lineSeparator();
+                startDate,
+                endDate,
+                task.getStatus().name(),
+                type,
+                recurrencePattern,
+                recurrenceEndDate) + System.lineSeparator();
     }
 
     private static String storageDate(Instant instant) {

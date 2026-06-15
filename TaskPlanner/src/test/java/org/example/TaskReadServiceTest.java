@@ -14,10 +14,14 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.example.recurring.RecurringTask;
+import org.example.recurring.RecurrencePattern;
+
 public class TaskReadServiceTest {
 
     private static final ZoneId WARSAW = ZoneId.of("Europe/Warsaw");
     private static final String HEADER = "id;title;description;owner;startDate;status";
+    private static final String EXTENDED_HEADER = "id;title;description;owner;startDate;endDate;status;type;recurrencePattern;recurrenceEndDate";
 
     @TempDir
     Path tempDir;
@@ -109,6 +113,21 @@ public class TaskReadServiceTest {
         assertEquals(TaskStatus.NEW, tasks.get(0).getStatus());
         assertEquals(TaskStatus.IN_PROGRESS, tasks.get(1).getStatus());
         assertEquals(TaskStatus.DONE, tasks.get(2).getStatus());
+    }
+
+    @Test
+    public void shouldReadRecurringTaskFromExtendedCsv() throws IOException {
+        Path csv = tempDir.resolve("tasks.csv");
+        write(csv, EXTENDED_HEADER
+                + "\n1;Cleaning;Weekly cleaning;Adam;01.06.2026 08:00;01.06.2026 09:00;NEW;RECURRING;WEEKLY;01.07.2026 09:00");
+
+        List<Task> tasks = service.readTasks(csv.toString());
+
+        assertEquals(1, tasks.size());
+        assertTrue(tasks.get(0) instanceof RecurringTask);
+        RecurringTask task = (RecurringTask) tasks.get(0);
+        assertEquals(RecurrencePattern.WEEKLY, task.getRecurrencePattern());
+        assertEquals(TaskStatus.NEW, task.getStatus());
     }
 
     private static void write(Path path, String content) throws IOException {

@@ -1,7 +1,11 @@
 package org.example;
 
+import org.example.recurring.RecurringTask;
+import org.example.recurring.RecurrencePattern;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -26,7 +30,7 @@ public class TaskReadService {
             if (row.isEmpty() || row.get(0).equals(HEADER_ID)) {
                 continue;
             }
-            if (row.size() != 6 && row.size() != 7) {
+            if (row.size() != 6 && row.size() != 10) {
                 throw new CsvException("Invalid task row format: " + row);
             }
             tasks.add(parseRow(row));
@@ -39,20 +43,29 @@ public class TaskReadService {
         String title = row.get(1);
         String description = row.get(2);
         String owner = row.get(3);
-
-        ZonedDateTime startDate = parseDate(row.get(4));
-
-        // 7 columns: id;title;description;owner;startDate;endDate;status
-        // 6 columns (legacy): no endDate -> default the end to the start
-        ZonedDateTime endDate;
+        String dateStr = row.get(4);
         String statusStr;
-        if (row.size() == 7) {
-            endDate = parseDate(row.get(5));
-            statusStr = row.get(6);
-        } else {
-            endDate = startDate;
+        String endDateStr;
+        String type;
+        String recurrencePatternStr;
+        String recurrenceEndDateStr;
+
+        if (row.size() == 6) {
+            endDateStr = row.get(4);
             statusStr = row.get(5);
+            type = "NORMAL";
+            recurrencePatternStr = "";
+            recurrenceEndDateStr = "";
+        } else {
+            endDateStr = row.get(5);
+            statusStr = row.get(6);
+            type = row.get(7);
+            recurrencePatternStr = row.get(8);
+            recurrenceEndDateStr = row.get(9);
         }
+
+        ZonedDateTime startDate = parseDate(dateStr);
+        Instant endDate = parseDate(endDateStr).toInstant();
 
         TaskStatus status;
         try {
@@ -61,9 +74,31 @@ public class TaskReadService {
             throw new CsvException("Invalid task status: " + statusStr, e);
         }
 
-        Task task = new Task(id, title, description, owner, startDate.toInstant(), endDate.toInstant());
+        Task task = parseTask(id, title, description, owner, startDate.toInstant(), endDate,
+                type, recurrencePatternStr, recurrenceEndDateStr);
         task.setStatus(status);
         return task;
+    }
+
+    private Task parseTask(String id, String title, String description, String owner,
+                           Instant startDate, Instant endDate, String type,
+                           String recurrencePatternStr, String recurrenceEndDateStr) {
+        if ("RECURRING".equalsIgnoreCase(type)) {
+            RecurrencePattern recurrencePattern;
+            try {
+                recurrencePattern = RecurrencePattern.valueOf(recurrencePatternStr);
+            } catch (IllegalArgumentException e) {
+                throw new CsvException("Invalid recurrence pattern: " + recurrencePatternStr, e);
+            }
+
+            Instant recurrenceEndDate = recurrenceEndDateStr == null || recurrenceEndDateStr.isBlank()
+                    ? null
+                    : parseDate(recurrenceEndDateStr).toInstant();
+            return new RecurringTask(id, title, description, owner, startDate, endDate,
+                    recurrencePattern, recurrenceEndDate);
+        }
+
+        return new Task(id, title, description, owner, startDate, endDate);
     }
 
     private ZonedDateTime parseDate(String dateStr) {
