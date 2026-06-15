@@ -19,19 +19,27 @@ public class MainMenu {
     private final String tasksFilePath;
     private final ConfigurationSaveService configurationSaveService;
     private final AppConfiguration appConfiguration;
+    private final String configPath;
 
     public MainMenu(TaskReadService taskReadService, TaskPrintService taskPrintService,
                     OtherUsersTasksUI otherUsersTasksUI, CreateTaskUI createTaskUI,
                     String tasksFilePath, AppConfiguration appConfiguration) {
+        this(taskReadService, taskPrintService, otherUsersTasksUI, createTaskUI,
+                tasksFilePath, appConfiguration, "data/config.json");
+    }
+
+    public MainMenu(TaskReadService taskReadService, TaskPrintService taskPrintService,
+                    OtherUsersTasksUI otherUsersTasksUI, CreateTaskUI createTaskUI,
+                    String tasksFilePath, AppConfiguration appConfiguration, String configPath) {
         this(taskReadService, taskPrintService, new TaskSaveService(),
                 new TaskEditService(new TaskStatusService()),
-                otherUsersTasksUI, createTaskUI, tasksFilePath, appConfiguration);
+                otherUsersTasksUI, createTaskUI, tasksFilePath, appConfiguration, configPath);
     }
 
     public MainMenu(TaskReadService taskReadService, TaskPrintService taskPrintService,
                     TaskSaveService taskSaveService, TaskEditService taskEditService,
                     OtherUsersTasksUI otherUsersTasksUI, CreateTaskUI createTaskUI,
-                    String tasksFilePath, AppConfiguration appConfiguration) {
+                    String tasksFilePath, AppConfiguration appConfiguration, String configPath) {
         this.taskReadService = taskReadService;
         this.taskPrintService = taskPrintService;
         this.taskSaveService = taskSaveService;
@@ -41,6 +49,7 @@ public class MainMenu {
         this.tasksFilePath = tasksFilePath;
         this.configurationSaveService = new ConfigurationSaveService();
         this.appConfiguration = appConfiguration;
+        this.configPath = configPath;
     }
 
     public void run(Scanner scanner, User currentUser) {
@@ -55,7 +64,6 @@ public class MainMenu {
             System.out.println("7. Save config");
             System.out.println("8. Exit");
             System.out.print("Choice: ");
-            String configPath = "data/config.json";
             String choice = scanner.nextLine().trim();
             switch (choice) {
                 case "1":
@@ -245,7 +253,12 @@ public class MainMenu {
                 return;
         }
         DateTimeFormats.init(appConfiguration);
-        System.out.println("Configuration updated. Use 'Save config' to persist changes.");
+        try {
+            configurationSaveService.saveConfiguration(appConfiguration, configPath);
+            System.out.println("Configuration updated and saved to " + configPath);
+        } catch (IOException e) {
+            System.out.println("Configuration updated but failed to save: " + e.getMessage());
+        }
     }
 
     private boolean isValidDatePattern(String pattern) {
