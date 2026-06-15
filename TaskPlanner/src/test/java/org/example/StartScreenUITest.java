@@ -91,7 +91,7 @@ public class StartScreenUITest {
 
     @Test
     public void shouldLoopAfterFailedLogin() {
-        Scanner scanner = new Scanner("1\nbad@example.com\nbadpass\nbad@example.com\nbadpass\nbad@example.com\nbadpass\n3\n");
+        Scanner scanner = new Scanner("1\nbad@example.com\nbadpass\nbadpass\nbadpass\n3\n");
         User user = startScreen.run(scanner);
         assertNull(user);
     }

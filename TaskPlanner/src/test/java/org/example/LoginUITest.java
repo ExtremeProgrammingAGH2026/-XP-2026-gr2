@@ -38,14 +38,14 @@ public class LoginUITest {
 
     @Test
     public void shouldReturnNullAfterMaxFailedAttempts() {
-        Scanner scanner = new Scanner("wrong@example.com\nbadpass\nwrong@example.com\nbadpass\nwrong@example.com\nbadpass\n");
+        Scanner scanner = new Scanner("alice@example.com\nbadpass\nbadpass\nbadpass\n");
         User user = loginUI.login(scanner);
         assertNull(user);
     }
 
     @Test
     public void shouldSucceedOnSecondAttempt() {
-        Scanner scanner = new Scanner("wrong@example.com\nbadpass\nbob@example.com\npass456\n");
+        Scanner scanner = new Scanner("bob@example.com\nwrongpass\npass456\n");
         User user = loginUI.login(scanner);
         assertNotNull(user);
         assertEquals("Bob", user.getName());

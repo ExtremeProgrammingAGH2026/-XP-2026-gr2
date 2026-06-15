@@ -20,10 +20,11 @@ public class LoginUI {
 
     public User login(Scanner scanner) {
         System.out.println("=== Login ===");
+        System.out.print("Email: ");
+        String email = scanner.nextLine().trim();
+
         int attempts = 0;
         while (attempts < maxAttempts) {
-            System.out.print("Email: ");
-            String email = scanner.nextLine().trim();
             System.out.print("Password: ");
             String password = scanner.nextLine().trim();
 
@@ -36,7 +37,7 @@ public class LoginUI {
             attempts++;
             int remaining = maxAttempts - attempts;
             if (remaining > 0) {
-                System.out.println("Invalid email or password. " + remaining + " attempt(s) remaining.");
+                System.out.println("Invalid password. " + remaining + " attempt(s) remaining.");
             }
         }
 
