@@ -28,10 +28,29 @@ public class CreateTaskUITest {
     private CreateTaskUI createTaskUI;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws IOException {
         tasksFile = tempDir.resolve("tasks.csv").toString();
-        currentUser = new User("1", "alice@example.com", "Alice", "secret");
-        createTaskUI = new CreateTaskUI(new TaskSaveService(), tasksFile);
+
+        Path usersFile = tempDir.resolve("users.csv");
+
+        Files.writeString(
+                usersFile,
+                "1;alice@example.com;Alice;secret",
+                StandardCharsets.UTF_8
+        );
+
+        currentUser = new User(
+                "1",
+                "alice@example.com",
+                "Alice",
+                "secret"
+        );
+
+        createTaskUI = new CreateTaskUI(
+                new TaskSaveService(),
+                new AuthService(usersFile.toString()),
+                tasksFile
+        );
     }
 
     @Test

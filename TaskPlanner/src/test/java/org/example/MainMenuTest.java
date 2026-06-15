@@ -46,7 +46,11 @@ public class MainMenuTest {
         TaskPrintService taskPrintService = new TaskPrintService(new TaskFilterService());
         OtherUsersTasksUI otherUsersTasksUI = new OtherUsersTasksUI(
                 authService, taskReadService, taskPrintService, tasksFile.toString());
-        CreateTaskUI createTaskUI = new CreateTaskUI(new TaskSaveService(), tasksFile.toString());
+        CreateTaskUI createTaskUI = new CreateTaskUI(
+                new TaskSaveService(),
+                authService,
+                tasksFile.toString()
+        );
 
         AppConfiguration config = new AppConfiguration();
         config.setUsersFilePath(usersFile.toString());
