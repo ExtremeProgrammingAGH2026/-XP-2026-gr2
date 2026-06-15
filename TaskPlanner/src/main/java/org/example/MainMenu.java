@@ -215,22 +215,22 @@ public class MainMenu {
             case "2":
                 appConfiguration.setTasksFilePath(value);
                 break;
-            case "3":
-                try {
-                    appConfiguration.setMaxLoginAttempts(Integer.parseInt(value));
-                } catch (NumberFormatException e) {
-                    System.out.println("Invalid number.");
+            case "3": {
+                Integer attempts = parsePositiveInt(value, "maximum login attempts");
+                if (attempts == null) {
                     return;
                 }
+                appConfiguration.setMaxLoginAttempts(attempts);
                 break;
-            case "4":
-                try {
-                    appConfiguration.setMinPasswordLength(Integer.parseInt(value));
-                } catch (NumberFormatException e) {
-                    System.out.println("Invalid number.");
+            }
+            case "4": {
+                Integer minLength = parsePositiveInt(value, "minimum password length");
+                if (minLength == null) {
                     return;
                 }
+                appConfiguration.setMinPasswordLength(minLength);
                 break;
+            }
             case "5":
                 try {
                     ZoneId.of(value);
@@ -259,6 +259,21 @@ public class MainMenu {
         } catch (IOException e) {
             System.out.println("Configuration updated but failed to save: " + e.getMessage());
         }
+    }
+
+    private Integer parsePositiveInt(String value, String label) {
+        int parsed;
+        try {
+            parsed = Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid number.");
+            return null;
+        }
+        if (parsed < 1) {
+            System.out.println("Invalid value: " + label + " must be at least 1.");
+            return null;
+        }
+        return parsed;
     }
 
     private boolean isValidDatePattern(String pattern) {
