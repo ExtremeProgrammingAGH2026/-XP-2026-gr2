@@ -164,6 +164,7 @@ public class CreateTaskUI {
             }
             try {
                 return ZonedDateTime.parse(input, DateTimeFormats.getFormatter()).toInstant();
+            } catch (DateTimeParseException e) {
                 System.out.println("Invalid format. Use " + DateTimeFormats.getPattern());
             }
         }
