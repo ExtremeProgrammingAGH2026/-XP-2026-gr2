@@ -2,7 +2,9 @@ package org.example;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +36,9 @@ public class TaskReadService {
         return tasks;
     }
 
+    private static final DateTimeFormatter FALLBACK_FORMATTER =
+            DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm").withZone(ZoneId.of("Europe/Warsaw"));
+
     private Task parseRow(List<String> row) {
         String id = row.get(0);
         String title = row.get(1);
@@ -42,12 +47,7 @@ public class TaskReadService {
         String dateStr = row.get(4);
         String statusStr = row.get(5);
 
-        ZonedDateTime startDate;
-        try {
-            startDate = ZonedDateTime.parse(dateStr, DateTimeFormats.FORMATTER);
-        } catch (DateTimeParseException e) {
-            throw new CsvException("Invalid date format in task row: " + dateStr, e);
-        }
+        ZonedDateTime startDate = parseDate(dateStr);
 
         TaskStatus status;
         try {
@@ -59,5 +59,17 @@ public class TaskReadService {
         Task task = new Task(id, title, description, owner, startDate.toInstant());
         task.setStatus(status);
         return task;
+    }
+
+    private ZonedDateTime parseDate(String dateStr) {
+        try {
+            return ZonedDateTime.parse(dateStr, DateTimeFormats.getFormatter());
+        } catch (DateTimeParseException e) {
+            try {
+                return ZonedDateTime.parse(dateStr, FALLBACK_FORMATTER);
+            } catch (DateTimeParseException fallbackEx) {
+                throw new CsvException("Invalid date format in task row: " + dateStr, fallbackEx);
+            }
+        }
     }
 }

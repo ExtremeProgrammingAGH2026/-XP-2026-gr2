@@ -1,7 +1,9 @@
 package org.example;
 
 import java.io.IOException;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
@@ -117,7 +119,7 @@ public class MainMenu {
         System.out.print(prompt);
         String input = scanner.nextLine().trim();
         try {
-            return ZonedDateTime.parse(input, DateTimeFormats.FORMATTER);
+            return ZonedDateTime.parse(input, DateTimeFormats.getFormatter());
         } catch (DateTimeParseException e) {
             System.out.println("Invalid date format.");
             return null;
@@ -222,16 +224,41 @@ public class MainMenu {
                 }
                 break;
             case "5":
-                appConfiguration.setTimeZoneName(value);
+                try {
+                    ZoneId.of(value);
+                    appConfiguration.setTimeZoneName(value);
+                } catch (Exception e) {
+                    System.out.println("Invalid timezone. Example: Europe/Warsaw, UTC, US/Eastern");
+                    return;
+                }
                 break;
             case "6":
+                if (!isValidDatePattern(value)) {
+                    System.out.println("Invalid date format pattern. Must include year, month, day, hour and minute.");
+                    System.out.println("Example: dd.MM.yyyy HH:mm");
+                    return;
+                }
                 appConfiguration.setDateTimeFormat(value);
                 break;
             default:
                 System.out.println("Invalid field.");
                 return;
         }
+        DateTimeFormats.init(appConfiguration);
         System.out.println("Configuration updated. Use 'Save config' to persist changes.");
+    }
+
+    private boolean isValidDatePattern(String pattern) {
+        try {
+            DateTimeFormatter testFormatter = DateTimeFormatter.ofPattern(pattern)
+                    .withZone(DateTimeFormats.getZone());
+            java.time.Instant sample = java.time.Instant.parse("2026-06-15T10:30:00Z");
+            String formatted = testFormatter.format(sample);
+            ZonedDateTime.parse(formatted, testFormatter);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     private String nullToPlaceholder(String s) {

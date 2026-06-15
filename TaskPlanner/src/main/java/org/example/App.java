@@ -16,6 +16,7 @@ public class App {
         Files.createDirectories(Path.of("data"));
 
         AppConfiguration config = loadConfiguration();
+        DateTimeFormats.init(config);
         String usersFile = config.getUsersFilePath();
         String tasksFile = config.getTasksFilePath();
 

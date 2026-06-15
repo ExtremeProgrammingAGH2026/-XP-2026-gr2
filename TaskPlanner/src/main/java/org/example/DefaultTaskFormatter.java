@@ -12,9 +12,9 @@ public class DefaultTaskFormatter implements TaskFormatter {
                 .append(" status: ").append(task.getStatus().name())
                 .append(System.lineSeparator());
         sb.append("Owned by: ").append(task.getOwner()).append(System.lineSeparator());
-        sb.append("Start date: ").append(DateTimeFormats.FORMATTER.format(task.getStartDate()))
+        sb.append("Start date: ").append(DateTimeFormats.getFormatter().format(task.getStartDate()))
                 .append(System.lineSeparator());
-        sb.append("End date: ").append(DateTimeFormats.FORMATTER.format(task.getEndDate()))
+        sb.append("End date: ").append(DateTimeFormats.getFormatter().format(task.getEndDate()))
                 .append(System.lineSeparator());
         sb.append("Description: ").append(task.getDescription()).append(System.lineSeparator());
         sb.append(BOTTOM_BORDER).append(System.lineSeparator());

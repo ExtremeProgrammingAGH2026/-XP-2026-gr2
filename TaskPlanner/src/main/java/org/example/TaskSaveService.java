@@ -44,7 +44,7 @@ class TaskSaveService {
             throw new CsvException("Task fields must not be null");
         }
 
-        String date = DateTimeFormats.FORMATTER.format(task.getStartDate());
+        String date = DateTimeFormats.getFormatter().format(task.getStartDate());
         return String.join(CsvConstants.SEPARATOR_STR,
                 task.getId(),
                 task.getTitle(),

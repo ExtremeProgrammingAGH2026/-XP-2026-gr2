@@ -39,7 +39,7 @@ public class CreateTaskUI {
         System.out.print("Description: ");
         String description = scanner.nextLine().trim();
 
-        ZonedDateTime startDate = promptDate(scanner, "Start date (" + DateTimeFormats.PATTERN + "): ");
+        ZonedDateTime startDate = promptDate(scanner, "Start date (" + DateTimeFormats.getPattern() + "): ");
         ZonedDateTime endDate = promptEndDate(scanner, startDate);
 
         Task task = new Task(
@@ -69,7 +69,7 @@ public class CreateTaskUI {
 
     private ZonedDateTime promptEndDate(Scanner scanner, ZonedDateTime startDate) {
         while (true) {
-            ZonedDateTime endDate = promptDate(scanner, "End date (" + DateTimeFormats.PATTERN + "): ");
+            ZonedDateTime endDate = promptDate(scanner, "End date (" + DateTimeFormats.getPattern() + "): ");
             if (endDate.isBefore(startDate)) {
                 System.out.println("End date cannot be before start date.");
                 continue;
@@ -83,9 +83,9 @@ public class CreateTaskUI {
             System.out.print(prompt);
             String input = scanner.nextLine().trim();
             try {
-                return ZonedDateTime.parse(input, DateTimeFormats.FORMATTER);
+                return ZonedDateTime.parse(input, DateTimeFormats.getFormatter());
             } catch (DateTimeParseException e) {
-                System.out.println("Invalid format. Use " + DateTimeFormats.PATTERN);
+                System.out.println("Invalid format. Use " + DateTimeFormats.getPattern());
             }
         }
     }
