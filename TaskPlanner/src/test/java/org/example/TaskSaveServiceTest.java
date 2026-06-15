@@ -23,7 +23,7 @@ class TaskSaveServiceTest {
 
     private static final ZoneId ZONE = ZoneId.of("Europe/Warsaw");
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-    private static final String HEADER = "id;title;description;owner;startDate;status" + System.lineSeparator();
+    private static final String HEADER = "id;title;description;owner;startDate;endDate;status" + System.lineSeparator();
 
     @TempDir
     Path tempDir;
@@ -117,13 +117,15 @@ class TaskSaveServiceTest {
     }
 
     private static String rowFor(Task task) {
-        String date = DATE_FORMATTER.withZone(ZONE).format(task.getStartDate());
+        String startDate = DATE_FORMATTER.withZone(ZONE).format(task.getStartDate());
+        String endDate = DATE_FORMATTER.withZone(ZONE).format(task.getEndDate());
         return String.join(";",
                 task.getId(),
                 task.getTitle(),
                 task.getDescription(),
                 task.getOwner(),
-                date,
+                startDate,
+                endDate,
                 task.getStatus().name()) + System.lineSeparator();
     }
 }

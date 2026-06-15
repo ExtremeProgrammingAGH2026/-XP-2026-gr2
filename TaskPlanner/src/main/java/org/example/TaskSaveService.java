@@ -10,7 +10,7 @@ import java.util.Objects;
 
 class TaskSaveService {
     private static final String HEADER = String.join(CsvConstants.SEPARATOR_STR,
-            "id", "title", "description", "owner", "startDate", "status") + System.lineSeparator();
+            "id", "title", "description", "owner", "startDate", "endDate", "status") + System.lineSeparator();
 
     public void saveTask(Task task, String path, boolean append) {
         Objects.requireNonNull(task, "task must not be null");
@@ -40,17 +40,20 @@ class TaskSaveService {
     private static String rowFor(Task task) {
         Objects.requireNonNull(task, "task must not be null");
         if (task.getId() == null || task.getTitle() == null || task.getDescription() == null
-                || task.getOwner() == null || task.getStartDate() == null || task.getStatus() == null) {
+                || task.getOwner() == null || task.getStartDate() == null || task.getEndDate() == null
+                || task.getStatus() == null) {
             throw new CsvException("Task fields must not be null");
         }
 
-        String date = DateTimeFormats.STORAGE_FORMATTER.format(task.getStartDate());
+        String startDate = DateTimeFormats.STORAGE_FORMATTER.format(task.getStartDate());
+        String endDate = DateTimeFormats.STORAGE_FORMATTER.format(task.getEndDate());
         return String.join(CsvConstants.SEPARATOR_STR,
                 task.getId(),
                 task.getTitle(),
                 task.getDescription(),
                 task.getOwner(),
-                date,
+                startDate,
+                endDate,
                 task.getStatus().name()) + System.lineSeparator();
     }
 
