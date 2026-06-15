@@ -52,7 +52,7 @@ public class CreateTaskTimeValidationTest {
     @Test
     public void acceptsEndStrictlyAfterStart() {
         Task task = ui().createTask(
-                new Scanner("T\nd\n15.06.2026 10:00\n15.06.2026 11:00\n"), user);
+                new Scanner("T\nd\n15.06.2026 10:00\n15.06.2026 11:00\nn\n"), user);
 
         assertEquals(ZonedDateTime.of(2026, 6, 15, 11, 0, 0, 0, WARSAW).toInstant(), task.getEndDate());
     }
@@ -60,7 +60,7 @@ public class CreateTaskTimeValidationTest {
     @Test
     public void rejectsEndBeforeStartThenAcceptsValid() {
         Task task = ui().createTask(
-                new Scanner("T\nd\n15.06.2026 10:00\n15.06.2026 09:00\n15.06.2026 11:00\n"), user);
+                new Scanner("T\nd\n15.06.2026 10:00\n15.06.2026 09:00\n15.06.2026 11:00\nn\n"), user);
 
         assertTrue(output.toString().contains("after start date"),
                 "end before start must be rejected, output: " + output);
@@ -70,7 +70,7 @@ public class CreateTaskTimeValidationTest {
     @Test
     public void rejectsEndEqualToStartThenAcceptsValid() {
         Task task = ui().createTask(
-                new Scanner("T\nd\n15.06.2026 10:00\n15.06.2026 10:00\n15.06.2026 11:00\n"), user);
+                new Scanner("T\nd\n15.06.2026 10:00\n15.06.2026 10:00\n15.06.2026 11:00\nn\n"), user);
 
         assertTrue(output.toString().contains("after start date"),
                 "end equal to start (zero duration) must be rejected, output: " + output);
