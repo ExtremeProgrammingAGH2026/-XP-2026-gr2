@@ -8,6 +8,8 @@ public class MainMenu {
 
     private final TaskReadService taskReadService;
     private final TaskPrintService taskPrintService;
+    private final TaskSaveService taskSaveService;
+    private final TaskEditService taskEditService;
     private final OtherUsersTasksUI otherUsersTasksUI;
     private final CreateTaskUI createTaskUI;
     private final String tasksFilePath;
@@ -17,8 +19,19 @@ public class MainMenu {
     public MainMenu(TaskReadService taskReadService, TaskPrintService taskPrintService,
                     OtherUsersTasksUI otherUsersTasksUI, CreateTaskUI createTaskUI,
                     String tasksFilePath, AppConfiguration appConfiguration) {
+        this(taskReadService, taskPrintService, new TaskSaveService(),
+                new TaskEditService(new TaskStatusService()),
+                otherUsersTasksUI, createTaskUI, tasksFilePath, appConfiguration);
+    }
+
+    public MainMenu(TaskReadService taskReadService, TaskPrintService taskPrintService,
+                    TaskSaveService taskSaveService, TaskEditService taskEditService,
+                    OtherUsersTasksUI otherUsersTasksUI, CreateTaskUI createTaskUI,
+                    String tasksFilePath, AppConfiguration appConfiguration) {
         this.taskReadService = taskReadService;
         this.taskPrintService = taskPrintService;
+        this.taskSaveService = taskSaveService;
+        this.taskEditService = taskEditService;
         this.otherUsersTasksUI = otherUsersTasksUI;
         this.createTaskUI = createTaskUI;
         this.tasksFilePath = tasksFilePath;
@@ -32,10 +45,11 @@ public class MainMenu {
             System.out.println("1. My tasks");
             System.out.println("2. Other users' tasks");
             System.out.println("3. Create task");
-            System.out.println("4. Show config");
-            System.out.println("5. Edit config");
-            System.out.println("6. Save config");
-            System.out.println("7. Exit");
+            System.out.println("4. Change task status");
+            System.out.println("5. Show config");
+            System.out.println("6. Edit config");
+            System.out.println("7. Save config");
+            System.out.println("8. Exit");
             System.out.print("Choice: ");
             String configPath = "data/config.json";
             String choice = scanner.nextLine().trim();
@@ -50,12 +64,15 @@ public class MainMenu {
                     createTaskUI.createTask(scanner, currentUser);
                     break;
                 case "4":
-                    showConfig();
+                    changeTaskStatus(scanner, currentUser);
                     break;
                 case "5":
-                    editConfig(scanner);
+                    showConfig();
                     break;
                 case "6":
+                    editConfig(scanner);
+                    break;
+                case "7":
                     try {
                         configurationSaveService.saveConfiguration(appConfiguration, configPath);
                         System.out.println("Configuration saved to " + configPath);
@@ -63,7 +80,7 @@ public class MainMenu {
                         System.out.println("Failed to save configuration: " + e.getMessage());
                     }
                     break;
-                case "7":
+                case "8":
                     return;
                 default:
                     System.out.println("Invalid choice. Try again.");
@@ -74,6 +91,63 @@ public class MainMenu {
     private void showMyTasks(User currentUser) {
         List<Task> tasks = taskReadService.readTasks(tasksFilePath);
         taskPrintService.printTasksByOwner(tasks, currentUser.getName());
+    }
+
+    private void changeTaskStatus(Scanner scanner, User currentUser) {
+        List<Task> allTasks = taskReadService.readTasks(tasksFilePath);
+        List<Task> myTasks = allTasks.stream()
+                .filter(t -> t.getOwner().equals(currentUser.getName()))
+                .collect(java.util.stream.Collectors.toList());
+
+        if (myTasks.isEmpty()) {
+            System.out.println("No tasks available.");
+            return;
+        }
+
+        System.out.println("=== Change Task Status ===");
+        for (int i = 0; i < myTasks.size(); i++) {
+            Task t = myTasks.get(i);
+            System.out.println((i + 1) + ". [" + t.getStatus() + "] " + t.getTitle());
+        }
+
+        System.out.print("Select task (1-" + myTasks.size() + "): ");
+        String taskInput = scanner.nextLine().trim();
+        int taskIndex;
+        try {
+            taskIndex = Integer.parseInt(taskInput) - 1;
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid choice.");
+            return;
+        }
+        if (taskIndex < 0 || taskIndex >= myTasks.size()) {
+            System.out.println("Invalid choice.");
+            return;
+        }
+
+        Task selected = myTasks.get(taskIndex);
+        TaskStatus[] statuses = TaskStatus.values();
+        System.out.println("Select new status:");
+        for (int i = 0; i < statuses.length; i++) {
+            System.out.println((i + 1) + ". " + statuses[i]);
+        }
+
+        System.out.print("Choice: ");
+        String statusInput = scanner.nextLine().trim();
+        int statusIndex;
+        try {
+            statusIndex = Integer.parseInt(statusInput) - 1;
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid choice.");
+            return;
+        }
+        if (statusIndex < 0 || statusIndex >= statuses.length) {
+            System.out.println("Invalid choice.");
+            return;
+        }
+
+        taskEditService.editStatus(selected, statuses[statusIndex]);
+        taskSaveService.saveTasks(allTasks, tasksFilePath, false);
+        System.out.println("Status changed to " + selected.getStatus() + ".");
     }
 
     private void showConfig() {
