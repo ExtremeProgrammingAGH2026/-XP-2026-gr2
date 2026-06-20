@@ -70,8 +70,8 @@ public class MainMenuAutoSaveTest {
         String configPath = tempDir.resolve("config.json").toString();
         MainMenu menu = menuWith(config, configPath);
 
-        // 6 = Edit config, field 6 = dateTimeFormat, 8 = Exit (no "Save config" step)
-        menu.run(new Scanner("6\n6\nyyyy-MM-dd HH:mm\n8\n"), user);
+        // 6 = Edit config, field 6 = dateTimeFormat, 9 = Exit (no "Save config" step)
+        menu.run(new Scanner("6\n6\nyyyy-MM-dd HH:mm\n9\n"), user);
 
         assertEquals("yyyy-MM-dd HH:mm", config.getDateTimeFormat());
         assertTrue(Files.exists(Path.of(configPath)), "edit should persist config.json immediately");
