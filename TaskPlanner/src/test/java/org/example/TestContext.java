@@ -88,6 +88,15 @@ public class TestContext {
     }
 
     /**
+     * Saves a single task to the tasks CSV file (append mode).
+     * Exposed publicly to allow step definitions outside the org.example package
+     * to interact with the package-private TaskSaveService.
+     */
+    public void saveTask(Task task) {
+        taskSaveService.saveTask(task, tasksFile.toString(), true);
+    }
+
+    /**
      * Saves all tasks in taskPool to tasksFile (overwrites existing file).
      */
     public void persistTaskPool() {

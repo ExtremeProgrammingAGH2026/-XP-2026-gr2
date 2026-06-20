@@ -28,9 +28,4 @@ public class TaskStatusSteps {
     public void theTaskStatusIsChangedTo(String newStatus) {
         ctx.taskStatusService.changeStatus(ctx.lastTask, TaskStatus.valueOf(newStatus));
     }
-
-    @Given("the task status is changed to {string}")
-    public void givenTheTaskStatusIsChangedTo(String newStatus) {
-        ctx.taskStatusService.changeStatus(ctx.lastTask, TaskStatus.valueOf(newStatus));
-    }
 }

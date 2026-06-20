@@ -38,12 +38,6 @@ public class TaskEditSteps {
         ctx.taskEditService.editStatus(ctx.lastTask, TaskStatus.valueOf(newStatus));
     }
 
-    @Then("the task description should be {string}")
-    public void theTaskDescriptionShouldBe(String expectedDescription) {
-        assertNotNull(ctx.lastTask, "No task in context");
-        assertEquals(expectedDescription, ctx.lastTask.getDescription());
-    }
-
     @Then("the task edit should fail with an error")
     public void theTaskEditShouldFailWithAnError() {
         assertNotNull(ctx.lastException, "Expected an error but edit succeeded");

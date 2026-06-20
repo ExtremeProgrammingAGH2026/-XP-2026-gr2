@@ -6,6 +6,10 @@ import org.junit.platform.suite.api.IncludeEngines;
 import org.junit.platform.suite.api.SelectClasspathResource;
 import org.junit.platform.suite.api.Suite;
 
+/**
+ * IDE entry point for running all Cucumber acceptance tests.
+ * Maven uses junit-platform.properties directly via the Cucumber engine.
+ */
 @Suite
 @IncludeEngines("cucumber")
 @SelectClasspathResource("features")

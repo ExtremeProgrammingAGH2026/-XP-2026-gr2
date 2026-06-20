@@ -44,8 +44,9 @@ public class RecurringTaskSteps {
     public void aWeeklyRecurringTaskWithEnd(String title, String owner, String start, String end, String recurrenceEnd) {
         Instant startInstant = ctx.parseDateTime(start);
         Instant endInstant = ctx.parseDateTime(end);
+        // plusDays(1) makes the given date inclusive: tasks starting on recurrenceEnd day are included
         Instant recurrenceEndInstant = LocalDate.parse(recurrenceEnd, DATE_FORMAT)
-                .atStartOfDay(TestContext.ZONE).toInstant();
+                .plusDays(1).atStartOfDay(TestContext.ZONE).toInstant();
         currentRecurringTask = new RecurringTask(
                 UUID.randomUUID().toString(), title, "", owner,
                 startInstant, endInstant, RecurrencePattern.WEEKLY, recurrenceEndInstant);

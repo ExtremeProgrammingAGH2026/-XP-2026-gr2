@@ -36,7 +36,7 @@ public class TaskManagementSteps {
         Instant startInstant = ctx.parseDateTime(start);
         Instant endInstant = ctx.parseDateTime(end);
         Task task = new Task(UUID.randomUUID().toString(), title, description, owner, startInstant, endInstant);
-        ctx.taskSaveService.saveTask(task, ctx.tasksFile.toString(), true);
+        ctx.saveTask(task);
     }
 
     @Given("a task is saved with title {string}, description {string}, owner {string}, starting {string} ending {string} with status {string}")
@@ -46,7 +46,7 @@ public class TaskManagementSteps {
         Instant endInstant = ctx.parseDateTime(end);
         Task task = new Task(UUID.randomUUID().toString(), title, description, owner, startInstant, endInstant);
         task.setStatus(TaskStatus.valueOf(status));
-        ctx.taskSaveService.saveTask(task, ctx.tasksFile.toString(), true);
+        ctx.saveTask(task);
     }
 
     @When("all tasks are loaded from storage")
