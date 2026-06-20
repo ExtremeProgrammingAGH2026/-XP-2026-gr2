@@ -69,8 +69,8 @@ public class MainMenuValidationTest {
         String configPath = tempDir.resolve("config.json").toString();
         MainMenu menu = menuWith(config, configPath);
 
-        // 6 = Edit config, field 4 = minPasswordLength, value 0, 8 = Exit
-        menu.run(new Scanner("6\n4\n0\n8\n"), user);
+        // 6 = Edit config, field 4 = minPasswordLength, value 0, 9 = Exit
+        menu.run(new Scanner("6\n4\n0\n9\n"), user);
 
         assertEquals(8, config.getMinPasswordLength(), "0 is nonsensical and must be rejected");
         assertFalse(Files.exists(Path.of(configPath)), "rejected edit must not persist");
@@ -83,8 +83,8 @@ public class MainMenuValidationTest {
         String configPath = tempDir.resolve("config2.json").toString();
         MainMenu menu = menuWith(config, configPath);
 
-        // 6 = Edit config, field 3 = maxLoginAttempts, value 0, 8 = Exit
-        menu.run(new Scanner("6\n3\n0\n8\n"), user);
+        // 6 = Edit config, field 3 = maxLoginAttempts, value 0, 9 = Exit
+        menu.run(new Scanner("6\n3\n0\n9\n"), user);
 
         assertEquals(3, config.getMaxLoginAttempts());
         assertTrue(output.toString().contains("at least 1"));

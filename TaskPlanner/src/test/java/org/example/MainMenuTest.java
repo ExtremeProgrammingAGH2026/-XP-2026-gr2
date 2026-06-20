@@ -70,7 +70,7 @@ public class MainMenuTest {
 
     @Test
     public void shouldDisplayMenuOptions() {
-        Scanner scanner = new Scanner("8\n");
+        Scanner scanner = new Scanner("9\n");
         menu.run(scanner, currentUser);
 
         String out = output.toString();
@@ -81,12 +81,13 @@ public class MainMenuTest {
         assertTrue(out.contains("Show config"));
         assertTrue(out.contains("Edit config"));
         assertTrue(out.contains("Save config"));
+        assertTrue(out.contains("Sort my tasks"));
         assertTrue(out.contains("Exit"));
     }
 
     @Test
-    public void shouldExitOnChoice8() {
-        Scanner scanner = new Scanner("8\n");
+    public void shouldExitOnChoice9() {
+        Scanner scanner = new Scanner("9\n");
         menu.run(scanner, currentUser);
         assertTrue(output.toString().contains("Exit") || !output.toString().isEmpty());
     }
@@ -96,7 +97,7 @@ public class MainMenuTest {
         write(tasksFile, "id;title;description;owner;startDate;status\n"
                 + "1;Clean;Clean room;Alice;01.06.2026 10:00;NEW");
 
-        Scanner scanner = new Scanner("1\nn\n8\n");
+        Scanner scanner = new Scanner("1\nn\n9\n");
         menu.run(scanner, currentUser);
 
         assertTrue(output.toString().contains("Clean"));
@@ -104,7 +105,7 @@ public class MainMenuTest {
 
     @Test
     public void shouldShowNoTasksWhenFileDoesNotExist() {
-        Scanner scanner = new Scanner("1\nn\n8\n");
+        Scanner scanner = new Scanner("1\nn\n9\n");
         menu.run(scanner, currentUser);
 
         assertTrue(output.toString().contains("No tasks available"));
@@ -117,7 +118,7 @@ public class MainMenuTest {
                 + "2;Afternoon;Desc;Alice;01.06.2026 14:00;NEW\n"
                 + "3;Evening;Desc;Alice;02.06.2026 20:00;NEW");
 
-        Scanner scanner = new Scanner("1\ny\n2\n01.06.2026\n8\n");
+        Scanner scanner = new Scanner("1\ny\n2\n01.06.2026\n9\n");
         menu.run(scanner, currentUser);
 
         String out = output.toString();
@@ -135,7 +136,7 @@ public class MainMenuTest {
                 + "1;TodayTask;Desc;Alice;" + formatDay(today) + " 10:00;NEW\n"
                 + "2;OtherTask;Desc;Alice;" + formatDay(otherDay) + " 10:00;NEW");
 
-        Scanner scanner = new Scanner("1\ny\n1\n8\n");
+        Scanner scanner = new Scanner("1\ny\n1\n9\n");
         menu.run(scanner, currentUser);
 
         String out = output.toString();
@@ -148,7 +149,7 @@ public class MainMenuTest {
         write(tasksFile, "id;title;description;owner;startDate;status\n"
                 + "1;Shopping;Buy milk;Bob;01.06.2026 11:00;NEW");
 
-        Scanner scanner = new Scanner("2\n1\n8\n");
+        Scanner scanner = new Scanner("2\n1\n9\n");
         menu.run(scanner, currentUser);
 
         assertTrue(output.toString().contains("Bob"));
@@ -156,7 +157,7 @@ public class MainMenuTest {
 
     @Test
     public void shouldHandleInvalidChoiceAndRetry() {
-        Scanner scanner = new Scanner("99\n8\n");
+        Scanner scanner = new Scanner("99\n9\n");
         menu.run(scanner, currentUser);
 
         assertTrue(output.toString().contains("Invalid choice"));
@@ -167,7 +168,7 @@ public class MainMenuTest {
         write(tasksFile, "id;title;description;owner;startDate;status\n"
                 + "1;Clean;Clean room;Alice;01.06.2026 10:00;NEW");
 
-        Scanner scanner = new Scanner("4\n1\n2\n8\n");
+        Scanner scanner = new Scanner("4\n1\n2\n9\n");
         menu.run(scanner, currentUser);
 
         String out = output.toString();
@@ -175,6 +176,39 @@ public class MainMenuTest {
 
         String csv = Files.readString(tasksFile);
         assertTrue(csv.contains("IN_PROGRESS"));
+    }
+
+    @Test
+    public void shouldSortMyTasksByDayDescendingAndTimeAscending()
+            throws IOException {
+
+        write(
+                tasksFile,
+                "id;title;description;owner;startDate;status\n"
+                        + "1;Morning;Desc;Alice;01.06.2026 08:00;NEW\n"
+                        + "2;Evening;Desc;Alice;01.06.2026 20:00;NEW\n"
+                        + "3;NextDay;Desc;Alice;02.06.2026 09:00;NEW\n"
+                        + "4;OtherUser;Desc;Bob;03.06.2026 10:00;NEW"
+        );
+
+        Scanner scanner = new Scanner("8\n3\n9\n");
+
+        menu.run(scanner, currentUser);
+
+        String out = output.toString();
+
+        int nextDayPosition = out.indexOf("TASK: NextDay");
+        int morningPosition = out.indexOf("TASK: Morning");
+        int eveningPosition = out.indexOf("TASK: Evening");
+
+        assertTrue(nextDayPosition >= 0);
+        assertTrue(morningPosition >= 0);
+        assertTrue(eveningPosition >= 0);
+
+        assertTrue(nextDayPosition < morningPosition);
+        assertTrue(morningPosition < eveningPosition);
+
+        assertFalse(out.contains("TASK: OtherUser"));
     }
 
     private static void write(Path path, String content) throws IOException {

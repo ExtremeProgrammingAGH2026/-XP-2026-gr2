@@ -8,6 +8,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
+import org.example.sorting.SortOrder;
+import org.example.sorting.TaskSorter;
 
 public class MainMenu {
 
@@ -66,7 +68,8 @@ public class MainMenu {
             System.out.println("5. Show config");
             System.out.println("6. Edit config");
             System.out.println("7. Save config");
-            System.out.println("8. Exit");
+            System.out.println("8. Sort my tasks");
+            System.out.println("9. Exit");
             System.out.print("Choice: ");
             String choice = scanner.nextLine().trim();
             switch (choice) {
@@ -97,6 +100,9 @@ public class MainMenu {
                     }
                     break;
                 case "8":
+                    sortMyTasks(scanner, currentUser);
+                    break;
+                case "9":
                     return;
                 default:
                     System.out.println("Invalid choice. Try again.");
@@ -321,5 +327,100 @@ public class MainMenu {
             return ZoneId.of(appConfiguration.getTimeZoneName());
         }
         return DateTimeFormats.getZone();
+    }
+
+    private void sortMyTasks(
+            Scanner scanner,
+            User currentUser
+    ) {
+        List<Task> allTasks =
+                taskReadService.readTasks(tasksFilePath);
+
+        List<Task> myTasks = allTasks.stream()
+                .filter(task ->
+                        task.getOwner().equals(currentUser.getName()))
+                .collect(java.util.stream.Collectors.toList());
+
+        if (myTasks.isEmpty()) {
+            taskPrintService.printTasks(myTasks);
+            return;
+        }
+
+        while (true) {
+            System.out.println("Sort tasks:");
+            System.out.println(
+                    "1. Day ascending, time ascending"
+            );
+            System.out.println(
+                    "2. Day ascending, time descending"
+            );
+            System.out.println(
+                    "3. Day descending, time ascending"
+            );
+            System.out.println(
+                    "4. Day descending, time descending"
+            );
+            System.out.println("5. Back");
+            System.out.print("Choice: ");
+
+            String choice = scanner.nextLine().trim();
+
+            switch (choice) {
+                case "1":
+                    printSortedTasks(
+                            myTasks,
+                            SortOrder.ASC,
+                            SortOrder.ASC
+                    );
+                    return;
+
+                case "2":
+                    printSortedTasks(
+                            myTasks,
+                            SortOrder.ASC,
+                            SortOrder.DESC
+                    );
+                    return;
+
+                case "3":
+                    printSortedTasks(
+                            myTasks,
+                            SortOrder.DESC,
+                            SortOrder.ASC
+                    );
+                    return;
+
+                case "4":
+                    printSortedTasks(
+                            myTasks,
+                            SortOrder.DESC,
+                            SortOrder.DESC
+                    );
+                    return;
+
+                case "5":
+                    return;
+
+                default:
+                    System.out.println(
+                            "Invalid choice. Try again."
+                    );
+            }
+        }
+    }
+
+    private void printSortedTasks(
+            List<Task> tasks,
+            SortOrder dayOrder,
+            SortOrder timeOrder
+    ) {
+        List<Task> sortedTasks = TaskSorter.sort(
+                tasks,
+                resolveZone(appConfiguration),
+                dayOrder,
+                timeOrder
+        );
+
+        taskPrintService.printTasks(sortedTasks);
     }
 }
