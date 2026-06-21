@@ -30,7 +30,7 @@ public class AuthService {
     public User authenticateUser(String email, String password) {
         List<User> users = loadUsers();
         for (User user : users) {
-            if (user.getEmail().equals(email) && user.getPassword().equals(password)) {
+            if (user.getEmail().equalsIgnoreCase(email) && user.getPassword().equals(password)) {
                 return user;
             }
         }
