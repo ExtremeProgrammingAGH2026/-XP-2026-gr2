@@ -39,6 +39,7 @@ public class TestContext {
     public final TaskOverlapService taskOverlapService;
     public final TaskDateFilterService taskDateFilterService;
     public final RecurringTaskExpander recurringTaskExpander;
+    public final TaskScheduleService taskScheduleService;
 
     public User lastRegisteredUser;
     public User lastLoggedInUser;
@@ -69,6 +70,7 @@ public class TestContext {
         taskConflictService = new TaskConflictService(taskOverlapService);
         taskDateFilterService = new TaskDateFilterService(ZONE);
         recurringTaskExpander = new RecurringTaskExpander(ZONE);
+        taskScheduleService = new TaskScheduleService(ZONE);
     }
 
     /**
