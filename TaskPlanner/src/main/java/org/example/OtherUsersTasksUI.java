@@ -9,13 +9,22 @@ public class OtherUsersTasksUI {
     private final AuthService authService;
     private final TaskReadService taskReadService;
     private final TaskPrintService taskPrintService;
+    private final TaskScheduleService taskScheduleService;
     private final String tasksFilePath;
 
     public OtherUsersTasksUI(AuthService authService, TaskReadService taskReadService,
                              TaskPrintService taskPrintService, String tasksFilePath) {
+        this(authService, taskReadService, taskPrintService,
+                new TaskScheduleService(DateTimeFormats.getZone()), tasksFilePath);
+    }
+
+    public OtherUsersTasksUI(AuthService authService, TaskReadService taskReadService,
+                             TaskPrintService taskPrintService, TaskScheduleService taskScheduleService,
+                             String tasksFilePath) {
         this.authService = authService;
         this.taskReadService = taskReadService;
         this.taskPrintService = taskPrintService;
+        this.taskScheduleService = taskScheduleService;
         this.tasksFilePath = tasksFilePath;
     }
 
@@ -36,7 +45,7 @@ public class OtherUsersTasksUI {
 
         User selected = promptSelection(scanner, others);
         List<Task> tasks = taskReadService.readTasks(tasksFilePath);
-        taskPrintService.printTasksByOwner(tasks, selected.getName());
+        taskPrintService.printTasksByOwner(taskScheduleService.expandAll(tasks), selected.getName());
     }
 
     private User promptSelection(Scanner scanner, List<User> users) {

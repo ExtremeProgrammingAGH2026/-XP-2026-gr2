@@ -117,7 +117,7 @@ public class MainMenu {
         if (answer.equalsIgnoreCase("y")) {
             showMyTasksByDay(scanner, tasks, currentUser);
         } else {
-            taskPrintService.printTasksByOwner(tasks, currentUser.getName());
+            taskPrintService.printTasksByOwner(taskScheduleService.expandAll(tasks), currentUser.getName());
         }
     }
 
