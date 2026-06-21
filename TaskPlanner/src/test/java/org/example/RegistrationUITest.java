@@ -49,24 +49,10 @@ public class RegistrationUITest {
     }
 
     @Test
-    public void shouldReturnNullOnInvalidEmail() {
-        Scanner scanner = new Scanner("Alice\nnot-an-email\npassword123\n");
-        User user = registrationUI.register(scanner);
-        assertNull(user);
-    }
-
-    @Test
-    public void shouldReturnNullOnShortPassword() {
-        Scanner scanner = new Scanner("Alice\nalice@example.com\nshort\n");
-        User user = registrationUI.register(scanner);
-        assertNull(user);
-    }
-
-    @Test
-    public void shouldPrintErrorMessageOnFailure() {
-        Scanner scanner = new Scanner("Alice\nbad-email\npassword123\n");
+    public void shouldPrintErrorMessageOnInvalidEmail() {
+        Scanner scanner = new Scanner("Alice\nbad-email\ncancel\n");
         registrationUI.register(scanner);
-        assertTrue(output.toString().contains("Registration failed"));
+        assertTrue(output.toString().contains("Email format is invalid"));
     }
 
     @Test

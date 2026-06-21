@@ -31,15 +31,27 @@ public class RegistrationValidator {
      * @param password the user's chosen password
      */
     public void validate(String name, String email, String password) {
+        validateName(name);
+        validateEmail(email);
+        validatePassword(password);
+    }
+
+    public void validateName(String name) {
         if (name == null || name.isBlank()) {
             throw new RegistrationException("Name must not be empty");
         }
+    }
+
+    public void validateEmail(String email) {
         if (email == null || email.isBlank()) {
             throw new RegistrationException("Email must not be empty");
         }
         if (!email.matches(EMAIL_REGEX)) {
             throw new RegistrationException("Email format is invalid");
         }
+    }
+
+    public void validatePassword(String password) {
         if (password == null || password.isBlank()) {
             throw new RegistrationException("Password must not be empty");
         }
