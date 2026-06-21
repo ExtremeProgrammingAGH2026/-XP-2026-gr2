@@ -29,3 +29,8 @@ Feature: User Authentication
     And the session is started for the authenticated user
     And the user logs out
     Then the session should not be active
+
+  Scenario: Login succeeds with email in different case
+    When the user logs in with email "JAN@EXAMPLE.COM" and password "securePass1"
+    Then the login should succeed
+    And the authenticated user name should be "Jan Kowalski"
