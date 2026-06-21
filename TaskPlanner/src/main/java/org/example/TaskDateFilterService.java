@@ -39,7 +39,11 @@ public class TaskDateFilterService {
         Objects.requireNonNull(date, "date must not be null");
 
         return tasks.stream()
-                .filter(task -> toLocalDate(task).equals(date))
+                .filter(task -> {
+                    LocalDate startDay = toLocalDate(task);
+                    LocalDate endDay = toEndLocalDate(task);
+                    return !date.isBefore(startDay) && !date.isAfter(endDay);
+                })
                 .collect(Collectors.toList());
     }
 
@@ -81,5 +85,12 @@ public class TaskDateFilterService {
     private LocalDate toLocalDate(Task task) {
         ZonedDateTime zdt = task.getStartDate().atZone(zone);
         return zdt.toLocalDate();
+    }
+
+    private LocalDate toEndLocalDate(Task task) {
+        if (task.getEndDate() == null) {
+            return toLocalDate(task);
+        }
+        return task.getEndDate().atZone(zone).toLocalDate();
     }
 }
