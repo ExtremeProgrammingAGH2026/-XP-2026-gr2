@@ -29,6 +29,14 @@ Wszystkie 11 wymaganych MUST user stories przechodzą testy akceptacyjne (Cucumb
 | Problem | Przyczyna | Fix |
 |---|---|---|
 | `TaskConflictWarningServiceTest` — 2 failures | Kodowanie Cp1252 na Windows nie obsługuje polskich znaków (ą) w PrintStream | Wymuszenie UTF-8 w PrintStream i odczyt ByteArrayOutputStream |
+| Login case-insensitive nie działał | `AuthService.authenticateUser()` używał `equals()` zamiast `equalsIgnoreCase()` | Zmiana na `equalsIgnoreCase()` |
+| Multi-day task nie pojawiał się w filtrze dnia | `TaskDateFilterService.filterByDay()` sprawdzał tylko datę startu | Sprawdzanie czy dzień mieści się w zakresie start-end |
+
+### Znane problemy (nie naprawione)
+
+| Problem | Uwaga |
+|---|---|
+| Cucumber scenariusze nie failują builda | Surefire raportuje "Tests run: 0" dla CucumberTestEngine — scenariusze się wykonują ale ich failures nie powodują BUILD FAILURE. Pre-existing issue. |
 
 ### Testy jednostkowe pokrywające edge cases
 
