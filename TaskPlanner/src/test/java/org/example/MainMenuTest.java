@@ -179,6 +179,33 @@ public class MainMenuTest {
     }
 
     @Test
+    public void shouldReturnTrueWhenUserChoosesLogout() {
+        Scanner scanner = new Scanner("9\n");
+        boolean logout = menu.run(scanner, currentUser);
+
+        assertTrue(logout, "Expected run() to return true on logout");
+        assertTrue(output.toString().contains("Logged out"));
+    }
+
+    @Test
+    public void shouldReturnFalseWhenUserChoosesExit() {
+        Scanner scanner = new Scanner("10\n");
+        boolean logout = menu.run(scanner, currentUser);
+
+        assertFalse(logout, "Expected run() to return false on exit");
+    }
+
+    @Test
+    public void shouldShowLogoutAndExitInMenu() {
+        Scanner scanner = new Scanner("10\n");
+        menu.run(scanner, currentUser);
+
+        String out = output.toString();
+        assertTrue(out.contains("Logout"));
+        assertTrue(out.contains("Exit"));
+    }
+
+    @Test
     public void shouldSortMyTasksByDayDescendingAndTimeAscending()
             throws IOException {
 
