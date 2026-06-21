@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.List;
 
@@ -19,7 +20,7 @@ class TaskConflictWarningServiceTest {
     @BeforeEach
     void setUp() {
         output = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(output));
+        System.setOut(new PrintStream(output, true, StandardCharsets.UTF_8));
     }
 
     @AfterEach
@@ -43,7 +44,7 @@ class TaskConflictWarningServiceTest {
 
         assertEquals(
                 "WARNING: Task 'Sprzątanie' conflicts with task 'Zakupy'" + System.lineSeparator(),
-                output.toString()
+                new String(output.toByteArray(), StandardCharsets.UTF_8)
         );
     }
 
@@ -61,7 +62,7 @@ class TaskConflictWarningServiceTest {
 
         service.printConflictWarning(task, List.of(other));
 
-        assertEquals("", output.toString());
+        assertEquals("", new String(output.toByteArray(), StandardCharsets.UTF_8));
     }
 
     @Test
@@ -85,7 +86,7 @@ class TaskConflictWarningServiceTest {
         assertEquals(
                 "WARNING: Task 'Sprzątanie' conflicts with task 'Zakupy'" + System.lineSeparator()
                         + "WARNING: Task 'Sprzątanie' conflicts with task 'Gotowanie'" + System.lineSeparator(),
-                output.toString()
+                new String(output.toByteArray(), StandardCharsets.UTF_8)
         );
     }
 }
