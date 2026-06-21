@@ -35,6 +35,25 @@ public class TaskScheduleService {
                 .collect(Collectors.toList());
     }
 
+    public List<Task> expandAll(List<? extends Task> tasks) {
+        Objects.requireNonNull(tasks, "tasks must not be null");
+        List<Task> result = new ArrayList<>();
+        for (Task task : tasks) {
+            if (task instanceof RecurringTask) {
+                RecurringTask recurring = (RecurringTask) task;
+                Instant from = recurring.getStartDate();
+                Instant to = recurring.getRecurrenceEndDate();
+                if (to == null) {
+                    to = from.atZone(zone).plusYears(1).toInstant();
+                }
+                result.addAll(recurringTaskExpander.expand(recurring, from, to));
+            } else {
+                result.add(task);
+            }
+        }
+        return result.stream().sorted(BY_START_DATE).collect(Collectors.toList());
+    }
+
     public List<Task> expandForWindow(List<Task> tasks, Instant from, Instant to) {
         Objects.requireNonNull(tasks, "tasks must not be null");
         Objects.requireNonNull(from, "from must not be null");
