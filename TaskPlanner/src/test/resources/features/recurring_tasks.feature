@@ -27,3 +27,8 @@ Feature: Recurring Tasks
     Given a weekly recurring task "Weekly cleaning" owned by "jan" starting "2026-07-06 10:00" ending "2026-07-06 11:00"
     When the recurring task is expanded for 4 weeks from "2026-07-06" to "2026-07-27"
     Then all occurrence IDs should be unique
+
+  Scenario: A biweekly recurring task generates one occurrence every two weeks
+    Given a biweekly recurring task "Biweekly review" owned by "jan" starting "2026-07-06 10:00" ending "2026-07-06 11:00"
+    When the recurring task is expanded from "2026-07-06" to "2026-08-16"
+    Then the expanded task list should contain 3 occurrences

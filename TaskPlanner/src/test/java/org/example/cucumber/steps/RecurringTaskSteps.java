@@ -70,6 +70,15 @@ public class RecurringTaskSteps {
                 startInstant, endInstant, RecurrencePattern.MONTHLY, null);
     }
 
+    @Given("a biweekly recurring task {string} owned by {string} starting {string} ending {string}")
+    public void aBiweeklyRecurringTask(String title, String owner, String start, String end) {
+        Instant startInstant = ctx.parseDateTime(start);
+        Instant endInstant = ctx.parseDateTime(end);
+        currentRecurringTask = new RecurringTask(
+                UUID.randomUUID().toString(), title, "", owner,
+                startInstant, endInstant, RecurrencePattern.BIWEEKLY, null);
+    }
+
     @When("the recurring task is expanded for 4 weeks from {string} to {string}")
     public void theRecurringTaskIsExpandedForWeeks(String from, String to) {
         expandRecurringTask(from, to);

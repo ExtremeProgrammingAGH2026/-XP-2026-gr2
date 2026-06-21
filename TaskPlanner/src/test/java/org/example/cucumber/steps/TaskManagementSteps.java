@@ -11,6 +11,7 @@ import org.example.TestContext;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -104,5 +105,15 @@ public class TaskManagementSteps {
             throw new AssertionError("Task list is empty");
         }
         assertEquals(TaskStatus.valueOf(expectedStatus), ctx.lastTaskList.get(0).getStatus());
+    }
+
+    @Then("the task pool should contain {int} tasks with different owners")
+    public void theTaskPoolShouldContainTasksWithDifferentOwners(int expectedCount) {
+        assertEquals(expectedCount, ctx.taskPool.size());
+        long distinctOwners = ctx.taskPool.stream()
+                .map(Task::getOwner)
+                .distinct()
+                .count();
+        assertEquals(expectedCount, distinctOwners, "Expected all tasks to have different owners");
     }
 }
