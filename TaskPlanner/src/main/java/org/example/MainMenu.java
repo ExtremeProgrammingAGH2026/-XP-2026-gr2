@@ -58,7 +58,7 @@ public class MainMenu {
         this.configPath = configPath;
     }
 
-    public void run(Scanner scanner, User currentUser) {
+    public boolean run(Scanner scanner, User currentUser) {
         while (true) {
             System.out.println("\n=== Menu ===");
             System.out.println("1. My tasks");
@@ -69,7 +69,8 @@ public class MainMenu {
             System.out.println("6. Edit config");
             System.out.println("7. Save config");
             System.out.println("8. Sort my tasks");
-            System.out.println("9. Exit");
+            System.out.println("9. Logout");
+            System.out.println("10. Exit");
             System.out.print("Choice: ");
             String choice = scanner.nextLine().trim();
             switch (choice) {
@@ -103,7 +104,10 @@ public class MainMenu {
                     sortMyTasks(scanner, currentUser);
                     break;
                 case "9":
-                    return;
+                    System.out.println("Logged out.");
+                    return true;
+                case "10":
+                    return false;
                 default:
                     System.out.println("Invalid choice. Try again.");
             }

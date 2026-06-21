@@ -42,9 +42,15 @@ public class App {
         CreateTaskUI createTaskUI = new CreateTaskUI(taskSaveService, authService, tasksFile);
         MainMenu mainMenu = new MainMenu(taskReadService, taskPrintService, otherUsersTasksUI, createTaskUI, tasksFile, config);
 
-        User user = startScreen.run(scanner);
-        if (user != null) {
-            mainMenu.run(scanner, user);
+        while (true) {
+            User user = startScreen.run(scanner);
+            if (user == null) {
+                return;
+            }
+            boolean logout = mainMenu.run(scanner, user);
+            if (!logout) {
+                return;
+            }
         }
     }
 
