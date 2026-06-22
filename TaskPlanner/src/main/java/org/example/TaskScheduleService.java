@@ -46,6 +46,10 @@ public class TaskScheduleService {
                 if (to == null) {
                     to = from.atZone(zone).plusYears(1).toInstant();
                 }
+                if (to.isBefore(from)) {
+                    // Misconfigured task (recurrence ends before it starts): no occurrences.
+                    continue;
+                }
                 result.addAll(recurringTaskExpander.expand(recurring, from, to));
             } else {
                 result.add(task);
