@@ -50,4 +50,18 @@ public class LoginUITest {
         assertNotNull(user);
         assertEquals("Bob", user.getName());
     }
+
+    @Test
+    public void shouldReadMaxAttemptsLiveFromSupplierOnEachLogin() {
+        int[] maxAttempts = {1};
+        LoginUI ui = new LoginUI(authService, () -> maxAttempts[0]);
+
+        User firstAttempt = ui.login(new Scanner("alice@example.com\nwrongpass\n"));
+        assertNull(firstAttempt, "With max 1 attempt, a single wrong password should fail");
+
+        maxAttempts[0] = 3;
+        User afterRaisingLimit = ui.login(new Scanner("alice@example.com\nbad\nbad\nsecret123\n"));
+        assertNotNull(afterRaisingLimit, "After raising the limit live, the 3rd attempt should succeed");
+        assertEquals("Alice", afterRaisingLimit.getName());
+    }
 }
