@@ -57,3 +57,9 @@ Feature: User Registration
   Scenario: Registration fails when name is empty string
     When a user registers with name "" , email "jan@example.com" and password "securePass1"
     Then the registration should fail
+
+  Scenario: A user whose name contains the CSV separator survives save and load
+    Given a user is already registered with name "Kowalski; Jan", email "jan@example.com" and password "securePass1"
+    When the user list is loaded from storage
+    Then the loaded user list should contain 1 user
+    And the registered user name should be "Kowalski; Jan"
