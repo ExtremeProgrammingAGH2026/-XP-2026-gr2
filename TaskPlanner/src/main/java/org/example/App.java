@@ -38,8 +38,8 @@ public class App {
         TaskReadService taskReadService = new TaskReadService();
         TaskFilterService taskFilterService = new TaskFilterService();
         TaskPrintService taskPrintService = new TaskPrintService(taskFilterService);
-        OtherUsersTasksUI otherUsersTasksUI = new OtherUsersTasksUI(authService, taskReadService, taskPrintService, tasksFile);
-        CreateTaskUI createTaskUI = new CreateTaskUI(taskSaveService, authService, tasksFile);
+        OtherUsersTasksUI otherUsersTasksUI = new OtherUsersTasksUI(authService, taskReadService, taskPrintService, config::getTasksFilePath);
+        CreateTaskUI createTaskUI = new CreateTaskUI(taskSaveService, authService, config::getTasksFilePath);
         MainMenu mainMenu = new MainMenu(taskReadService, taskPrintService, otherUsersTasksUI, createTaskUI, tasksFile, config);
 
         while (true) {

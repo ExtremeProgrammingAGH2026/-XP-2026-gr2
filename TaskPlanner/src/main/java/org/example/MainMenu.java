@@ -112,7 +112,7 @@ public class MainMenu {
     }
 
     private void showMyTasks(Scanner scanner, User currentUser) {
-        List<Task> tasks = taskReadService.readTasks(tasksFilePath);
+        List<Task> tasks = taskReadService.readTasks(tasksPath());
         System.out.print("Filter by date? (y/n): ");
         String answer = scanner.nextLine().trim();
         if (answer.equalsIgnoreCase("y")) {
@@ -164,7 +164,7 @@ public class MainMenu {
     }
 
     private void changeTaskStatus(Scanner scanner, User currentUser) {
-        List<Task> allTasks = taskReadService.readTasks(tasksFilePath);
+        List<Task> allTasks = taskReadService.readTasks(tasksPath());
         List<Task> myTasks = allTasks.stream()
                 .filter(t -> t.getOwner().equals(currentUser.getName()))
                 .collect(java.util.stream.Collectors.toList());
@@ -216,7 +216,7 @@ public class MainMenu {
         }
 
         taskEditService.editStatus(selected, statuses[statusIndex]);
-        taskSaveService.saveTasks(allTasks, tasksFilePath, false);
+        taskSaveService.saveTasks(allTasks, tasksPath(), false);
         System.out.println("Status changed to " + selected.getStatus() + ".");
     }
 
@@ -326,6 +326,19 @@ public class MainMenu {
         return new TaskScheduleService(resolveZone(appConfiguration));
     }
 
+    /**
+     * Resolves the tasks file path from the live configuration so that editing
+     * it at runtime takes effect immediately. Falls back to the path supplied at
+     * construction when the configuration does not define one.
+     */
+    private String tasksPath() {
+        if (appConfiguration != null && appConfiguration.getTasksFilePath() != null
+                && !appConfiguration.getTasksFilePath().isBlank()) {
+            return appConfiguration.getTasksFilePath();
+        }
+        return tasksFilePath;
+    }
+
     private static ZoneId resolveZone(AppConfiguration appConfiguration) {
         if (appConfiguration != null && appConfiguration.getTimeZoneName() != null
                 && !appConfiguration.getTimeZoneName().isBlank()) {
@@ -339,7 +352,7 @@ public class MainMenu {
             User currentUser
     ) {
         List<Task> allTasks =
-                taskReadService.readTasks(tasksFilePath);
+                taskReadService.readTasks(tasksPath());
 
         List<Task> myTasks = allTasks.stream()
                 .filter(task ->

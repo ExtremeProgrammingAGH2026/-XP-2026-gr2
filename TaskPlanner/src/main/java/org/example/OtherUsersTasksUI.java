@@ -2,6 +2,7 @@ package org.example;
 
 import java.util.List;
 import java.util.Scanner;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class OtherUsersTasksUI {
@@ -10,7 +11,7 @@ public class OtherUsersTasksUI {
     private final TaskReadService taskReadService;
     private final TaskPrintService taskPrintService;
     private final TaskScheduleService taskScheduleService;
-    private final String tasksFilePath;
+    private final Supplier<String> tasksFilePath;
 
     public OtherUsersTasksUI(AuthService authService, TaskReadService taskReadService,
                              TaskPrintService taskPrintService, String tasksFilePath) {
@@ -19,8 +20,21 @@ public class OtherUsersTasksUI {
     }
 
     public OtherUsersTasksUI(AuthService authService, TaskReadService taskReadService,
+                             TaskPrintService taskPrintService, Supplier<String> tasksFilePath) {
+        this(authService, taskReadService, taskPrintService,
+                new TaskScheduleService(DateTimeFormats.getZone()), tasksFilePath);
+    }
+
+    public OtherUsersTasksUI(AuthService authService, TaskReadService taskReadService,
                              TaskPrintService taskPrintService, TaskScheduleService taskScheduleService,
                              String tasksFilePath) {
+        this(authService, taskReadService, taskPrintService, taskScheduleService,
+                () -> tasksFilePath);
+    }
+
+    public OtherUsersTasksUI(AuthService authService, TaskReadService taskReadService,
+                             TaskPrintService taskPrintService, TaskScheduleService taskScheduleService,
+                             Supplier<String> tasksFilePath) {
         this.authService = authService;
         this.taskReadService = taskReadService;
         this.taskPrintService = taskPrintService;
@@ -44,7 +58,7 @@ public class OtherUsersTasksUI {
         }
 
         User selected = promptSelection(scanner, others);
-        List<Task> tasks = taskReadService.readTasks(tasksFilePath);
+        List<Task> tasks = taskReadService.readTasks(tasksFilePath.get());
         taskPrintService.printTasksByOwner(taskScheduleService.expandAll(tasks), selected.getName());
     }
 
