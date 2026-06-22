@@ -17,7 +17,6 @@ public class MainMenu {
     private final TaskPrintService taskPrintService;
     private final TaskSaveService taskSaveService;
     private final TaskEditService taskEditService;
-    private final TaskScheduleService taskScheduleService;
     private final OtherUsersTasksUI otherUsersTasksUI;
     private final CreateTaskUI createTaskUI;
     private final String tasksFilePath;
@@ -48,8 +47,6 @@ public class MainMenu {
         this.taskPrintService = taskPrintService;
         this.taskSaveService = taskSaveService;
         this.taskEditService = taskEditService;
-        ZoneId zone = resolveZone(appConfiguration);
-        this.taskScheduleService = new TaskScheduleService(zone);
         this.otherUsersTasksUI = otherUsersTasksUI;
         this.createTaskUI = createTaskUI;
         this.tasksFilePath = tasksFilePath;
@@ -121,7 +118,7 @@ public class MainMenu {
         if (answer.equalsIgnoreCase("y")) {
             showMyTasksByDay(scanner, tasks, currentUser);
         } else {
-            taskPrintService.printTasksByOwner(taskScheduleService.expandAll(tasks), currentUser.getName());
+            taskPrintService.printTasksByOwner(scheduleService().expandAll(tasks), currentUser.getName());
         }
     }
 
@@ -131,7 +128,7 @@ public class MainMenu {
             return;
         }
 
-        List<Task> dayTasks = taskScheduleService.getTasksForDay(tasks, day).stream()
+        List<Task> dayTasks = scheduleService().getTasksForDay(tasks, day).stream()
                 .filter(t -> t.getOwner().equals(currentUser.getName()))
                 .collect(java.util.stream.Collectors.toList());
         taskPrintService.printTasksSortedByDate(dayTasks);
@@ -323,6 +320,10 @@ public class MainMenu {
 
     private String nullToPlaceholder(String s) {
         return s == null ? "(none)" : s;
+    }
+
+    private TaskScheduleService scheduleService() {
+        return new TaskScheduleService(resolveZone(appConfiguration));
     }
 
     private static ZoneId resolveZone(AppConfiguration appConfiguration) {
