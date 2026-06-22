@@ -24,6 +24,7 @@ CucumberTestEngine.
 | 10 | Registration fails with password 7 characters long | PASS |
 | 11 | Registration fails when email has no domain | PASS |
 | 12 | Registration fails when name is empty string | PASS |
+| 13 | A user whose name contains the CSV separator survives save and load | PASS |
 
 ## US#2 — Logowanie (`authentication.feature`)
 
@@ -51,6 +52,7 @@ CucumberTestEngine.
 | 9 | Task with end date after start date is valid | PASS |
 | 10 | Task with empty description is valid | PASS |
 | 11 | Task with blank title is invalid | PASS |
+| 12 | A task whose title contains the CSV separator survives save and load | PASS |
 
 ## US#8 — Przypisywanie zadań (`task_management.feature`)
 
@@ -154,12 +156,12 @@ CucumberTestEngine.
 ## Podsumowanie
 
 Wszystkie 11 wymaganych MUST user stories mają pokrycie testami akceptacyjnymi Cucumber.
-Łącznie wykonywanych jest ~60 scenariuszy BDD. Scenariusze pokrywają:
+Łącznie wykonywanych jest ~67 scenariuszy BDD. Scenariusze pokrywają:
 
 - Pozytywne ścieżki (happy path) każdej user story
 - Walidację błędnych danych wejściowych
 - Granice (granica długości hasła, granica stykających się zadań)
-- Persystencję (zapis/odczyt z CSV)
+- Persystencję (zapis/odczyt z CSV, w tym pola zawierające separator `;`)
 - Trzy poziomy filtrowania (dzień / miesiąc / zakres)
 - Wszystkie wzorce powtarzania zadań cyklicznych
-- Konflikty czasowe w 6 wariantach
+- Konflikty czasowe w 8 wariantach (w tym rozdzielność per właściciel)

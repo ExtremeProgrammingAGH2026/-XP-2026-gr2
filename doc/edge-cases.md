@@ -21,6 +21,7 @@ automatycznymi (jednostkowymi lub Cucumber) i nie były testowane ręcznie.
 | 8 | Hasło dokładnie 8 znaków (granica) | Rejestracja OK | PASS | granica włącznie |
 | 9 | Null w polu name/email/password | Błąd walidacji | auto | `RegistrationValidatorTest` |
 | 10 | Anulowanie rejestracji w trakcie | Powrót do menu | PASS | wpisanie `cancel` w dowolnym polu |
+| 11 | Nazwa zawiera separator CSV `;` | Zapis/odczyt zachowuje nazwę | auto | `RegistrationServiceTest`, `registration.feature` (RFC4180 quoting) |
 
 ## US#2 — Logowanie
 
@@ -42,6 +43,7 @@ automatycznymi (jednostkowymi lub Cucumber) i nie były testowane ręcznie.
 | 4 | Data końca = data początku | Błąd walidacji | auto | strict after |
 | 5 | Brak opisu (puste) | OK (opcjonalny) | PASS | zadanie tworzone bez opisu |
 | 6 | Nieprawidłowy format daty | Błąd parsowania + reprompt | PASS | "Invalid format. Use dd.MM.yyyy HH:mm" |
+| 7 | Tytuł zawiera separator CSV `;` | Zapis/odczyt zachowuje tytuł | auto | `TaskReadServiceTest`, `task_management.feature` (RFC4180 quoting) |
 
 ## US#8 — Przypisywanie zadań do osoby
 
@@ -120,6 +122,7 @@ automatycznymi (jednostkowymi lub Cucumber) i nie były testowane ręcznie.
 | 5 | Wiele zadań, konflikt z jednym | Wykryty konflikt | auto | jak wyżej |
 | 6 | To samo zadanie (ten sam ID) | Ignorowane | auto | nie konflikt z samym sobą |
 | 7 | Opcja anulowania po konflikcie | Wybór y/n | PASS | "Task has conflicts. Create anyway? (y/n)" |
+| 8 | Nakładające się zadanie innego domownika | BRAK konfliktu | auto | konflikt liczony tylko w obrębie właściciela (`TaskConflictService`, `task_conflicts.feature`) |
 
 ## Podsumowanie
 
