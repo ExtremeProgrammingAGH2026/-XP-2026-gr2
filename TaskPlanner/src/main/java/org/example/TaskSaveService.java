@@ -64,32 +64,16 @@ class TaskSaveService {
         String startDate = DateTimeFormats.STORAGE_FORMATTER.format(task.getStartDate());
         String endDate = DateTimeFormats.STORAGE_FORMATTER.format(task.getEndDate());
         return String.join(CsvConstants.SEPARATOR_STR,
-                escape(task.getId()),
-                escape(task.getTitle()),
-                escape(task.getDescription()),
-                escape(task.getOwner()),
-                escape(startDate),
-                escape(endDate),
-                escape(task.getStatus().name()),
-                escape(type),
-                escape(recurrencePattern),
-                escape(recurrenceEndDate)) + System.lineSeparator();
-    }
-
-    /**
-     * Quotes a field per RFC 4180 when it contains the separator, a quote, or a
-     * line break, so the commons-csv reader can round-trip it. Fields without
-     * special characters are returned unchanged.
-     */
-    private static String escape(String field) {
-        boolean needsQuoting = field.indexOf(CsvConstants.SEPARATOR) >= 0
-                || field.indexOf('"') >= 0
-                || field.indexOf('\n') >= 0
-                || field.indexOf('\r') >= 0;
-        if (!needsQuoting) {
-            return field;
-        }
-        return '"' + field.replace("\"", "\"\"") + '"';
+                CsvEscaper.escape(task.getId()),
+                CsvEscaper.escape(task.getTitle()),
+                CsvEscaper.escape(task.getDescription()),
+                CsvEscaper.escape(task.getOwner()),
+                CsvEscaper.escape(startDate),
+                CsvEscaper.escape(endDate),
+                CsvEscaper.escape(task.getStatus().name()),
+                CsvEscaper.escape(type),
+                CsvEscaper.escape(recurrencePattern),
+                CsvEscaper.escape(recurrenceEndDate)) + System.lineSeparator();
     }
 
     private static String storageDate(Instant instant) {
