@@ -55,6 +55,40 @@ class TaskConflictServiceTest {
     }
 
     @Test
+    void shouldNotDetectConflictWhenOverlappingTaskBelongsToDifferentOwner() {
+        Task mine = new Task("1", "My task", "Desc", "Anna",
+                Instant.parse("2026-06-01T10:00:00Z"),
+                Instant.parse("2026-06-01T11:00:00Z"));
+
+        Task othersOverlapping = new Task("2", "Bob's task", "Desc", "Bob",
+                Instant.parse("2026-06-01T10:30:00Z"),
+                Instant.parse("2026-06-01T11:30:00Z"));
+
+        TaskConflictService service = new TaskConflictService();
+
+        assertFalse(service.hasConflict(mine, List.of(othersOverlapping)));
+    }
+
+    @Test
+    void shouldDetectConflictOnlyWithSameOwnerAmongMixedOwners() {
+        Task mine = new Task("1", "My task", "Desc", "Anna",
+                Instant.parse("2026-06-01T10:00:00Z"),
+                Instant.parse("2026-06-01T11:00:00Z"));
+
+        Task bobOverlapping = new Task("2", "Bob's task", "Desc", "Bob",
+                Instant.parse("2026-06-01T10:30:00Z"),
+                Instant.parse("2026-06-01T11:30:00Z"));
+
+        Task annaOverlapping = new Task("3", "Anna's other task", "Desc", "Anna",
+                Instant.parse("2026-06-01T10:45:00Z"),
+                Instant.parse("2026-06-01T11:15:00Z"));
+
+        TaskConflictService service = new TaskConflictService();
+
+        assertTrue(service.hasConflict(mine, List.of(bobOverlapping, annaOverlapping)));
+    }
+
+    @Test
     void shouldIgnoreTheSameTaskById() {
         Task first = new Task("1", "Task 1", "Desc", "Adam",
                 Instant.parse("2026-06-01T10:00:00Z"),
