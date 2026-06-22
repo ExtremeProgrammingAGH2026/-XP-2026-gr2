@@ -42,3 +42,18 @@ Feature: Task Conflict Detection
       | Lunch   | 2026-07-01 12:00 | 2026-07-01 13:00 | jan   |
     When checking if a new task from "2026-07-01 09:00" to "2026-07-01 09:30" conflicts
     Then a conflict should be detected
+
+  Scenario: No conflict when the overlapping task belongs to another household member
+    Given the existing tasks are:
+      | title       | startDateTime    | endDateTime      | owner |
+      | Bob meeting | 2026-07-01 10:00 | 2026-07-01 12:00 | bob   |
+    When checking if a new task from "2026-07-01 10:30" to "2026-07-01 11:30" conflicts
+    Then there should be no conflict
+
+  Scenario: Conflict is detected only with the owner's own overlapping task
+    Given the existing tasks are:
+      | title       | startDateTime    | endDateTime      | owner |
+      | Bob meeting | 2026-07-01 10:00 | 2026-07-01 12:00 | bob   |
+      | Jan errand  | 2026-07-01 10:30 | 2026-07-01 11:00 | jan   |
+    When checking if a new task from "2026-07-01 10:15" to "2026-07-01 10:45" conflicts
+    Then a conflict should be detected
