@@ -87,7 +87,10 @@ public class MainMenu {
                     showConfig();
                     break;
                 case "6":
-                    editConfig(scanner);
+                    if (editConfig(scanner)) {
+                        System.out.println("Users file changed. You have been logged out.");
+                        return true;
+                    }
                     break;
                 case "7":
                     try {
@@ -230,12 +233,20 @@ public class MainMenu {
         System.out.println("6. dateTimeFormat: " + nullToPlaceholder(appConfiguration.getDateTimeFormat()));
     }
 
-    private void editConfig(Scanner scanner) {
+    /**
+     * Edits a single configuration field.
+     *
+     * @return {@code true} if the users file path was changed, which invalidates
+     *         the current session and should force the logged-in user to log out
+     */
+    private boolean editConfig(Scanner scanner) {
         showConfig();
         System.out.print("Select field to edit (1-6): ");
         String field = scanner.nextLine().trim();
         System.out.print("New value: ");
         String value = scanner.nextLine().trim();
+
+        String previousUsersPath = appConfiguration.getUsersFilePath();
 
         switch (field) {
             case "1":
@@ -247,7 +258,7 @@ public class MainMenu {
             case "3": {
                 Integer attempts = parsePositiveInt(value, "maximum login attempts");
                 if (attempts == null) {
-                    return;
+                    return false;
                 }
                 appConfiguration.setMaxLoginAttempts(attempts);
                 break;
@@ -255,7 +266,7 @@ public class MainMenu {
             case "4": {
                 Integer minLength = parsePositiveInt(value, "minimum password length");
                 if (minLength == null) {
-                    return;
+                    return false;
                 }
                 appConfiguration.setMinPasswordLength(minLength);
                 break;
@@ -266,20 +277,20 @@ public class MainMenu {
                     appConfiguration.setTimeZoneName(value);
                 } catch (Exception e) {
                     System.out.println("Invalid timezone. Example: Europe/Warsaw, UTC, US/Eastern");
-                    return;
+                    return false;
                 }
                 break;
             case "6":
                 if (!isValidDatePattern(value)) {
                     System.out.println("Invalid date format pattern. Must include year, month, day, hour and minute.");
                     System.out.println("Example: dd.MM.yyyy HH:mm");
-                    return;
+                    return false;
                 }
                 appConfiguration.setDateTimeFormat(value);
                 break;
             default:
                 System.out.println("Invalid field.");
-                return;
+                return false;
         }
         DateTimeFormats.init(appConfiguration);
         try {
@@ -288,6 +299,7 @@ public class MainMenu {
         } catch (IOException e) {
             System.out.println("Configuration updated but failed to save: " + e.getMessage());
         }
+        return !java.util.Objects.equals(previousUsersPath, appConfiguration.getUsersFilePath());
     }
 
     private Integer parsePositiveInt(String value, String label) {
