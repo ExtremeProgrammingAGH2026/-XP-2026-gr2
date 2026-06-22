@@ -1,7 +1,7 @@
 # Weryfikacja User Stories — Raport
 
 **Data:** 2026-06-22  
-**Wynik testów:** 242 testy jednostkowe + ~65 scenariuszy Cucumber, 0 failures, 0 errors  
+**Wynik testów:** 242 testy jednostkowe + ~75 scenariuszy Cucumber, 0 failures, 0 errors  
 **Status:** BUILD SUCCESS
 
 ## Mapowanie feature files → user stories

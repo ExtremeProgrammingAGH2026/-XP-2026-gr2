@@ -156,7 +156,7 @@ CucumberTestEngine.
 ## Podsumowanie
 
 Wszystkie 11 wymaganych MUST user stories mają pokrycie testami akceptacyjnymi Cucumber.
-Łącznie wykonywanych jest ~67 scenariuszy BDD. Scenariusze pokrywają:
+Łącznie wykonywanych jest ~75 scenariuszy BDD. Scenariusze pokrywają:
 
 - Pozytywne ścieżki (happy path) każdej user story
 - Walidację błędnych danych wejściowych
