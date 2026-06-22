@@ -1,21 +1,26 @@
 package org.example;
 
 import java.util.Scanner;
+import java.util.function.IntSupplier;
 
 public class LoginUI {
 
     private static final int DEFAULT_MAX_ATTEMPTS = 3;
 
     private final AuthService authService;
-    private final int maxAttempts;
+    private final IntSupplier maxAttemptsSupplier;
 
     public LoginUI(AuthService authService) {
         this(authService, DEFAULT_MAX_ATTEMPTS);
     }
 
     public LoginUI(AuthService authService, int maxAttempts) {
+        this(authService, () -> maxAttempts);
+    }
+
+    public LoginUI(AuthService authService, IntSupplier maxAttemptsSupplier) {
         this.authService = authService;
-        this.maxAttempts = maxAttempts;
+        this.maxAttemptsSupplier = maxAttemptsSupplier;
     }
 
     public User login(Scanner scanner) {
@@ -23,6 +28,7 @@ public class LoginUI {
         System.out.print("Email: ");
         String email = scanner.nextLine().trim();
 
+        int maxAttempts = maxAttemptsSupplier.getAsInt();
         int attempts = 0;
         while (attempts < maxAttempts) {
             System.out.print("Password: ");
