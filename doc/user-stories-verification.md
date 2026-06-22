@@ -1,7 +1,7 @@
 # Weryfikacja User Stories — Raport
 
 **Data:** 2026-06-22  
-**Wynik testów:** 236 testów jednostkowych + ~65 scenariuszy Cucumber, 0 failures, 0 errors  
+**Wynik testów:** 242 testy jednostkowe + ~65 scenariuszy Cucumber, 0 failures, 0 errors  
 **Status:** BUILD SUCCESS
 
 ## Mapowanie feature files → user stories
@@ -37,6 +37,8 @@ Wszystkie 11 wymaganych MUST user stories przechodzą testy akceptacyjne (Cucumb
 | Tytuł zadania / nazwa użytkownika z `;` rozbijały plik CSV | Writer używał `String.join(";")` bez cytowania, reader (commons-csv) oczekiwał RFC4180 | Wspólny `CsvEscaper` cytujący pola ze separatorem/cudzysłowem/nową linią |
 | Brak opcji wylogowania | `MainMenu` miał tylko Exit | Dodano Logout (powrót do ekranu startowego), `run()` zwraca `boolean` |
 | Rejestracja przerywała się po jednym błędnym polu | `RegistrationUI` walidowało wszystko naraz i wracało do menu | Walidacja per pole z repromptem + `cancel` do anulowania |
+| Edycja configu nie działała w trakcie sesji (tylko po restarcie) | Serwisy „zaszywały" wartości configu przy starcie w `App.main` | Konsumenci czytają config na żywo: `LoginUI`/`RegistrationValidator` przez `IntSupplier`, ścieżki plików przez `Supplier<String>` / live z `AppConfiguration`, strefa budowana per użycie |
+| Zmiana ścieżki użytkowników na nieistniejący plik powodowała crash | `AuthService.loadUsers()` rzucał `CsvException` gdy plik nie istniał | Zwraca pustą listę gdy plik nie istnieje (jak `TaskReadService`) |
 
 ### Testy jednostkowe pokrywające edge cases
 
