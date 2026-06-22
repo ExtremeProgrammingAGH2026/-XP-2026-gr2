@@ -1,7 +1,7 @@
 # Weryfikacja User Stories — Raport
 
-**Data:** 2026-06-21  
-**Wynik testów:** 221 testów, 0 failures, 0 errors  
+**Data:** 2026-06-22  
+**Wynik testów:** 236 testów jednostkowych + ~65 scenariuszy Cucumber, 0 failures, 0 errors  
 **Status:** BUILD SUCCESS
 
 ## Mapowanie feature files → user stories
@@ -31,6 +31,12 @@ Wszystkie 11 wymaganych MUST user stories przechodzą testy akceptacyjne (Cucumb
 | `TaskConflictWarningServiceTest` — 2 failures | Kodowanie Cp1252 na Windows nie obsługuje polskich znaków (ą) w PrintStream | Wymuszenie UTF-8 w PrintStream i odczyt ByteArrayOutputStream |
 | Login case-insensitive nie działał | `AuthService.authenticateUser()` używał `equals()` zamiast `equalsIgnoreCase()` | Zmiana na `equalsIgnoreCase()` |
 | Multi-day task nie pojawiał się w filtrze dnia | `TaskDateFilterService.filterByDay()` sprawdzał tylko datę startu | Sprawdzanie czy dzień mieści się w zakresie start-end |
+| Zadania cykliczne tworzyły tylko 1 wystąpienie na liście | `MainMenu` / `OtherUsersTasksUI` drukowały szablon bez ekspansji | `TaskScheduleService.expandAll()` + podpięcie w obu UI |
+| Konflikt fałszywie wykrywany między zadaniami różnych domowników | `TaskConflictService.hasConflict()` nie filtrował po właścicielu | Filtrowanie istniejących zadań po `getOwner()` przed sprawdzeniem nakładania |
+| Crash przy listowaniu, gdy data końca cykliczności < startu | `expandAll` wołał `expand(from, to)` z `from > to` → `IllegalArgumentException` | Guard pomijający źle skonfigurowane zadanie (brak wystąpień) |
+| Tytuł zadania / nazwa użytkownika z `;` rozbijały plik CSV | Writer używał `String.join(";")` bez cytowania, reader (commons-csv) oczekiwał RFC4180 | Wspólny `CsvEscaper` cytujący pola ze separatorem/cudzysłowem/nową linią |
+| Brak opcji wylogowania | `MainMenu` miał tylko Exit | Dodano Logout (powrót do ekranu startowego), `run()` zwraca `boolean` |
+| Rejestracja przerywała się po jednym błędnym polu | `RegistrationUI` walidowało wszystko naraz i wracało do menu | Walidacja per pole z repromptem + `cancel` do anulowania |
 
 ### Testy jednostkowe pokrywające edge cases
 

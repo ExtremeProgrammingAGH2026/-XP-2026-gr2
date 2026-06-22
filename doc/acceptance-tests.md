@@ -1,4 +1,4 @@
-# Testy akceptacyjne (Cucumber) — MUST User Stories
+    # Testy akceptacyjne (Cucumber) — MUST User Stories
 
 **Data weryfikacji:** 2026-06-22
 **Framework:** Cucumber 7.22.2 + JUnit Platform 5
@@ -130,6 +130,8 @@ CucumberTestEngine.
 | 4 | Tasks touching at boundary (end equals start) do not conflict | PASS |
 | 5 | No conflict when no existing tasks are present | PASS |
 | 6 | Multiple existing tasks - conflict with one is enough | PASS |
+| 7 | No conflict when the overlapping task belongs to another household member | PASS |
+| 8 | Conflict is detected only with the owner's own overlapping task | PASS |
 
 ## Scenariusze pomocnicze
 
