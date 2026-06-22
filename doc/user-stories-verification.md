@@ -1,7 +1,7 @@
 # Weryfikacja User Stories — Raport
 
 **Data:** 2026-06-22  
-**Wynik testów:** 242 testy jednostkowe + ~75 scenariuszy Cucumber, 0 failures, 0 errors  
+**Wynik testów:** 244 testy jednostkowe + ~75 scenariuszy Cucumber, 0 failures, 0 errors  
 **Status:** BUILD SUCCESS
 
 ## Mapowanie feature files → user stories
@@ -39,6 +39,7 @@ Wszystkie 11 wymaganych MUST user stories przechodzą testy akceptacyjne (Cucumb
 | Rejestracja przerywała się po jednym błędnym polu | `RegistrationUI` walidowało wszystko naraz i wracało do menu | Walidacja per pole z repromptem + `cancel` do anulowania |
 | Edycja configu nie działała w trakcie sesji (tylko po restarcie) | Serwisy „zaszywały" wartości configu przy starcie w `App.main` | Konsumenci czytają config na żywo: `LoginUI`/`RegistrationValidator` przez `IntSupplier`, ścieżki plików przez `Supplier<String>` / live z `AppConfiguration`, strefa budowana per użycie |
 | Zmiana ścieżki użytkowników na nieistniejący plik powodowała crash | `AuthService.loadUsers()` rzucał `CsvException` gdy plik nie istniał | Zwraca pustą listę gdy plik nie istnieje (jak `TaskReadService`) |
+| Zmiana pliku użytkowników nie unieważniała sesji zalogowanego usera | `editConfig` ignorował fakt, że zalogowany user pochodzi ze starego pliku | `editConfig` zwraca sygnał, a `MainMenu.run` wymusza wylogowanie po zmianie `usersFilePath` |
 
 ### Testy jednostkowe pokrywające edge cases
 

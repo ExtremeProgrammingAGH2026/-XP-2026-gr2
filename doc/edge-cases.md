@@ -124,6 +124,18 @@ automatycznymi (jednostkowymi lub Cucumber) i nie były testowane ręcznie.
 | 7 | Opcja anulowania po konflikcie | Wybór y/n | PASS | "Task has conflicts. Create anyway? (y/n)" |
 | 8 | Nakładające się zadanie innego domownika | BRAK konfliktu | auto | konflikt liczony tylko w obrębie właściciela (`TaskConflictService`, `task_conflicts.feature`) |
 
+## Konfiguracja (edycja w runtime)
+
+| # | Przypadek | Oczekiwany rezultat | Wynik | Uwagi |
+|---|-----------|---------------------|-------|-------|
+| 1 | Zmiana `dateTimeFormat` w trakcie sesji | Stosowane od razu | auto | `MainMenuTest` (parsowanie/wyświetlanie na żywo) |
+| 2 | Zmiana `timeZoneName` w trakcie sesji | Stosowane od razu (filtr dnia) | auto | `MainMenuTest.shouldApplyEditedTimeZoneLiveWhenFilteringByDay` |
+| 3 | Zmiana `maxLoginAttempts` / `minPasswordLength` | Stosowane od razu | auto | `LoginUITest`, `RegistrationValidatorTest` (supplier) |
+| 4 | Zmiana `tasksFilePath` w trakcie sesji | Odczyt/zapis/status z nowego pliku | auto | `MainMenuTest.shouldReadTasksFromEditedTasksFilePathLive` |
+| 5 | Zmiana `usersFilePath` gdy ktoś zalogowany | Wymuszone wylogowanie (sesja unieważniona) | auto | `MainMenuTest.shouldLogOutWhenUsersFilePathIsChanged` |
+| 6 | Zmiana pola innego niż `usersFilePath` | Brak wylogowania | auto | `MainMenuTest.shouldNotLogOutWhenANonUsersConfigFieldIsChanged` |
+| 7 | Ustawienie `usersFilePath` na nieistniejący plik | Pusta lista użytkowników (brak crashu) | auto | `AuthServiceTest.shouldReturnEmptyListWhenUsersFileDoesNotExist` |
+
 ## Podsumowanie
 
 Wszystkie przetestowane przypadki brzegowe (ręcznie + automatycznie) przechodzą poprawnie.
@@ -137,3 +149,4 @@ Aplikacja prawidłowo:
 - Ogranicza liczbę prób logowania
 - Ekspanduje zadania cykliczne na konkretne wystąpienia przy listowaniu
 - Pokazuje zadania wielodniowe w każdym dniu z ich zakresu
+- Stosuje zmiany konfiguracji na żywo, a zmianę pliku użytkowników traktuje jako unieważnienie sesji (wymusza wylogowanie)
