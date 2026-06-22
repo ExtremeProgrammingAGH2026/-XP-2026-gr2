@@ -28,10 +28,10 @@ public class App {
 
         Scanner scanner = new Scanner(System.in);
 
-        AuthService authService = new AuthService(usersFile);
+        AuthService authService = new AuthService(config::getUsersFilePath);
         LoginUI loginUI = new LoginUI(authService, config::getMaxLoginAttempts);
         RegistrationValidator registrationValidator = new RegistrationValidator(config::getMinPasswordLength);
-        RegistrationUI registrationUI = new RegistrationUI(new RegistrationService(usersFile, registrationValidator), registrationValidator);
+        RegistrationUI registrationUI = new RegistrationUI(new RegistrationService(config::getUsersFilePath, registrationValidator), registrationValidator);
         StartScreenUI startScreen = new StartScreenUI(loginUI, registrationUI);
 
         TaskSaveService taskSaveService = new TaskSaveService();
