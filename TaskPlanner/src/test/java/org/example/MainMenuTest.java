@@ -180,6 +180,22 @@ public class MainMenuTest {
     }
 
     @Test
+    public void shouldReadTasksFromEditedTasksFilePathLive() throws IOException {
+        write(tasksFile, "id;title;description;owner;startDate;status\n"
+                + "1;OldFileTask;Desc;Alice;01.06.2026 10:00;NEW");
+        Path otherTasksFile = tempDir.resolve("tasks2.csv");
+        write(otherTasksFile, "id;title;description;owner;startDate;status\n"
+                + "1;NewFileTask;Desc;Alice;01.06.2026 10:00;NEW");
+
+        Scanner scanner = new Scanner("6\n2\n" + otherTasksFile + "\n1\nn\n10\n");
+        menu.run(scanner, currentUser);
+
+        String out = output.toString();
+        assertTrue(out.contains("NewFileTask"), "Should read from the newly configured tasks file");
+        assertFalse(out.contains("OldFileTask"), "Should no longer read from the old tasks file");
+    }
+
+    @Test
     public void shouldApplyEditedTimeZoneLiveWhenFilteringByDay() throws IOException {
         // Instant 2026-07-06T22:00Z, stored as Warsaw wall-clock 07.07.2026 00:00.
         // In UTC its calendar day is 06.07; in Europe/Warsaw it is 07.07.
