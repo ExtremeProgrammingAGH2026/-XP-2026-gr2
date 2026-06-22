@@ -30,7 +30,7 @@ public class App {
 
         AuthService authService = new AuthService(usersFile);
         LoginUI loginUI = new LoginUI(authService, config::getMaxLoginAttempts);
-        RegistrationValidator registrationValidator = new RegistrationValidator(config.getMinPasswordLength());
+        RegistrationValidator registrationValidator = new RegistrationValidator(config::getMinPasswordLength);
         RegistrationUI registrationUI = new RegistrationUI(new RegistrationService(usersFile, registrationValidator), registrationValidator);
         StartScreenUI startScreen = new StartScreenUI(loginUI, registrationUI);
 

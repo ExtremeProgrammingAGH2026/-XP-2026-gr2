@@ -3,6 +3,7 @@ package org.example.registration;
 import org.example.User;
 
 import java.util.List;
+import java.util.function.IntSupplier;
 
 /**
  * Validates registration input data provided by the user.
@@ -13,13 +14,17 @@ public class RegistrationValidator {
     private static final int DEFAULT_MIN_PASSWORD_LENGTH = 8;
     private static final String EMAIL_REGEX = "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$";
 
-    private final int minPasswordLength;
+    private final IntSupplier minPasswordLength;
 
     public RegistrationValidator() {
         this(DEFAULT_MIN_PASSWORD_LENGTH);
     }
 
     public RegistrationValidator(int minPasswordLength) {
+        this(() -> minPasswordLength);
+    }
+
+    public RegistrationValidator(IntSupplier minPasswordLength) {
         this.minPasswordLength = minPasswordLength;
     }
 
@@ -55,8 +60,9 @@ public class RegistrationValidator {
         if (password == null || password.isBlank()) {
             throw new RegistrationException("Password must not be empty");
         }
-        if (password.length() < minPasswordLength) {
-            throw new RegistrationException("Password must be at least " + minPasswordLength + " characters long");
+        int min = minPasswordLength.getAsInt();
+        if (password.length() < min) {
+            throw new RegistrationException("Password must be at least " + min + " characters long");
         }
     }
 
