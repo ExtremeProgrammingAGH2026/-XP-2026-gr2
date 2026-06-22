@@ -106,6 +106,18 @@ public class RegistrationServiceTest {
     }
 
     @Test
+    public void shouldRoundTripUserWhoseNameContainsTheCsvSeparator() {
+        rs.register("Kowalski; Jan", "jan@example.com", "securePass1");
+
+        AuthService as = new AuthService(csvPath.toString());
+        List<User> users = as.loadUsers();
+
+        assertEquals(1, users.size());
+        assertEquals("Kowalski; Jan", users.get(0).getName());
+        assertEquals("jan@example.com", users.get(0).getEmail());
+    }
+
+    @Test
     public void shouldGenerateUniqueIdsForDifferentUsers() {
         User first = rs.register("Jan Kowalski", "jan@example.com", "securePass1");
         User second = rs.register("Anna Nowak", "anna@example.com", "securePass2");
