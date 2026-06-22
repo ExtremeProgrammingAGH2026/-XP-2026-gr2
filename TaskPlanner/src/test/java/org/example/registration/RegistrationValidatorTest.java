@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.function.IntSupplier;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -100,5 +101,18 @@ public class RegistrationValidatorTest {
         RegistrationException exception = assertThrows(RegistrationException.class,
                 () -> rv.validate("Jan", "jan@example.com", null));
         assertEquals("Password must not be empty", exception.getMessage());
+    }
+
+    @Test
+    public void shouldReadMinPasswordLengthLiveFromSupplier() {
+        int[] minLength = {6};
+        RegistrationValidator validator = new RegistrationValidator((IntSupplier) () -> minLength[0]);
+
+        assertDoesNotThrow(() -> validator.validatePassword("123456"));
+
+        minLength[0] = 10;
+        RegistrationException exception = assertThrows(RegistrationException.class,
+                () -> validator.validatePassword("123456"));
+        assertEquals("Password must be at least 10 characters long", exception.getMessage());
     }
 }
