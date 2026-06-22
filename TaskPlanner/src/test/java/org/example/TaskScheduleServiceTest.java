@@ -40,6 +40,25 @@ class TaskScheduleServiceTest {
     }
 
     @Test
+    void expandAllShouldReturnNoOccurrencesWhenRecurrenceEndIsBeforeStart() {
+        TaskScheduleService service = new TaskScheduleService(WARSAW);
+        RecurringTask broken = new RecurringTask(
+                "r1",
+                "Misconfigured",
+                "End before start",
+                "User",
+                instant(2026, 6, 23, 13, 0),
+                instant(2026, 6, 23, 14, 0),
+                RecurrencePattern.DAILY,
+                instant(2026, 6, 20, 19, 0)
+        );
+
+        List<Task> expanded = service.expandAll(List.of(broken));
+
+        assertTrue(expanded.isEmpty());
+    }
+
+    @Test
     void expandAllShouldKeepNonRecurringTaskAsIs() {
         TaskScheduleService service = new TaskScheduleService(WARSAW);
         Task normal = new Task("t1", "Meeting", "Team sync", "Alice",
