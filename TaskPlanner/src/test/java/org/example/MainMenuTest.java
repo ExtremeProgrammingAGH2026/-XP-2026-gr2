@@ -211,6 +211,26 @@ public class MainMenuTest {
     }
 
     @Test
+    public void shouldLogOutWhenUsersFilePathIsChanged() {
+        Path newUsersFile = tempDir.resolve("users2.csv");
+
+        Scanner scanner = new Scanner("6\n1\n" + newUsersFile + "\n");
+        boolean logout = menu.run(scanner, currentUser);
+
+        assertTrue(logout, "Changing the users file should force the current user to log out");
+        assertTrue(output.toString().contains("logged out") || output.toString().contains("Logged out"),
+                "Should inform the user they were logged out");
+    }
+
+    @Test
+    public void shouldNotLogOutWhenANonUsersConfigFieldIsChanged() {
+        Scanner scanner = new Scanner("6\n4\n12\n10\n");
+        boolean logout = menu.run(scanner, currentUser);
+
+        assertFalse(logout, "Editing a non-users field should not force a logout");
+    }
+
+    @Test
     public void shouldReturnTrueWhenUserChoosesLogout() {
         Scanner scanner = new Scanner("9\n");
         boolean logout = menu.run(scanner, currentUser);
