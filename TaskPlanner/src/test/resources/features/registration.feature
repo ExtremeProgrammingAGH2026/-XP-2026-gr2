@@ -36,3 +36,30 @@ Feature: User Registration
     When a user registers with name "Anna Nowak", email "anna@example.com" and password "securePass2"
     Then the registration should succeed
     And the registered user email should be "anna@example.com"
+
+  Scenario: Registration fails when email is duplicate with different case
+    Given a user is already registered with name "Jan Kowalski", email "jan@example.com" and password "securePass1"
+    When a user registers with name "Other User", email "JAN@EXAMPLE.COM" and password "securePass2"
+    Then the registration should fail
+
+  Scenario: Registration succeeds with password exactly 8 characters long
+    When a user registers with name "Jan Kowalski", email "jan@example.com" and password "exactly8"
+    Then the registration should succeed
+
+  Scenario: Registration fails with password 7 characters long
+    When a user registers with name "Jan Kowalski", email "jan@example.com" and password "seven77"
+    Then the registration should fail
+
+  Scenario: Registration fails when email has no domain
+    When a user registers with name "Jan Kowalski", email "jan@" and password "securePass1"
+    Then the registration should fail
+
+  Scenario: Registration fails when name is empty string
+    When a user registers with name "" , email "jan@example.com" and password "securePass1"
+    Then the registration should fail
+
+  Scenario: A user whose name contains the CSV separator survives save and load
+    Given a user is already registered with name "Kowalski; Jan", email "jan@example.com" and password "securePass1"
+    When the user list is loaded from storage
+    Then the loaded user list should contain 1 user
+    And the registered user name should be "Kowalski; Jan"

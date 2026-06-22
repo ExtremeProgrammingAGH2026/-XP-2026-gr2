@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class AuthServiceTest {
@@ -80,6 +81,28 @@ public class AuthServiceTest {
             assertEquals(expected.getName(), actual.getName());
             assertEquals(expected.getPassword(), actual.getPassword());
         }
+    }
+
+    @Test
+    public void shouldReturnEmptyListWhenUsersFileDoesNotExist() {
+        AuthService service = new AuthService(tempDir.resolve("missing.csv").toString());
+        assertTrue(service.loadUsers().isEmpty());
+    }
+
+    @Test
+    public void shouldReadUsersFromLiveFilePathSupplier() {
+        Path fileA = tempDir.resolve("usersA.csv");
+        Path fileB = tempDir.resolve("usersB.csv");
+        writeUtf8(fileA, "1;a@example.com;Alice;passA");
+        writeUtf8(fileB, "2;b@example.com;Bob;passB");
+
+        String[] active = {fileA.toString()};
+        AuthService service = new AuthService(() -> active[0]);
+
+        assertEquals("Alice", service.loadUsers().get(0).getName());
+
+        active[0] = fileB.toString();
+        assertEquals("Bob", service.loadUsers().get(0).getName());
     }
 
     private static void writeUtf8(Path path, String content) {

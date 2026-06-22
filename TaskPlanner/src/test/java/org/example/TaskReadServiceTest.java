@@ -34,6 +34,21 @@ public class TaskReadServiceTest {
     }
 
     @Test
+    public void shouldRoundTripTaskWhoseTitleContainsTheCsvSeparator() {
+        Path csv = tempDir.resolve("tasks.csv");
+        Task task = new Task("1", "Buy milk; eggs and bread", "desc", "Adam",
+                LocalDateTime.of(2026, 5, 29, 10, 30).atZone(WARSAW).toInstant(),
+                LocalDateTime.of(2026, 5, 29, 11, 30).atZone(WARSAW).toInstant());
+
+        new TaskSaveService().saveTask(task, csv.toString(), false);
+        List<Task> loaded = service.readTasks(csv.toString());
+
+        assertEquals(1, loaded.size());
+        assertEquals("Buy milk; eggs and bread", loaded.get(0).getTitle());
+        assertEquals("desc", loaded.get(0).getDescription());
+    }
+
+    @Test
     public void shouldReadSingleTaskFromCsv() throws IOException {
         Path csv = tempDir.resolve("tasks.csv");
         write(csv, HEADER + "\n1;Clean;Clean room;Adam;29.05.2026 10:30;NEW");

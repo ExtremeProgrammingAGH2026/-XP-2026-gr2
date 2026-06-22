@@ -2,6 +2,7 @@ package org.example.registration;
 
 import org.example.AuthService;
 import org.example.CsvConstants;
+import org.example.CsvEscaper;
 import org.example.CsvException;
 import org.example.User;
 
@@ -12,6 +13,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 /**
  * Registration of new user accounts and persistence to CSV.
@@ -19,7 +21,7 @@ import java.util.UUID;
  */
 public class RegistrationService {
 
-    private final String filePath;
+    private final Supplier<String> filePath;
     private final RegistrationValidator rv;
 
     /**
@@ -27,6 +29,14 @@ public class RegistrationService {
      * @param rv validator used to check registration input
      */
     public RegistrationService(String filePath, RegistrationValidator rv) {
+        this(() -> filePath, rv);
+    }
+
+    /**
+     * @param filePath  live supplier of the users CSV file path
+     * @param rv validator used to check registration input
+     */
+    public RegistrationService(Supplier<String> filePath, RegistrationValidator rv) {
         this.filePath = filePath;
         this.rv = rv;
     }
@@ -54,7 +64,7 @@ public class RegistrationService {
     }
 
     private List<User> loadExistingUsers(AuthService as) {
-        Path path = Path.of(filePath);
+        Path path = Path.of(filePath.get());
         if(!Files.exists(path)) {
             return List.of();
         }
@@ -62,15 +72,19 @@ public class RegistrationService {
     }
 
     private void appendUserToCsv(User user) {
+        String path = filePath.get();
         String row =
                 String.join(CsvConstants.SEPARATOR_STR,
-                        user.getId(), user.getEmail(), user.getName(), user.getPassword())
+                        CsvEscaper.escape(user.getId()),
+                        CsvEscaper.escape(user.getEmail()),
+                        CsvEscaper.escape(user.getName()),
+                        CsvEscaper.escape(user.getPassword()))
                         + System.lineSeparator();
         try {
-            Files.writeString(Path.of(filePath), row, StandardCharsets.UTF_8,
+            Files.writeString(Path.of(path), row, StandardCharsets.UTF_8,
                     StandardOpenOption.CREATE, StandardOpenOption.APPEND);
         } catch (IOException e) {
-            throw new CsvException("Failed to save user to CSV: " + filePath, e);
+            throw new CsvException("Failed to save user to CSV: " + path, e);
         }
     }
 }

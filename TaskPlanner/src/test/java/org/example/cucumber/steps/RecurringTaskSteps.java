@@ -61,6 +61,16 @@ public class RecurringTaskSteps {
                 startInstant, endInstant, RecurrencePattern.DAILY, null);
     }
 
+    @Given("a daily recurring task {string} owned by {string} starting {string} ending {string} with recurrence end {string}")
+    public void aDailyRecurringTaskWithEnd(String title, String owner, String start, String end, String recurrenceEnd) {
+        Instant startInstant = ctx.parseDateTime(start);
+        Instant endInstant = ctx.parseDateTime(end);
+        Instant recurrenceEndInstant = ctx.parseDateTime(recurrenceEnd);
+        currentRecurringTask = new RecurringTask(
+                UUID.randomUUID().toString(), title, "", owner,
+                startInstant, endInstant, RecurrencePattern.DAILY, recurrenceEndInstant);
+    }
+
     @Given("a monthly recurring task {string} owned by {string} starting {string} ending {string}")
     public void aMonthlyRecurringTask(String title, String owner, String start, String end) {
         Instant startInstant = ctx.parseDateTime(start);
@@ -70,9 +80,23 @@ public class RecurringTaskSteps {
                 startInstant, endInstant, RecurrencePattern.MONTHLY, null);
     }
 
+    @Given("a biweekly recurring task {string} owned by {string} starting {string} ending {string}")
+    public void aBiweeklyRecurringTask(String title, String owner, String start, String end) {
+        Instant startInstant = ctx.parseDateTime(start);
+        Instant endInstant = ctx.parseDateTime(end);
+        currentRecurringTask = new RecurringTask(
+                UUID.randomUUID().toString(), title, "", owner,
+                startInstant, endInstant, RecurrencePattern.BIWEEKLY, null);
+    }
+
     @When("the recurring task is expanded for 4 weeks from {string} to {string}")
     public void theRecurringTaskIsExpandedForWeeks(String from, String to) {
         expandRecurringTask(from, to);
+    }
+
+    @When("all tasks are expanded for listing")
+    public void allTasksAreExpandedForListing() {
+        expandedOccurrences = ctx.taskScheduleService.expandAll(List.of(currentRecurringTask));
     }
 
     @When("the recurring task is expanded from {string} to {string}")

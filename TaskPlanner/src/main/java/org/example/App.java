@@ -28,23 +28,29 @@ public class App {
 
         Scanner scanner = new Scanner(System.in);
 
-        AuthService authService = new AuthService(usersFile);
-        LoginUI loginUI = new LoginUI(authService, config.getMaxLoginAttempts());
-        RegistrationValidator registrationValidator = new RegistrationValidator(config.getMinPasswordLength());
-        RegistrationUI registrationUI = new RegistrationUI(new RegistrationService(usersFile, registrationValidator));
+        AuthService authService = new AuthService(config::getUsersFilePath);
+        LoginUI loginUI = new LoginUI(authService, config::getMaxLoginAttempts);
+        RegistrationValidator registrationValidator = new RegistrationValidator(config::getMinPasswordLength);
+        RegistrationUI registrationUI = new RegistrationUI(new RegistrationService(config::getUsersFilePath, registrationValidator), registrationValidator);
         StartScreenUI startScreen = new StartScreenUI(loginUI, registrationUI);
 
         TaskSaveService taskSaveService = new TaskSaveService();
         TaskReadService taskReadService = new TaskReadService();
         TaskFilterService taskFilterService = new TaskFilterService();
         TaskPrintService taskPrintService = new TaskPrintService(taskFilterService);
-        OtherUsersTasksUI otherUsersTasksUI = new OtherUsersTasksUI(authService, taskReadService, taskPrintService, tasksFile);
-        CreateTaskUI createTaskUI = new CreateTaskUI(taskSaveService, authService, tasksFile);
+        OtherUsersTasksUI otherUsersTasksUI = new OtherUsersTasksUI(authService, taskReadService, taskPrintService, config::getTasksFilePath);
+        CreateTaskUI createTaskUI = new CreateTaskUI(taskSaveService, authService, config::getTasksFilePath);
         MainMenu mainMenu = new MainMenu(taskReadService, taskPrintService, otherUsersTasksUI, createTaskUI, tasksFile, config);
 
-        User user = startScreen.run(scanner);
-        if (user != null) {
-            mainMenu.run(scanner, user);
+        while (true) {
+            User user = startScreen.run(scanner);
+            if (user == null) {
+                return;
+            }
+            boolean logout = mainMenu.run(scanner, user);
+            if (!logout) {
+                return;
+            }
         }
     }
 

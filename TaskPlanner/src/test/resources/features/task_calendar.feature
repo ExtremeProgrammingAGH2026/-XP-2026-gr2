@@ -30,3 +30,20 @@ Feature: Task Calendar and Date Filtering
   Scenario: Filtering tasks by date range excludes tasks outside the range
     When tasks are filtered from "2026-07-10" to "2026-07-14"
     Then the filtered task list should be empty
+
+  Scenario: Multi-day task appears when filtering by a middle day
+    Given the following tasks exist in the pool:
+      | title         | owner | startDateTime    | endDateTime      |
+      | Long project  | jan   | 2026-08-01 09:00 | 2026-08-05 17:00 |
+    When tasks are filtered by day "2026-08-03"
+    Then the filtered task list should contain 1 task
+    And the filtered task list should include "Long project"
+
+  Scenario: Filtering by today returns tasks scheduled for today
+    Given the following tasks exist in the pool:
+      | title       | owner | startDateTime    | endDateTime      |
+      | Today task  | jan   | today 08:00      | today 09:00      |
+      | Other task  | jan   | 2026-12-31 10:00 | 2026-12-31 11:00 |
+    When tasks are filtered by today
+    Then the filtered task list should contain 1 task
+    And the filtered task list should include "Today task"

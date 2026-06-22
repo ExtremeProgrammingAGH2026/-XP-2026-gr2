@@ -32,3 +32,22 @@ Feature: Task Management
     Given a task is saved with title "Dishes", description "Wash dishes", owner "jan", starting "2026-07-01 08:00" ending "2026-07-01 08:30" with status "DONE"
     When all tasks are loaded from storage
     Then the first loaded task status should be "DONE"
+
+  Scenario: A task can be assigned to the creator themselves
+    When a task is created with title "My own task", description "Self-assigned", owner "jan", starting "2026-07-01 10:00" ending "2026-07-01 11:00"
+    Then the task owner should be "jan"
+
+  Scenario: A task can be assigned to any registered household member
+    When a task is created with title "Task for Bob", description "Assigned by Jan", owner "bob", starting "2026-07-03 14:00" ending "2026-07-03 15:00"
+    Then the task owner should be "bob"
+
+  Scenario: Multiple tasks can be assigned to different people
+    When a task is created with title "Jan's task", description "", owner "jan", starting "2026-07-01 10:00" ending "2026-07-01 11:00"
+    And a task is created with title "Anna's task", description "", owner "anna", starting "2026-07-01 12:00" ending "2026-07-01 13:00"
+    Then the task pool should contain 2 tasks with different owners
+
+  Scenario: A task whose title contains the CSV separator survives save and load
+    Given a task is saved with title "Buy milk; eggs and bread", description "weekly run", owner "jan", starting "2026-07-01 08:00" ending "2026-07-01 09:00"
+    When all tasks are loaded from storage
+    Then the loaded task list should contain 1 task
+    And the first loaded task title should be "Buy milk; eggs and bread"

@@ -17,7 +17,6 @@ public class MainMenu {
     private final TaskPrintService taskPrintService;
     private final TaskSaveService taskSaveService;
     private final TaskEditService taskEditService;
-    private final TaskScheduleService taskScheduleService;
     private final OtherUsersTasksUI otherUsersTasksUI;
     private final CreateTaskUI createTaskUI;
     private final String tasksFilePath;
@@ -48,8 +47,6 @@ public class MainMenu {
         this.taskPrintService = taskPrintService;
         this.taskSaveService = taskSaveService;
         this.taskEditService = taskEditService;
-        ZoneId zone = resolveZone(appConfiguration);
-        this.taskScheduleService = new TaskScheduleService(zone);
         this.otherUsersTasksUI = otherUsersTasksUI;
         this.createTaskUI = createTaskUI;
         this.tasksFilePath = tasksFilePath;
@@ -58,7 +55,7 @@ public class MainMenu {
         this.configPath = configPath;
     }
 
-    public void run(Scanner scanner, User currentUser) {
+    public boolean run(Scanner scanner, User currentUser) {
         while (true) {
             System.out.println("\n=== Menu ===");
             System.out.println("1. My tasks");
@@ -69,7 +66,8 @@ public class MainMenu {
             System.out.println("6. Edit config");
             System.out.println("7. Save config");
             System.out.println("8. Sort my tasks");
-            System.out.println("9. Exit");
+            System.out.println("9. Logout");
+            System.out.println("10. Exit");
             System.out.print("Choice: ");
             String choice = scanner.nextLine().trim();
             switch (choice) {
@@ -89,7 +87,10 @@ public class MainMenu {
                     showConfig();
                     break;
                 case "6":
-                    editConfig(scanner);
+                    if (editConfig(scanner)) {
+                        System.out.println("Users file changed. You have been logged out.");
+                        return true;
+                    }
                     break;
                 case "7":
                     try {
@@ -103,7 +104,10 @@ public class MainMenu {
                     sortMyTasks(scanner, currentUser);
                     break;
                 case "9":
-                    return;
+                    System.out.println("Logged out.");
+                    return true;
+                case "10":
+                    return false;
                 default:
                     System.out.println("Invalid choice. Try again.");
             }
@@ -111,13 +115,13 @@ public class MainMenu {
     }
 
     private void showMyTasks(Scanner scanner, User currentUser) {
-        List<Task> tasks = taskReadService.readTasks(tasksFilePath);
+        List<Task> tasks = taskReadService.readTasks(tasksPath());
         System.out.print("Filter by date? (y/n): ");
         String answer = scanner.nextLine().trim();
         if (answer.equalsIgnoreCase("y")) {
             showMyTasksByDay(scanner, tasks, currentUser);
         } else {
-            taskPrintService.printTasksByOwner(tasks, currentUser.getName());
+            taskPrintService.printTasksByOwner(scheduleService().expandAll(tasks), currentUser.getName());
         }
     }
 
@@ -127,7 +131,7 @@ public class MainMenu {
             return;
         }
 
-        List<Task> dayTasks = taskScheduleService.getTasksForDay(tasks, day).stream()
+        List<Task> dayTasks = scheduleService().getTasksForDay(tasks, day).stream()
                 .filter(t -> t.getOwner().equals(currentUser.getName()))
                 .collect(java.util.stream.Collectors.toList());
         taskPrintService.printTasksSortedByDate(dayTasks);
@@ -163,7 +167,7 @@ public class MainMenu {
     }
 
     private void changeTaskStatus(Scanner scanner, User currentUser) {
-        List<Task> allTasks = taskReadService.readTasks(tasksFilePath);
+        List<Task> allTasks = taskReadService.readTasks(tasksPath());
         List<Task> myTasks = allTasks.stream()
                 .filter(t -> t.getOwner().equals(currentUser.getName()))
                 .collect(java.util.stream.Collectors.toList());
@@ -215,7 +219,7 @@ public class MainMenu {
         }
 
         taskEditService.editStatus(selected, statuses[statusIndex]);
-        taskSaveService.saveTasks(allTasks, tasksFilePath, false);
+        taskSaveService.saveTasks(allTasks, tasksPath(), false);
         System.out.println("Status changed to " + selected.getStatus() + ".");
     }
 
@@ -229,12 +233,20 @@ public class MainMenu {
         System.out.println("6. dateTimeFormat: " + nullToPlaceholder(appConfiguration.getDateTimeFormat()));
     }
 
-    private void editConfig(Scanner scanner) {
+    /**
+     * Edits a single configuration field.
+     *
+     * @return {@code true} if the users file path was changed, which invalidates
+     *         the current session and should force the logged-in user to log out
+     */
+    private boolean editConfig(Scanner scanner) {
         showConfig();
         System.out.print("Select field to edit (1-6): ");
         String field = scanner.nextLine().trim();
         System.out.print("New value: ");
         String value = scanner.nextLine().trim();
+
+        String previousUsersPath = appConfiguration.getUsersFilePath();
 
         switch (field) {
             case "1":
@@ -246,7 +258,7 @@ public class MainMenu {
             case "3": {
                 Integer attempts = parsePositiveInt(value, "maximum login attempts");
                 if (attempts == null) {
-                    return;
+                    return false;
                 }
                 appConfiguration.setMaxLoginAttempts(attempts);
                 break;
@@ -254,7 +266,7 @@ public class MainMenu {
             case "4": {
                 Integer minLength = parsePositiveInt(value, "minimum password length");
                 if (minLength == null) {
-                    return;
+                    return false;
                 }
                 appConfiguration.setMinPasswordLength(minLength);
                 break;
@@ -265,20 +277,20 @@ public class MainMenu {
                     appConfiguration.setTimeZoneName(value);
                 } catch (Exception e) {
                     System.out.println("Invalid timezone. Example: Europe/Warsaw, UTC, US/Eastern");
-                    return;
+                    return false;
                 }
                 break;
             case "6":
                 if (!isValidDatePattern(value)) {
                     System.out.println("Invalid date format pattern. Must include year, month, day, hour and minute.");
                     System.out.println("Example: dd.MM.yyyy HH:mm");
-                    return;
+                    return false;
                 }
                 appConfiguration.setDateTimeFormat(value);
                 break;
             default:
                 System.out.println("Invalid field.");
-                return;
+                return false;
         }
         DateTimeFormats.init(appConfiguration);
         try {
@@ -287,6 +299,7 @@ public class MainMenu {
         } catch (IOException e) {
             System.out.println("Configuration updated but failed to save: " + e.getMessage());
         }
+        return !java.util.Objects.equals(previousUsersPath, appConfiguration.getUsersFilePath());
     }
 
     private Integer parsePositiveInt(String value, String label) {
@@ -321,6 +334,23 @@ public class MainMenu {
         return s == null ? "(none)" : s;
     }
 
+    private TaskScheduleService scheduleService() {
+        return new TaskScheduleService(resolveZone(appConfiguration));
+    }
+
+    /**
+     * Resolves the tasks file path from the live configuration so that editing
+     * it at runtime takes effect immediately. Falls back to the path supplied at
+     * construction when the configuration does not define one.
+     */
+    private String tasksPath() {
+        if (appConfiguration != null && appConfiguration.getTasksFilePath() != null
+                && !appConfiguration.getTasksFilePath().isBlank()) {
+            return appConfiguration.getTasksFilePath();
+        }
+        return tasksFilePath;
+    }
+
     private static ZoneId resolveZone(AppConfiguration appConfiguration) {
         if (appConfiguration != null && appConfiguration.getTimeZoneName() != null
                 && !appConfiguration.getTimeZoneName().isBlank()) {
@@ -334,7 +364,7 @@ public class MainMenu {
             User currentUser
     ) {
         List<Task> allTasks =
-                taskReadService.readTasks(tasksFilePath);
+                taskReadService.readTasks(tasksPath());
 
         List<Task> myTasks = allTasks.stream()
                 .filter(task ->

@@ -66,6 +66,7 @@ public class MainMenuTest {
     @AfterEach
     public void tearDown() {
         System.setOut(originalOut);
+        DateTimeFormats.resetToDefaults();
     }
 
     @Test
@@ -176,6 +177,84 @@ public class MainMenuTest {
 
         String csv = Files.readString(tasksFile);
         assertTrue(csv.contains("IN_PROGRESS"));
+    }
+
+    @Test
+    public void shouldReadTasksFromEditedTasksFilePathLive() throws IOException {
+        write(tasksFile, "id;title;description;owner;startDate;status\n"
+                + "1;OldFileTask;Desc;Alice;01.06.2026 10:00;NEW");
+        Path otherTasksFile = tempDir.resolve("tasks2.csv");
+        write(otherTasksFile, "id;title;description;owner;startDate;status\n"
+                + "1;NewFileTask;Desc;Alice;01.06.2026 10:00;NEW");
+
+        Scanner scanner = new Scanner("6\n2\n" + otherTasksFile + "\n1\nn\n10\n");
+        menu.run(scanner, currentUser);
+
+        String out = output.toString();
+        assertTrue(out.contains("NewFileTask"), "Should read from the newly configured tasks file");
+        assertFalse(out.contains("OldFileTask"), "Should no longer read from the old tasks file");
+    }
+
+    @Test
+    public void shouldApplyEditedTimeZoneLiveWhenFilteringByDay() throws IOException {
+        // Instant 2026-07-06T22:00Z, stored as Warsaw wall-clock 07.07.2026 00:00.
+        // In UTC its calendar day is 06.07; in Europe/Warsaw it is 07.07.
+        write(tasksFile, "id;title;description;owner;startDate;status\n"
+                + "1;BoundaryTask;Desc;Alice;07.07.2026 00:00;NEW");
+
+        // Switch zone to UTC, then filter by 06.07.2026 — task should now appear.
+        Scanner scanner = new Scanner("6\n5\nUTC\n1\ny\n2\n06.07.2026\n10\n");
+        menu.run(scanner, currentUser);
+
+        assertTrue(output.toString().contains("BoundaryTask"),
+                "After switching the zone to UTC live, the boundary task should match 06.07");
+    }
+
+    @Test
+    public void shouldLogOutWhenUsersFilePathIsChanged() {
+        Path newUsersFile = tempDir.resolve("users2.csv");
+
+        Scanner scanner = new Scanner("6\n1\n" + newUsersFile + "\n");
+        boolean logout = menu.run(scanner, currentUser);
+
+        assertTrue(logout, "Changing the users file should force the current user to log out");
+        assertTrue(output.toString().contains("logged out") || output.toString().contains("Logged out"),
+                "Should inform the user they were logged out");
+    }
+
+    @Test
+    public void shouldNotLogOutWhenANonUsersConfigFieldIsChanged() {
+        Scanner scanner = new Scanner("6\n4\n12\n10\n");
+        boolean logout = menu.run(scanner, currentUser);
+
+        assertFalse(logout, "Editing a non-users field should not force a logout");
+    }
+
+    @Test
+    public void shouldReturnTrueWhenUserChoosesLogout() {
+        Scanner scanner = new Scanner("9\n");
+        boolean logout = menu.run(scanner, currentUser);
+
+        assertTrue(logout, "Expected run() to return true on logout");
+        assertTrue(output.toString().contains("Logged out"));
+    }
+
+    @Test
+    public void shouldReturnFalseWhenUserChoosesExit() {
+        Scanner scanner = new Scanner("10\n");
+        boolean logout = menu.run(scanner, currentUser);
+
+        assertFalse(logout, "Expected run() to return false on exit");
+    }
+
+    @Test
+    public void shouldShowLogoutAndExitInMenu() {
+        Scanner scanner = new Scanner("10\n");
+        menu.run(scanner, currentUser);
+
+        String out = output.toString();
+        assertTrue(out.contains("Logout"));
+        assertTrue(out.contains("Exit"));
     }
 
     @Test

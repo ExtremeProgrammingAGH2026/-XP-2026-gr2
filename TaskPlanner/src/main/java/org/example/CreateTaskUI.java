@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class CreateTaskUI {
@@ -19,12 +20,20 @@ public class CreateTaskUI {
     private final TaskConflictService taskConflictService;
     private final TaskConflictWarningService taskConflictWarningService;
     private final AuthService authService;
-    private final String tasksFilePath;
+    private final Supplier<String> tasksFilePath;
 
     public CreateTaskUI(
             TaskSaveService taskSaveService,
             AuthService authService,
             String tasksFilePath
+    ) {
+        this(taskSaveService, authService, () -> tasksFilePath);
+    }
+
+    public CreateTaskUI(
+            TaskSaveService taskSaveService,
+            AuthService authService,
+            Supplier<String> tasksFilePath
     ) {
         this.taskSaveService = taskSaveService;
         this.taskReadService = new TaskReadService();
@@ -78,7 +87,8 @@ public class CreateTaskUI {
             );
         }
 
-        List<Task> existingTasks = taskReadService.readTasks(tasksFilePath);
+        String path = tasksFilePath.get();
+        List<Task> existingTasks = taskReadService.readTasks(path);
 
         List<Task> assigneeTasks = existingTasks.stream()
                 .filter(existing -> assignee.getName().equals(existing.getOwner()))
@@ -96,7 +106,7 @@ public class CreateTaskUI {
             }
         }
 
-        taskSaveService.saveTask(task, tasksFilePath, true);
+        taskSaveService.saveTask(task, path, true);
         System.out.println(
                 "Task assigned to " + assignee.getName() + " and created."
         );

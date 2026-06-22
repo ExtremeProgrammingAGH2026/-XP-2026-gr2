@@ -19,6 +19,58 @@ class TaskScheduleServiceTest {
     private static final ZoneId WARSAW = ZoneId.of("Europe/Warsaw");
 
     @Test
+    void expandAllShouldExpandDailyRecurringTaskAcrossItsRecurrenceWindow() {
+        TaskScheduleService service = new TaskScheduleService(WARSAW);
+        RecurringTask daily = new RecurringTask(
+                "r1",
+                "Create User List",
+                "Create User List",
+                "User",
+                instant(2026, 6, 23, 13, 2),
+                instant(2026, 6, 23, 14, 2),
+                RecurrencePattern.DAILY,
+                instant(2026, 6, 27, 19, 0)
+        );
+
+        List<Task> expanded = service.expandAll(List.of(daily));
+
+        assertEquals(5, expanded.size());
+        assertEquals(instant(2026, 6, 23, 13, 2), expanded.get(0).getStartDate());
+        assertEquals(instant(2026, 6, 27, 13, 2), expanded.get(4).getStartDate());
+    }
+
+    @Test
+    void expandAllShouldReturnNoOccurrencesWhenRecurrenceEndIsBeforeStart() {
+        TaskScheduleService service = new TaskScheduleService(WARSAW);
+        RecurringTask broken = new RecurringTask(
+                "r1",
+                "Misconfigured",
+                "End before start",
+                "User",
+                instant(2026, 6, 23, 13, 0),
+                instant(2026, 6, 23, 14, 0),
+                RecurrencePattern.DAILY,
+                instant(2026, 6, 20, 19, 0)
+        );
+
+        List<Task> expanded = service.expandAll(List.of(broken));
+
+        assertTrue(expanded.isEmpty());
+    }
+
+    @Test
+    void expandAllShouldKeepNonRecurringTaskAsIs() {
+        TaskScheduleService service = new TaskScheduleService(WARSAW);
+        Task normal = new Task("t1", "Meeting", "Team sync", "Alice",
+                instant(2026, 6, 15, 11, 0), instant(2026, 6, 15, 12, 0));
+
+        List<Task> expanded = service.expandAll(List.of(normal));
+
+        assertEquals(1, expanded.size());
+        assertEquals("t1", expanded.get(0).getId());
+    }
+
+    @Test
     void shouldReturnRecurringOccurrencesForGivenDay() {
         TaskScheduleService service = new TaskScheduleService(WARSAW);
         RecurringTask recurringTask = new RecurringTask(

@@ -64,16 +64,16 @@ class TaskSaveService {
         String startDate = DateTimeFormats.STORAGE_FORMATTER.format(task.getStartDate());
         String endDate = DateTimeFormats.STORAGE_FORMATTER.format(task.getEndDate());
         return String.join(CsvConstants.SEPARATOR_STR,
-                task.getId(),
-                task.getTitle(),
-                task.getDescription(),
-                task.getOwner(),
-                startDate,
-                endDate,
-                task.getStatus().name(),
-                type,
-                recurrencePattern,
-                recurrenceEndDate) + System.lineSeparator();
+                CsvEscaper.escape(task.getId()),
+                CsvEscaper.escape(task.getTitle()),
+                CsvEscaper.escape(task.getDescription()),
+                CsvEscaper.escape(task.getOwner()),
+                CsvEscaper.escape(startDate),
+                CsvEscaper.escape(endDate),
+                CsvEscaper.escape(task.getStatus().name()),
+                CsvEscaper.escape(type),
+                CsvEscaper.escape(recurrencePattern),
+                CsvEscaper.escape(recurrenceEndDate)) + System.lineSeparator();
     }
 
     private static String storageDate(Instant instant) {
