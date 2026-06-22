@@ -66,6 +66,7 @@ public class MainMenuTest {
     @AfterEach
     public void tearDown() {
         System.setOut(originalOut);
+        DateTimeFormats.resetToDefaults();
     }
 
     @Test
@@ -176,6 +177,21 @@ public class MainMenuTest {
 
         String csv = Files.readString(tasksFile);
         assertTrue(csv.contains("IN_PROGRESS"));
+    }
+
+    @Test
+    public void shouldApplyEditedTimeZoneLiveWhenFilteringByDay() throws IOException {
+        // Instant 2026-07-06T22:00Z, stored as Warsaw wall-clock 07.07.2026 00:00.
+        // In UTC its calendar day is 06.07; in Europe/Warsaw it is 07.07.
+        write(tasksFile, "id;title;description;owner;startDate;status\n"
+                + "1;BoundaryTask;Desc;Alice;07.07.2026 00:00;NEW");
+
+        // Switch zone to UTC, then filter by 06.07.2026 — task should now appear.
+        Scanner scanner = new Scanner("6\n5\nUTC\n1\ny\n2\n06.07.2026\n10\n");
+        menu.run(scanner, currentUser);
+
+        assertTrue(output.toString().contains("BoundaryTask"),
+                "After switching the zone to UTC live, the boundary task should match 06.07");
     }
 
     @Test
